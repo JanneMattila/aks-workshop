@@ -1,67 +1,45 @@
 #!/bin/bash
 
-# All the variables for the deployment
-subscriptionName="AzureDev"
-aadAdminGroupContains="janne''s"
+#######################
+# __   ___ __ ___
+# \ \ / / '_ ` _ \
+#  \ V /| | | | | |
+#   \_/ |_| |_| |_|
+# Deployment
+#######################
 
-aksName="myaksstorage"
-premiumStorageName="myaksstorage00010"
-premiumStorageShareNameSMB="smb"
-premiumStorageShareNameNFS="nfs"
-workspaceName="mystorageworkspace"
-vnetName="myaksstorage-vnet"
-subnetAks="AksSubnet"
-subnetStorage="StorageSubnet"
-subnetNetApp="NetAppSubnet"
-identityName="myaksstorage"
-resourceGroupName="rg-myaksstorage"
-location="westeurope"
+# Create Bastion
+az network public-ip create --resource-group $resource_group_name --name $bastion_public_ip --sku Standard --location $location
+bastion_id=$(az network bastion create --name $bastion_name --public-ip-address $bastion_public_ip --resource-group $resource_group_name --vnet-name $vnet_hub_name --location $location --query id -o tsv)
+az resource update --ids $bastion_id --set properties.enableTunneling=true
 
-# Login and set correct context
-az login -o table
-az account set --subscription $subscriptionName -o table
-
-# Prepare extensions and providers
-az extension add --upgrade --yes --name aks-preview
-
-# Enable feature
-az feature register --namespace "Microsoft.ContainerService" --name "PodSubnetPreview"
-az feature list -o table --query "[?contains(name, 'Microsoft.ContainerService/PodSubnetPreview')].{Name:name,State:properties.state}"
-az provider register --namespace Microsoft.ContainerService
-
-# Remove extension in case conflicting previews
-az extension remove --name aks-preview
-
-az group create -l $location -n $resourceGroupName -o table
-
-aadAdmingGroup=$(az ad group list --display-name $aadAdminGroupContains --query [].objectId -o tsv)
-echo $aadAdmingGroup
-
-workspaceid=$(az monitor log-analytics workspace create -g $resourceGroupName -n $workspaceName --query id -o tsv)
-echo $workspaceid
-
-vnetid=$(az network vnet create -g $resourceGroupName --name $vnetName \
-  --address-prefix 10.0.0.0/8 \
-  --query newVNet.id -o tsv)
-echo $vnetid
-
-subnetaksid=$(az network vnet subnet create -g $resourceGroupName --vnet-name $vnetName \
-  --name $subnetAks --address-prefixes 10.2.0.0/24 \
+# Create jumpbox virtual machine
+vm_id=$(az $vm_name create \
+  --resource-group $resource_group_name  \
+  --name vm \
+  --image UbuntuLTS \
+  --size Standard_DS2_v2 \
+  --subnet $vnet_hub_management_subnet_id \
+  --admin-username $vm_username \
+  --admin-password $vm_password \
   --query id -o tsv)
-echo $subnetaksid
 
-subnetstorageid=$(az network vnet subnet create -g $resourceGroupName --vnet-name $vnetName \
-  --name $subnetStorage --address-prefixes 10.3.0.0/24 \
-  --query id -o tsv)
-echo $subnetstorageid
+###################
+#          _ 
+#  ___ ___| |__
+# / __/ __| '_ \
+# \__ \__ \ | | |
+# |___/___/_| |_|
+# to jumpbox 
+###################
+# Connect to a VM using Bastion and the native client on your Windows computer (Preview)
+# https://docs.microsoft.com/en-us/azure/bastion/connect-native-client-windows
 
-# Delegate a subnet to Azure NetApp Files
-# https://docs.microsoft.com/en-us/azure/azure-netapp-files/azure-netapp-files-delegate-subnet
-subnetnetappid=$(az network vnet subnet create -g $resourceGroupName --vnet-name $vnetName \
-  --name $subnetNetApp --address-prefixes 10.4.0.0/28 \
-  --delegations "Microsoft.NetApp/volumes" \
-  --query id -o tsv)
-echo $subnetnetappid
+echo $vm_password
+az network bastion ssh --name $bastion_name --resource-group $resource_group_name --target-resource-id $vm_id --auth-type "password" --username $vm_username
+
+# Exit jumpbox
+exit
 
 identityid=$(az identity create --name $identityName --resource-group $resourceGroupName --query id -o tsv)
 echo $identityid

@@ -45,13 +45,30 @@ vnet_spoke1_front_subnet_address_prefix="10.1.0.0/24"
 
 vnet_spoke2_name="vnet-spoke2"
 vnet_spoke2_address_prefix="10.2.0.0/22"
-vnet_spoke2_front_subnet_name="snet-aks"
-vnet_spoke2_front_subnet_address_prefix="10.2.0.0/24"
+vnet_spoke2_aks_subnet_name="snet-aks"
+vnet_spoke2_aks_subnet_address_prefix="10.2.0.0/24"
+
+#######################
+# __   ___ __ ___
+# \ \ / / '_ ` _ \
+#  \ V /| | | | | |
+#   \_/ |_| |_| |_|
+# Virtual Machine vars
+#######################
+
+vm_name="jumpbox"
+
+vm_username="azureuser"
+vm_password=$(openssl rand -base64 32)
+echo $vm_password
+
+bastion_public_ip="pip-bastion"
+bastion_name="bas-management"
 
 # Login and set correct context
-# Note: You can skip if using cloud shell
+# NOTE: You can skip if using cloud shell
 # Command: VAR-1
-az login -o table 
+az login -o table --only-show-errors
 az account set --subscription $subscription_name -o table
 
 # Create resource group
@@ -61,3 +78,4 @@ az group create -l $location -n $resource_group_name -o table
 # Prepare extensions and providers
 # Command: VAR-3
 az extension add --upgrade --yes --name aks-preview
+az extension add --upgrade --yes --name ssh
