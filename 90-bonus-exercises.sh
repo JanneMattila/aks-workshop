@@ -22,7 +22,6 @@
 # (Remove peering after testing)
 #
 
-
 # Exercise 3:
 # -----------
 # Test scaling: 
@@ -37,4 +36,9 @@
 # Exercise 4:
 # -----------
 # Enable Private DNS Zone usage in Hub virtual network
+#
+
+# Exercise 5:
+# -----------
+# Change ACR to be private and accessible inside AKS virtual network.
 #

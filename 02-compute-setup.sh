@@ -146,7 +146,7 @@ az aks create -g $resource_group_name -n $aks_name \
 # Note: In case your own ip changes, 
 # then you need to update it in order to access Kubernetes api server
 # Command: COMPUTE-12
-az aks update -g $resourceGroupName -n $aksName --api-server-authorized-ip-ranges $my_ip
+az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
 
 # Install kubectl
 # Command: COMPUTE-13

@@ -4,6 +4,8 @@
 # Command: REGISTRY-1
 az acr import -n $acr_name -t "apps/jannemattila/webapp-fs-tester:1.1.7" --source "docker.io/jannemattila/webapp-fs-tester:1.1.7" 
 
+# Enable "Defender for Containers" in the Portal
+
 ############################
 # Import vulnerable images
 # --
@@ -20,6 +22,15 @@ az acr import -n $acr_name -t "bad/vulnerables/mail-haraka-2.8.9-rce" --source "
 # /Import vulnerable images
 ############################
 
-# Enable "Defender for Containers" in the Portal
+# Build
+az acr build --registry $acr_name --image "apps/simple-app:v1" ./simple-app/src
+
+acr_loginserver=$(az acr list -g $resource_group_name -n $acr_name --query loginServer -o tsv)
+echo $acr_loginserver
+
+kubectl create ns simple-app
+kubectl create deployment simple-app-deployment --image "$acr_loginserver/apps/simple-app:v1" --replicas 1 -n simple-app
+
+kubectl get pods -n simple-app
 
 # Study ACR in Portal
