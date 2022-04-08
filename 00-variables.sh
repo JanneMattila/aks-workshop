@@ -31,19 +31,28 @@ location="swedencentral"
 # Virtual Networks vars
 #########################
 
-vnet_hub_name="hub-vnet"
+vnet_hub_plain_name="hub"
+vnet_hub_name="vnet-$vnet_hub_plain_name"
 vnet_hub_address_prefix="10.0.0.0/21"
+vnet_hub_gateway_subnet_name="GatewaySubnet"
+vnet_hub_gateway_subnet_address_prefix="10.0.0.0/24"
+vnet_hub_firewall_subnet_name="AzureFirewallSubnet" # Azure Firewall (Optional)
+vnet_hub_firewall_subnet_address_prefix="10.0.1.0/24"
+vnet_hub_infra_subnet_name="snet-infra" # For intrastructure resources e.g., DCs
+vnet_hub_infra_subnet_address_prefix="10.0.2.0/24"
 vnet_hub_management_subnet_name="snet-management"
 vnet_hub_management_subnet_address_prefix="10.0.3.0/24"
 vnet_hub_bastion_subnet_name="AzureBastionSubnet"
 vnet_hub_bastion_subnet_address_prefix="10.0.4.0/24"
 
-vnet_spoke1_name="vnet-spoke1"
+vnet_spoke1_plain_name="spoke1"
+vnet_spoke1_name="vnet-$vnet_spoke1_plain_name"
 vnet_spoke1_address_prefix="10.1.0.0/22"
 vnet_spoke1_front_subnet_name="snet-front"
 vnet_spoke1_front_subnet_address_prefix="10.1.0.0/24"
 
-vnet_spoke2_name="vnet-spoke2"
+vnet_spoke2_plain_name="spoke2"
+vnet_spoke2_name="vnet-$vnet_spoke2_plain_name"
 vnet_spoke2_address_prefix="10.2.0.0/22"
 vnet_spoke2_aks_subnet_name="snet-aks"
 vnet_spoke2_aks_subnet_address_prefix="10.2.0.0/24"

@@ -71,3 +71,58 @@ echo $vnet_spoke2_aks_subnet_id
 #                              |___/
 #######################################
 
+# Understand the configuration!
+az network vnet peering create --help
+
+# QUESTION:
+# ---------
+# What are these parameters?
+#  --allow-vnet-access 
+#  --allow-gateway-transit
+#  --use-remote-gateways
+#
+
+# Hub -> Spoke 1
+az network vnet peering create \
+  --name "$vnet_hub_plain_name-to-$vnet_spoke1_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_hub_name \
+  --remote-vnet $vnet_spoke1_id \
+  --allow-vnet-access \
+  --allow-gateway-transit
+
+# Spoke 1 -> Hub
+az network vnet peering create \
+  --name "$vnet_spoke1_plain_name-to-$vnet_hub_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_spoke1_name \
+  --remote-vnet $vnet_hub_id \
+  --allow-vnet-access \
+  --allow-forwarded-traffic
+  # --use-remote-gateways
+
+# ---
+
+# Hub -> Spoke 2
+az network vnet peering create \
+  --name "$vnet_hub_plain_name-to-$vnet_spoke2_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_hub_name \
+  --remote-vnet $vnet_spoke2_id \
+  --allow-vnet-access \
+  --allow-gateway-transit
+
+# Spoke 2 -> Hub
+az network vnet peering create \
+  --name "$vnet_spoke2_plain_name-to-$vnet_hub_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_spoke2_name \
+  --remote-vnet $vnet_hub_id \
+  --allow-vnet-access \
+  --allow-forwarded-traffic
+  # --use-remote-gateways
+
+# QUESTION:
+# ---------
+# Can "spoke1" and "spoke2" communicate with each other?
+#
