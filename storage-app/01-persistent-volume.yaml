@@ -18,7 +18,7 @@ spec:
     # `#` is not allowed in self defined volumeHandle
     volumeHandle: nfspv
     volumeAttributes:
-      storageAccount: $aks_storage_account_name
+      storageAccount: $storage_name
       shareName: nfs
       protocol: nfs
     nodeStageSecretRef:

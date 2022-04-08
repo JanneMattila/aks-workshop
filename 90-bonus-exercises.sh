@@ -21,3 +21,20 @@
 # Test and verify.
 # (Remove peering after testing)
 #
+
+
+# Exercise 3:
+# -----------
+# Test scaling: 
+# - Deployment of "network-app" to e.g., 100 instances
+# - Cluster nodes
+# - Auto-scale vs. Manual
+#
+# More information:
+# https://github.com/JanneMattila/playground-aks-scaling
+#
+
+# Exercise 4:
+# -----------
+# Enable Private DNS Zone usage in Hub virtual network
+#

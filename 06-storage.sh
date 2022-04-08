@@ -123,6 +123,39 @@ cat azurefile-secret.yaml
 kubectl apply -f storage-app/00-namespace.yaml
 kubectl apply -f azurefile-secret.yaml
 
+# Update persistent volume to refer to correct storage account
+
+cat <<EOF > storage-app/01-persistent-volume.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-pv
+  namespace: storage-app
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  # From:
+  # https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/deploy/example/pv-azurefile-csi.yaml
+  csi:
+    driver: file.csi.azure.com
+    readOnly: false
+    # make sure this volumeid is unique in the cluster
+    # `#` is not allowed in self defined volumeHandle
+    volumeHandle: nfspv
+    volumeAttributes:
+      storageAccount: $storage_name
+      shareName: nfs
+      protocol: nfs
+    nodeStageSecretRef:
+      name: azurefile-secret
+      namespace: storage-app
+EOF
+
+cat storage-app/01-persistent-volume.yaml
+
 # Execute static provisioning
 kubectl apply -f storage-app/01-persistent-volume.yaml
 
@@ -131,3 +164,10 @@ kubectl get pvc -n demos
 
 kubectl describe pv nfs-pv -n demos
 kubectl describe pvc nfs-pvc -n demos
+
+# QUESTION:
+# ---------
+# If you do "nslookup" from jumpbox, then what ip do you get and why?
+#
+# Extra "Exercise 4" in "90-bonus-exercises.sh".
+#
