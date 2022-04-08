@@ -14,3 +14,10 @@
 # Add route table to "spoke1" and prevent routing to "hub". 
 # Test and verify.
 #
+
+# Exercise 2:
+# -----------
+# Peer spoke1 and spoke2. 
+# Test and verify.
+# (Remove peering after testing)
+#
