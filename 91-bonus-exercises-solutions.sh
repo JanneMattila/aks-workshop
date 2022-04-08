@@ -197,8 +197,145 @@
 
 
 
-# Exercise 1 solution:
+# Exercise 1:
 # -----------
 # Add route table to "spoke1" and prevent routing to "hub". 
 # Test and verify.
 #
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Exercise 2:
+# -----------
+# Peer spoke1 and spoke2. 
+# Test and verify.
+# (Remove peering after testing)
+#
+
+# Spoke 1 -> Spoke 2
+# Command: BONUS2-1
+az network vnet peering create \
+  --name "$vnet_spoke1_plain_name-to-$vnet_spoke2_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_spoke1_name \
+  --remote-vnet $vnet_spoke2_id \
+  --allow-vnet-access
+
+# Spoke 2 -> Spoke 1
+# Command: BONUS2-2
+az network vnet peering create \
+  --name "$vnet_spoke2_plain_name-to-$vnet_spoke1_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_spoke2_name \
+  --remote-vnet $vnet_spoke1_id \
+  --allow-vnet-access
+
+# Test connectivity between spokes "03-networking-tests.sh".
+
+# Remove peerings
+# Command: BONUS2-3
+az network vnet peering delete \
+  --name "$vnet_spoke1_plain_name-to-$vnet_spoke2_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_spoke1_name
+
+az network vnet peering delete \
+  --name "$vnet_spoke2_plain_name-to-$vnet_spoke1_plain_name" \
+  --resource-group $resource_group_name \
+  --vnet-name $vnet_spoke2_name
+
+# End of Exercise 2.

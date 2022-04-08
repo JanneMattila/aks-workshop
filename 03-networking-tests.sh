@@ -53,7 +53,7 @@ curl -X POST --data  "HTTP GET \"http://$network_app_internal_svc_ip\"" -H "Cont
 # ---------
 # What are our options to enable spoke-to-spoke connectivity?
 #
-# Extra "Exercise 2" in "90-bonus-exercices.sh".
+# Extra "Exercise 2" in "90-bonus-exercises.sh".
 #
 
 # Exit jumpbox
