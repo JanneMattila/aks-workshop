@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-app-deployment
+  namespace: network-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network-app
+  template:
+    metadata:
+      labels:
+        app: network-app
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+      - image: jannemattila/webapp-network-tester:1.0.50
+        name: network-app
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 150m
+            memory: 150Mi
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP

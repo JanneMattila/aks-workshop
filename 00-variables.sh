@@ -13,14 +13,13 @@ my_name="janne" # Lower caps!
 # Your subscription name
 subscription_name="AzureDev"
 
-# Azure AD Group name used for AKS admins
-azure_ad_admin_group_contains="janne''s"
-
-aks_name="aks$my_name"
 resource_group_name="rg-aks-workshop-$my_name"
 
+# List Azure regions
+az account list-locations -o table
+
 # Azure region to use
-location="swedencentral"
+location="westcentralus"
 
 #########################
 #                   _
@@ -74,7 +73,45 @@ echo $vm_password
 bastion_public_ip="pip-bastion"
 bastion_name="bas-management"
 
-# Login and set correct context
+#################################
+#     _     ____  ___
+#    / \   / ___||_ _|
+#   / _ \ | |     | |
+#  / ___ \| |___  | |
+# /_/   \_\\____||___|
+# Azure Container Instances vars
+#################################
+
+aci_name="ci-$vnet_spoke1_plain_name"
+
+################################
+#     _     _  __ ____
+#    / \   | |/ // ___|
+#   / _ \  | ' / \___ \
+#  / ___ \ | . \  ___) |
+# /_/   \_\|_|\_\|____/
+# Azure Kubernetes Service vars
+################################
+
+# Azure AD Group name used for AKS admins
+aks_azure_ad_admin_group_contains="janne''s"
+
+# AKS specific
+aks_name="aks-$my_name"
+aks_workspace_name="log-$my_name"
+aks_identity_name="id-$my_name"
+acr_name="cr${my_name}000000010"
+
+###################################
+#  _                   _
+# | |     ___    __ _ (_) _ __
+# | |    / _ \  / _` || || '_ \
+# | |___| (_) || (_| || || | | |
+# |_____|\___/  \__, ||_||_| |_|
+#               |___/
+# and set correct context
+###################################
+
 # NOTE: You can skip if using cloud shell
 # Command: VAR-1
 az login -o table --only-show-errors

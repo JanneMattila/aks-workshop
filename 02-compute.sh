@@ -8,21 +8,27 @@
 # Deployment
 #######################
 
-# Create Bastion
-az network public-ip create --resource-group $resource_group_name --name $bastion_public_ip --sku Standard --location $location
-bastion_id=$(az network bastion create --name $bastion_name --public-ip-address $bastion_public_ip --resource-group $resource_group_name --vnet-name $vnet_hub_name --location $location --query id -o tsv)
-az resource update --ids $bastion_id --set properties.enableTunneling=true
-
 # Create jumpbox virtual machine
-vm_id=$(az $vm_name create \
+vm_id=$(az vm create \
   --resource-group $resource_group_name  \
-  --name vm \
+  --name $vm_name \
   --image UbuntuLTS \
   --size Standard_DS2_v2 \
+  --public-ip-address "" \
   --subnet $vnet_hub_management_subnet_id \
   --admin-username $vm_username \
   --admin-password $vm_password \
   --query id -o tsv)
+
+# QUESTION:
+# ---------
+# Can you access jumpbox virtual machine?
+#
+
+# Create Bastion
+az network public-ip create --resource-group $resource_group_name --name $bastion_public_ip --sku Standard --location $location
+bastion_id=$(az network bastion create --name $bastion_name --public-ip-address $bastion_public_ip --resource-group $resource_group_name --vnet-name $vnet_hub_name --location $location --query id -o tsv)
+az resource update --ids $bastion_id --set properties.enableTunneling=true
 
 ###################
 #          _ 
@@ -32,7 +38,7 @@ vm_id=$(az $vm_name create \
 # |___/___/_| |_|
 # to jumpbox 
 ###################
-# Connect to a VM using Bastion and the native client on your Windows computer (Preview)
+# Connect to a VM using Bastion and the native client on your Windows computer
 # https://docs.microsoft.com/en-us/azure/bastion/connect-native-client-windows
 
 echo $vm_password
@@ -41,28 +47,70 @@ az network bastion ssh --name $bastion_name --resource-group $resource_group_nam
 # Exit jumpbox
 exit
 
-identityid=$(az identity create --name $identityName --resource-group $resourceGroupName --query id -o tsv)
-echo $identityid
+#######################################
+#     _     ____  ___
+#    / \   / ___||_ _|
+#   / _ \ | |     | |
+#  / ___ \| |___  | |
+# /_/   \_\\____||___|
+# Azure Container Instances deployment
+#######################################
 
+aci_ip=$(az container create \
+  --name $aci_name \
+  --image "jannemattila/webapp-network-tester" \
+  --ports 80 \
+  --cpu 1 \
+  --memory 1 \
+  --resource-group $resource_group_name \
+  --restart-policy Always \
+  --ip-address Private \
+  --subnet $vnet_spoke1_front_subnet_id \
+  --query ipAddress.ip -o tsv)
+echo $aci_ip
+
+#######################################
+#     _     _  __ ____
+#    / \   | |/ // ___|
+#   / _ \  | ' / \___ \
+#  / ___ \ | . \  ___) |
+# /_/   \_\|_|\_\|____/
+# Azure Kubernetes Service deployment
+#######################################
+
+# Create identity for AKS
+aks_identity_id=$(az identity create --name $aks_identity_name --resource-group $resource_group_name --query id -o tsv)
+echo $aks_identity_id
+
+# Find Azure AD Group for AKS Admins
+aks_azure_ad_admin_group_object_id=$(az ad group list --display-name $aks_azure_ad_admin_group_contains --query [].objectId -o tsv)
+echo $aks_azure_ad_admin_group_object_id
+
+# Create Log Analytics workspace for our AKS
+aks_workspace_id=$(az monitor log-analytics workspace create -g $resource_group_name -n $aks_workspace_name --query id -o tsv)
+echo $aks_workspace_id
+
+# Create Container Registry
+acr_id=$(az acr create -l $location -g $resource_group_name -n $acr_name --sku Basic --query id -o tsv)
+echo $acr_id
+
+# See all available Kubernetes versions
 az aks get-versions -l $location -o table
 
 # Note: for public cluster you need to authorize your ip to use api
-myip=$(curl --no-progress-meter https://api.ipify.org)
-echo $myip
+my_ip=$(curl --no-progress-meter https://api.ipify.org)
+echo $my_ip
 
 # Note about private clusters:
 # https://docs.microsoft.com/en-us/azure/aks/private-clusters
-
+#
 # For private cluster add these:
 #  --enable-private-cluster
-#  --private-dns-zone None
+#  --private-dns-zone None|System|BYOD
 
-# Enable Ultra Disk:
-# --enable-ultra-ssd
-
-az aks create -g $resourceGroupName -n $aksName \
- --zones 1 2 3 --max-pods 50 --network-plugin azure \
- --node-count 3 --enable-cluster-autoscaler --min-count 3 --max-count 4 \
+az aks create -g $resource_group_name -n $aks_name \
+ --max-pods 50 --network-plugin azure \
+ --node-count 2 --enable-cluster-autoscaler --min-count 2 --max-count 4 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
  --kubernetes-version 1.22.6 \
@@ -70,182 +118,40 @@ az aks create -g $resourceGroupName -n $aksName \
  --enable-aad \
  --enable-managed-identity \
  --disable-local-accounts \
- --aad-admin-group-object-ids $aadAdmingGroup \
- --workspace-resource-id $workspaceid \
+ --aad-admin-group-object-ids $aks_azure_ad_admin_group_object_id \
+ --workspace-resource-id $aks_workspace_id \
+ --attach-acr $acr_id \
  --load-balancer-sku standard \
- --vnet-subnet-id $subnetaksid \
- --assign-identity $identityid \
- --api-server-authorized-ip-ranges $myip \
- --enable-ultra-ssd \
+ --vnet-subnet-id $vnet_spoke2_aks_subnet_id \
+ --assign-identity $aks_identity_id \
+ --api-server-authorized-ip-ranges $my_ip \
  -o table 
 
-###################################################################
-# Enable current ip
-az aks update -g $resourceGroupName -n $aksName --api-server-authorized-ip-ranges $myip
+# Note: In case your own ip changes, 
+# then you need to update it in order to access Kubernetes api server
+az aks update -g $resourceGroupName -n $aksName --api-server-authorized-ip-ranges $my_ip
 
-# Clear all authorized ip ranges
-az aks update -g $resourceGroupName -n $aksName --api-server-authorized-ip-ranges ""
-###################################################################
-
+# Install kubectl
 sudo az aks install-cli
 
-az aks get-credentials -n $aksName -g $resourceGroupName --overwrite-existing
+# Get credentials, so that you can access Kubernetes api server
+az aks get-credentials -n $aks_name -g $resource_group_name --overwrite-existing
 
+# Test connectivity to Kubernetes
 kubectl get nodes
-kubectl get nodes -o wide
-kubectl get nodes -o custom-columns=NAME:'{.metadata.name}',REGION:'{.metadata.labels.topology\.kubernetes\.io/region}',ZONE:'{metadata.labels.topology\.kubernetes\.io/zone}'
-# NAME                                REGION       ZONE
-# aks-nodepool1-30714164-vmss000000   westeurope   westeurope-1
-# aks-nodepool1-30714164-vmss000001   westeurope   westeurope-2
-# aks-nodepool1-30714164-vmss000002   westeurope   westeurope-3
 
-# Create namespace
-kubectl apply -f namespace.yaml
+# Deploy simple network test application
+kubectl apply -f network-app/
 
-# Continue using "static provisioning" example
-# => static/setup-static.sh
+# Validate
+kubectl get deployment -n network-app
+kubectl get pod -n network-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
 
-# Continue using "dynamic provisioning" example
-# => dynamic/setup-dynamic.sh
+network_app_pod1=$(kubectl get pod -n network-app -o name | head -n 1)
+echo $network_app_pod1
 
-kubectl apply -f demos
+network_app_svc_ip=$(kubectl get service -n network-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
+echo $network_app_svc_ip
 
-kubectl get deployment -n demos
-kubectl describe deployment -n demos
-
-kubectl get pod -n demos
-kubectl get pod -n demos -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
-
-kubectl get pod -n demos
-pod1=$(kubectl get pod -n demos -o name | head -n 1)
-echo $pod1
-
-kubectl describe $pod1 -n demos
-
-kubectl get service -n demos
-
-ingressip=$(kubectl get service -n demos -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
-echo $ingressip
-
-curl $ingressip/swagger/index.html
-# -> OK!
-
-cat <<EOF > payload.json
-{
-  "path": "/mnt/nfs",
-  "filter": "*.*",
-  "recursive": true
-}
-EOF
-
-# Quick tests
-# - Azure Files NFSv4.1
-curl --no-progress-meter -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$ingressip/api/files" | jq .milliseconds
-# - Azure Files SMB
-curl --no-progress-meter -X POST --data '{"path": "/mnt/smb","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$ingressip/api/files" | jq .milliseconds
-# - Azure NetApp Files NFSv4.1
-curl --no-progress-meter -X POST --data '{"path": "/mnt/netapp-nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$ingressip/api/files" | jq .milliseconds
-
-# Test same in loop
-# - Azure Files NFSv4.1
-for i in {0..50}
-do 
-  curl --no-progress-meter -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$ingressip/api/files" | jq .milliseconds
-done
-# Examples: 1.8357, 2.918, 1.9534, 2.9706, 1.7649, 1.8872
-
-# - Azure Files SMB
-for i in {0..50}
-do 
-  curl --no-progress-meter -X POST --data '{"path": "/mnt/smb","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$ingressip/api/files" | jq .milliseconds
-done
-# Examples: 15.7838, 10.2626, 14.653, 11.2682, 9.8133, 15.9403, 11.6134
-
-# - Azure NetApp Files NFSv4.1
-for i in {0..50}
-do 
-  curl --no-progress-meter -X POST --data '{"path": "/mnt/netapp-nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$ingressip/api/files" | jq .milliseconds
-done
-# Examples: 0.4258, 0.3901,0.407, 0.5709, 0.3992, 0.3968
-
-# Use upload and download APIs to test client to server latency and transfer performance
-# You can also use calculators e.g., https://www.calculator.net/bandwidth-calculator.html#download-time
-truncate -s 10m demo1.bin
-ls -lhF *.bin
-time curl -T demo1.bin -X POST "http://$ingressip/api/upload"
-time curl --no-progress-meter -X POST --data '{"size": 10485760}' -H "Content-Type: application/json" "http://$ingressip/api/download" -o demo2.bin
-rm *.bin
-
-# Connect to first pod
-pod1=$(kubectl get pod -n demos -o name | head -n 1)
-echo $pod1
-kubectl exec --stdin --tty $pod1 -n demos -- /bin/sh
-
-##############
-# fio examples
-##############
-mount
-fdisk -l
-df -h
-cat /proc/partitions
-
-# If not installed, then install
-apk add --no-cache fio
-
-fio
-
-cd /mnt
-ls
-cd /mnt/empty
-cd /mnt/hostpath
-cd /mnt/nfs
-cd /mnt/smb
-cd /mnt/premiumdisk
-cd /mnt/ultradisk
-cd /mnt/netapp-nfs
-cd /home
-mkdir perf-test
-
-# Write test with 4 x 4MBs for 20 seconds
-fio --directory=perf-test --direct=1 --rw=randwrite --bs=4k --ioengine=libaio --iodepth=256 --runtime=20 --numjobs=4 --time_based --group_reporting --size=4m --name=iops-test-job --eta-newline=1
-
-# Read test with 4 x 4MBs for 20 seconds
-fio --directory=perf-test --direct=1 --rw=randread --bs=4k --ioengine=libaio --iodepth=256 --runtime=20 --numjobs=4 --time_based --group_reporting --size=4m --name=iops-test-job --eta-newline=1 --readonly
-
-# Find test files
-ls perf-test/*.0
-
-# Remove test files
-rm perf-test/*.0
-
-# Exit container shell
-exit
-
-################################
-# To test
-#  _____
-# | ____|_ __ _ __ ___  _ __
-# |  _| | '__| '__/ _ \| '__|
-# | |___| |  | | | (_) | |
-# |_____|_|  |_|  \___/|_|   s
-# scenarios
-################################
-
-# Delete pod
-# ----------
-kubectl delete $pod1 -n demos
-
-# Delete VM in VMSS
-# -----------------
-# Note: If you use Azure Disk from Zone-1, then
-# killing node from matching zone will bring app down until
-# AKS introduces new node to that zone.
-nodeResourceGroup=$(az aks show -g $resourceGroupName -n $aksName --query nodeResourceGroup -o tsv)
-vmss=$(az vmss list -g $nodeResourceGroup --query [0].name -o tsv)
-az vmss list-instances -n $vmss -g $nodeResourceGroup -o table
-vmssvm1=$(az vmss list-instances -n $vmss -g $nodeResourceGroup --query [0].instanceId -o tsv)
-echo $vmssvm1
-az vmss delete-instances --instance-ids $vmssvm1 -n $vmss -g $nodeResourceGroup
-
-# Wipe out the resources
-az group delete --name $resourceGroupName -y
+curl $network_app_svc_ip
+# -> <html><body>Hello there!</body></html>

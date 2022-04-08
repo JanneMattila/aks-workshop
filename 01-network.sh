@@ -8,16 +8,19 @@
 # |_| |_|\__,_|_.__/
 ######################
 
+# Command: NETWORK-1
 vnet_hub_id=$(az network vnet create -g $resource_group_name --name $vnet_hub_name \
   --address-prefix $vnet_hub_address_prefix \
   --query newVNet.id -o tsv)
 echo $vnet_hub_id
 
+# Command: NETWORK-2
 vnet_hub_management_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
   --name $vnet_hub_management_subnet_name --address-prefixes $vnet_hub_management_subnet_address_prefix \
   --query id -o tsv)
 echo $vnet_hub_management_subnet_id
 
+# Command: NETWORK-3
 vnet_hub_bastion_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
   --name $vnet_hub_bastion_subnet_name --address-prefixes $vnet_hub_bastion_subnet_address_prefix \
   --query id -o tsv)
@@ -32,11 +35,13 @@ echo $vnet_hub_bastion_subnet_id
 #       |_|
 ####################################
 
+# Command: NETWORK-4
 vnet_spoke1_id=$(az network vnet create -g $resource_group_name --name $vnet_spoke1_name \
   --address-prefix $vnet_spoke1_address_prefix \
   --query newVNet.id -o tsv)
 echo $vnet_spoke1_id
 
+# Command: NETWORK-5
 vnet_spoke1_front_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke1_name \
   --name $vnet_spoke1_front_subnet_name --address-prefixes $vnet_spoke1_front_subnet_address_prefix \
   --delegations "Microsoft.ContainerInstance/containerGroups" \
@@ -52,11 +57,13 @@ echo $vnet_spoke1_front_subnet_id
 #       |_|
 #######################################
 
+# Command: NETWORK-6
 vnet_spoke2_id=$(az network vnet create -g $resource_group_name --name $vnet_spoke2_name \
   --address-prefix $vnet_spoke2_address_prefix \
   --query newVNet.id -o tsv)
 echo $vnet_spoke2_id
 
+# Command: NETWORK-7
 vnet_spoke2_aks_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_aks_subnet_name --address-prefixes $vnet_spoke2_aks_subnet_address_prefix \
   --query id -o tsv)
@@ -83,6 +90,7 @@ az network vnet peering create --help
 #
 
 # Hub -> Spoke 1
+# Command: NETWORK-8
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke1_plain_name" \
   --resource-group $resource_group_name \
@@ -92,6 +100,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 1 -> Hub
+# Command: NETWORK-9
 az network vnet peering create \
   --name "$vnet_spoke1_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
@@ -104,6 +113,7 @@ az network vnet peering create \
 # ---
 
 # Hub -> Spoke 2
+# Command: NETWORK-10
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke2_plain_name" \
   --resource-group $resource_group_name \
@@ -113,6 +123,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 2 -> Hub
+# Command: NETWORK-11
 az network vnet peering create \
   --name "$vnet_spoke2_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
