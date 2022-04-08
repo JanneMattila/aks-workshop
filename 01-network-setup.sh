@@ -26,6 +26,8 @@ vnet_hub_bastion_subnet_id=$(az network vnet subnet create -g $resource_group_na
   --query id -o tsv)
 echo $vnet_hub_bastion_subnet_id
 
+# Study Hub virtual network in Portal
+
 ####################################
 #  ____              _          _
 # / ___| _ __   ___ | | _____  / |
@@ -69,6 +71,12 @@ vnet_spoke2_aks_subnet_id=$(az network vnet subnet create -g $resource_group_nam
   --query id -o tsv)
 echo $vnet_spoke2_aks_subnet_id
 
+# Command: NETWORK-8
+vnet_spoke2_pe_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
+  --name $vnet_spoke2_pe_subnet_name --address-prefixes $vnet_spoke2_pe_subnet_address_prefix \
+  --query id -o tsv)
+echo $vnet_spoke2_pe_subnet_id
+
 #######################################
 #  ____                _
 # |  _ \ ___  ___ _ __(_)_ __   __ _
@@ -90,7 +98,7 @@ az network vnet peering create --help
 #
 
 # Hub -> Spoke 1
-# Command: NETWORK-8
+# Command: NETWORK-9
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke1_plain_name" \
   --resource-group $resource_group_name \
@@ -100,7 +108,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 1 -> Hub
-# Command: NETWORK-9
+# Command: NETWORK-10
 az network vnet peering create \
   --name "$vnet_spoke1_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
@@ -113,7 +121,7 @@ az network vnet peering create \
 # ---
 
 # Hub -> Spoke 2
-# Command: NETWORK-10
+# Command: NETWORK-11
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke2_plain_name" \
   --resource-group $resource_group_name \
@@ -123,7 +131,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 2 -> Hub
-# Command: NETWORK-11
+# Command: NETWORK-12
 az network vnet peering create \
   --name "$vnet_spoke2_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
@@ -137,3 +145,5 @@ az network vnet peering create \
 # ---------
 # Can "spoke1" and "spoke2" communicate with each other?
 #
+
+# Study virtual network setup in Portal

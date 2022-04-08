@@ -55,6 +55,8 @@ vnet_spoke2_name="vnet-$vnet_spoke2_plain_name"
 vnet_spoke2_address_prefix="10.2.0.0/22"
 vnet_spoke2_aks_subnet_name="snet-aks"
 vnet_spoke2_aks_subnet_address_prefix="10.2.0.0/24"
+vnet_spoke2_pe_subnet_name="snet-pe"
+vnet_spoke2_pe_subnet_address_prefix="10.2.1.0/24"
 
 #######################
 # __   ___ __ ___
@@ -100,7 +102,11 @@ aks_azure_ad_admin_group_contains="janne''s"
 aks_name="aks-$my_name"
 aks_workspace_name="log-$my_name"
 aks_identity_name="id-$my_name"
+
+# Additional resources used by AKS
 acr_name="cr${my_name}000000010"
+storage_name="st${my_name}000000010"
+storage_share_name="nfs"
 
 ###################################
 #  _                   _

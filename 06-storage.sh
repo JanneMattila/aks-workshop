@@ -1,32 +1,44 @@
 #!/bin/bash
 
 # Create Premium ZRS file share ahead of time => static provisioning
+#
 # NFS related notes from Azure portal if "Secure transfer required" is enabled:
 #   "Secure transfer required" is a setting that is enabled for this storage account. 
 #   The NFS protocol does not support encryption and relies on network-level security. 
 #   This setting must be disabled for NFS to work.
-storageid=$(az storage account create \
-  --name $premiumStorageName \
-  --resource-group $resourceGroupName \
+#
+# Create storage account
+# Command: STORAGE-1
+storage_id=$(az storage account create \
+  --name $storage_name \
+  --resource-group $resource_group_name \
   --location $location \
-  --sku Premium_ZRS \
+  --sku Premium_LRS \
   --kind FileStorage \
   --default-action Deny \
   --allow-blob-public-access false \
   --public-network-access Disabled \
   --https-only false \
   --query id -o tsv)
-echo $storageid
+echo $storage_id
 
-premiumStorageKey=$(az storage account keys list \
-  --account-name $premiumStorageName \
-  --resource-group $resourceGroupName \
+# Get storage account access key
+# Command: STORAGE-2
+storage_key=$(az storage account keys list \
+  --account-name $storage_name \
+  --resource-group $resource_group_name \
   --query [0].value \
   -o tsv)
-echo $premiumStorageKey
+echo $storage_key
 
-az storage share-rm create --access-tier Premium --enabled-protocols SMB --quota 100 --name $premiumStorageShareNameSMB --storage-account $premiumStorageName
-az storage share-rm create --access-tier Premium --enabled-protocols NFS --quota 100 --name $premiumStorageShareNameNFS --storage-account $premiumStorageName
+# Create NFS file share
+# Command: STORAGE-3
+az storage share-rm create \
+  --access-tier Premium \
+  --enabled-protocols NFS \
+  --quota 100 \
+  --name $storage_share_name \
+  --storage-account $storage_name
 
 # Provisioned capacity: 100 GiB
 # =>
@@ -38,80 +50,84 @@ az storage share-rm create --access-tier Premium --enabled-protocols NFS --quota
 # Follow instructions from here:
 # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
 # Disable private endpoint network policies
+#
+# Command: STORAGE-4
 az network vnet subnet update \
-  --ids $subnetstorageid \
+  --ids $vnet_spoke2_pe_subnet_id \
   --disable-private-endpoint-network-policies \
   --output none
 
-# Create private endpoint to "StorageSubnet"
-storagepeid=$(az network private-endpoint create \
+# Create private endpoint to "snet-pe"
+# Command: STORAGE-5
+storage_pe_id=$(az network private-endpoint create \
     --name storage-pe \
-    --resource-group $resourceGroupName \
-    --vnet-name $vnetName --subnet $subnetStorage \
-    --private-connection-resource-id $storageid \
+    --resource-group $resource_group_name \
+    --vnet-name $vnet_spoke2_name --subnet $vnet_spoke2_pe_subnet_name \
+    --private-connection-resource-id $storage_id \
     --group-id file \
     --connection-name storage-connection \
     --query id -o tsv)
-echo $storagepeid
+echo $storage_pe_id
 
 # Create Private DNS Zone
-fileprivatednszoneid=$(az network private-dns zone create \
-    --resource-group $resourceGroupName \
+# Command: STORAGE-6
+file_private_dns_zone_id=$(az network private-dns zone create \
+    --resource-group $resource_group_name \
     --name "privatelink.file.core.windows.net" \
     --query id -o tsv)
-echo $fileprivatednszoneid
+echo $file_private_dns_zone_id
 
 # Link Private DNS Zone to VNET
+# Command: STORAGE-7
 az network private-dns link vnet create \
-  --resource-group $resourceGroupName \
+  --resource-group $resource_group_name \
   --zone-name "privatelink.file.core.windows.net" \
   --name file-dnszone-link \
-  --virtual-network $vnetName \
+  --virtual-network $vnet_spoke2_name \
   --registration-enabled false
 
-# Get private endpoint NIC
-penicid=$(az network private-endpoint show \
-  --ids $storagepeid \
+# Get private endpoint nic
+# Command: STORAGE-8
+storage_pe_nic_id=$(az network private-endpoint show \
+  --ids $storage_pe_id \
   --query "networkInterfaces[0].id" -o tsv)
-echo $penicid
+echo $storage_pe_nic_id
 
 # Get ip of private endpoint NIC
-peip=$(az network nic show \
-  --ids $penicid \
+storage_pe_ip=$(az network nic show \
+  --ids $storage_pe_nic_id \
   --query "ipConfigurations[0].privateIpAddress" -o tsv)
-echo $peip
+echo $storage_pe_ip
 
 # Map private endpoint ip to A record in Private DNS Zone
 az network private-dns record-set a create \
-  --resource-group $resourceGroupName \
+  --resource-group $resource_group_name \
   --zone-name "privatelink.file.core.windows.net" \
-  --name $premiumStorageName \
+  --name $storage_name \
   --output none
 
 az network private-dns record-set a add-record \
-  --resource-group $resourceGroupName \
+  --resource-group $resource_group_name \
   --zone-name "privatelink.file.core.windows.net" \
-  --record-set-name $premiumStorageName \
-  --ipv4-address $peip \
+  --record-set-name $storage_name \
+  --ipv4-address $storage_pe_ip \
   --output none
 
 # Deploy storage secret
 kubectl create secret generic azurefile-secret \
-  --from-literal=azurestorageaccountname=$premiumStorageName \
-  --from-literal=azurestorageaccountkey=$premiumStorageKey \
-  -n demos --type Opaque --dry-run=client -o yaml > azurefile-secret.yaml
+  --from-literal=azurestorageaccountname=$storage_name \
+  --from-literal=azurestorageaccountkey=$storage_key \
+  -n storage-app --type Opaque --dry-run=client -o yaml > azurefile-secret.yaml
 cat azurefile-secret.yaml
+
+kubectl apply -f storage-app/00-namespace.yaml
 kubectl apply -f azurefile-secret.yaml
 
-# Enable static provisioning
-kubectl apply -f static/azurefile-csi-nfs
-kubectl apply -f static/azurefile-csi-premium
+# Execute static provisioning
+kubectl apply -f storage-app/01-persistent-volume.yaml
 
 kubectl get pv -n demos
 kubectl get pvc -n demos
 
 kubectl describe pv nfs-pv -n demos
 kubectl describe pvc nfs-pvc -n demos
-
-kubectl describe pv smb-pv -n demos
-kubectl describe pvc smb-pvc -n demos
