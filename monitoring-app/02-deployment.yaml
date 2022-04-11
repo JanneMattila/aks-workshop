@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monitoring-app-deployment
+  namespace: monitoring-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: monitoring-app
+  template:
+    metadata:
+      labels:
+        app: monitoring-app
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/path: "/metrics"
+        prometheus.io/port: "80"
+        prometheus.io/scheme: "http"
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+      - image: jannemattila/webapp-monitoring:1.0.1
+        imagePullPolicy: Always
+        name: monitoring-app
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 150m
+            memory: 150Mi
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP
