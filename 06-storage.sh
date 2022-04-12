@@ -171,3 +171,8 @@ kubectl describe pvc nfs-pvc -n demos
 #
 # Extra "Exercise 4" in "90-bonus-exercises.sh".
 #
+
+# QUESTION:
+# ---------
+# List persistent storage options and their use cases for AKS?
+#

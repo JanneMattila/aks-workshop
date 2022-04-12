@@ -57,6 +57,8 @@ vnet_spoke2_aks_subnet_name="snet-aks"
 vnet_spoke2_aks_subnet_address_prefix="10.2.0.0/24"
 vnet_spoke2_pe_subnet_name="snet-pe"
 vnet_spoke2_pe_subnet_address_prefix="10.2.1.0/24"
+vnet_spoke2_agic_subnet_name="snet-agic"
+vnet_spoke2_agic_subnet_address_prefix="10.2.2.0/24"
 
 #######################
 # __   ___ __ ___
@@ -107,6 +109,7 @@ aks_identity_name="id-$my_name"
 acr_name="cr${my_name}000000010"
 storage_name="st${my_name}000000010"
 storage_share_name="nfs"
+agic_name="agw-aks"
 
 ###################################
 #  _                   _

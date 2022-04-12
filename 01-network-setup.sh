@@ -77,6 +77,12 @@ vnet_spoke2_pe_subnet_id=$(az network vnet subnet create -g $resource_group_name
   --query id -o tsv)
 echo $vnet_spoke2_pe_subnet_id
 
+# Command: NETWORK-9
+vnet_spoke2_agic_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
+  --name $vnet_spoke2_agic_subnet_name --address-prefixes $vnet_spoke2_agic_subnet_address_prefix \
+  --query id -o tsv)
+echo $vnet_spoke2_agic_subnet_id
+
 #######################################
 #  ____                _
 # |  _ \ ___  ___ _ __(_)_ __   __ _
@@ -98,7 +104,7 @@ az network vnet peering create --help
 #
 
 # Hub -> Spoke 1
-# Command: NETWORK-9
+# Command: NETWORK-10
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke1_plain_name" \
   --resource-group $resource_group_name \
@@ -108,7 +114,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 1 -> Hub
-# Command: NETWORK-10
+# Command: NETWORK-11
 az network vnet peering create \
   --name "$vnet_spoke1_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
@@ -121,7 +127,7 @@ az network vnet peering create \
 # ---
 
 # Hub -> Spoke 2
-# Command: NETWORK-11
+# Command: NETWORK-12
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke2_plain_name" \
   --resource-group $resource_group_name \
@@ -131,7 +137,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 2 -> Hub
-# Command: NETWORK-12
+# Command: NETWORK-13
 az network vnet peering create \
   --name "$vnet_spoke2_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
