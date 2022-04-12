@@ -16,5 +16,8 @@ echo $ingress_ip
 curl $ingress_ip
 # -> <html><body>Hello there!</body></html>
 
+#
 # Read more:
 # https://github.com/Azure/application-gateway-kubernetes-ingress
+# https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/annotations.md
+#

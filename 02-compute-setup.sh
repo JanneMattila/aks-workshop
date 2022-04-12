@@ -20,6 +20,7 @@ vm_id=$(az vm create \
   --admin-username $vm_username \
   --admin-password $vm_password \
   --query id -o tsv)
+store_variable "vm_id"
 
 # QUESTION:
 # ---------
@@ -72,6 +73,7 @@ aci_ip=$(az container create \
   --subnet $vnet_spoke1_front_subnet_id \
   --query ipAddress.ip -o tsv)
 echo $aci_ip
+store_variable "aci_ip"
 
 #######################################
 #     _     _  __ ____
@@ -101,6 +103,7 @@ echo $aks_workspace_id
 # Command: COMPUTE-8
 acr_id=$(az acr create -l $location -g $resource_group_name -n $acr_name --sku Basic --query id -o tsv)
 echo $acr_id
+store_variable "acr_id"
 
 # See all available Kubernetes versions
 # Command: COMPUTE-9

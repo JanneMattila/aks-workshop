@@ -55,10 +55,10 @@ vnet_spoke2_name="vnet-$vnet_spoke2_plain_name"
 vnet_spoke2_address_prefix="10.2.0.0/22"
 vnet_spoke2_aks_subnet_name="snet-aks"
 vnet_spoke2_aks_subnet_address_prefix="10.2.0.0/24"
-vnet_spoke2_pe_subnet_name="snet-pe"
-vnet_spoke2_pe_subnet_address_prefix="10.2.1.0/24"
 vnet_spoke2_agic_subnet_name="snet-agic"
-vnet_spoke2_agic_subnet_address_prefix="10.2.2.0/24"
+vnet_spoke2_agic_subnet_address_prefix="10.2.1.0/24"
+vnet_spoke2_pe_subnet_name="snet-pe"
+vnet_spoke2_pe_subnet_address_prefix="10.2.2.0/24"
 
 #######################
 # __   ___ __ ___
@@ -73,6 +73,7 @@ vm_name="jumpbox"
 vm_username="azureuser"
 vm_password=$(openssl rand -base64 32)
 echo $vm_password
+store_variable "vm_password"
 
 bastion_public_ip="pip-bastion"
 bastion_name="bas-management"
@@ -105,6 +106,9 @@ aks_name="aks-$my_name"
 aks_workspace_name="log-$my_name"
 aks_identity_name="id-$my_name"
 
+aks_nodepool1="nodepool1"
+aks_nodepool2="nodepool2"
+
 # Additional resources used by AKS
 acr_name="cr${my_name}000000010"
 storage_name="st${my_name}000000010"
@@ -134,3 +138,10 @@ az group create -l $location -n $resource_group_name -o table
 # Command: VAR-3
 az extension add --upgrade --yes --name aks-preview
 az extension add --upgrade --yes --name ssh
+
+function store_variable()
+{
+    local var_name="$1"
+    local var_value=$(echo "${!var_name}")
+    echo "${var_name}=$var_value" >> saved_variables.sh
+}

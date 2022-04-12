@@ -23,6 +23,7 @@ az acr import -n $acr_name -t "bad/vulnerables/mail-haraka-2.8.9-rce" --source "
 ############################
 
 # Build
+# Command: REGISTRY-3
 az acr build --registry $acr_name --image "apps/simple-app:v1" ./simple-app/src
 
 acr_loginserver=$(az acr list -g $resource_group_name -n $acr_name --query loginServer -o tsv)
