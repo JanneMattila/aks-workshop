@@ -8,23 +8,56 @@
 # |_| |_|\__,_|_.__/
 ######################
 
+# Create hub virtual network
 # Command: NETWORK-1
 vnet_hub_id=$(az network vnet create -g $resource_group_name --name $vnet_hub_name \
   --address-prefix $vnet_hub_address_prefix \
   --query newVNet.id -o tsv)
 echo $vnet_hub_id
 
+# Create gateway subnet
 # Command: NETWORK-2
+vnet_hub_gateway_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
+  --name $vnet_hub_gateway_subnet_name --address-prefixes $vnet_hub_gateway_subnet_address_prefix \
+  --query id -o tsv)
+echo $vnet_hub_gateway_subnet_id
+
+# Create firewall subnet
+# Command: NETWORK-3
+vnet_hub_firewall_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
+  --name $vnet_hub_firewall_subnet_name --address-prefixes $vnet_hub_firewall_subnet_address_prefix \
+  --query id -o tsv)
+echo $vnet_hub_firewall_subnet_id
+
+# Create infra subnet
+# Command: NETWORK-4
+vnet_hub_infra_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
+  --name $vnet_hub_infra_subnet_name --address-prefixes $vnet_hub_infra_subnet_address_prefix \
+  --query id -o tsv)
+echo $vnet_hub_infra_subnet_id
+
+# Create management subnet
+# Command: NETWORK-5
 vnet_hub_management_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
   --name $vnet_hub_management_subnet_name --address-prefixes $vnet_hub_management_subnet_address_prefix \
   --query id -o tsv)
 echo $vnet_hub_management_subnet_id
 
-# Command: NETWORK-3
+# Create bastion subnet
+# Command: NETWORK-6
 vnet_hub_bastion_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
   --name $vnet_hub_bastion_subnet_name --address-prefixes $vnet_hub_bastion_subnet_address_prefix \
   --query id -o tsv)
 echo $vnet_hub_bastion_subnet_id
+
+# Create user-defined route (UDR) to management subnet
+# Command: NETWORK-7
+az network route-table route create -g $resource_group_name --route-table-name $vnet_hub_management_subnet_udr_name
+
+# Assign user-defined route (UDR) to management subnet
+# Command: NETWORK-8
+az network vnet subnet update -g $resource_group_name --vnet-name $vnet_hub_name \
+  --name $vnet_hub_management_subnet_name --route-table $vnet_hub_management_subnet_udr_name
 
 # Study Hub virtual network in Portal
 
@@ -37,18 +70,29 @@ echo $vnet_hub_bastion_subnet_id
 #       |_|
 ####################################
 
-# Command: NETWORK-4
+# Create spoke1 virtual network
+# Command: NETWORK-9
 vnet_spoke1_id=$(az network vnet create -g $resource_group_name --name $vnet_spoke1_name \
   --address-prefix $vnet_spoke1_address_prefix \
   --query newVNet.id -o tsv)
 echo $vnet_spoke1_id
 
-# Command: NETWORK-5
+# Create front subnet
+# Command: NETWORK-10
 vnet_spoke1_front_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke1_name \
   --name $vnet_spoke1_front_subnet_name --address-prefixes $vnet_spoke1_front_subnet_address_prefix \
   --delegations "Microsoft.ContainerInstance/containerGroups" \
   --query id -o tsv)
 echo $vnet_spoke1_front_subnet_id
+
+# Create network security group (NSG) to front subnet
+# Command: NETWORK-11
+az network nsg create -n $vnet_spoke1_front_subnet_nsg_name -g $resource_group_name
+
+# Assign network security group (NSG) to front subnet
+# Command: NETWORK-12
+az network vnet subnet update -g $resource_group_name --vnet-name $vnet_spoke1_name \
+  --name $vnet_spoke1_front_subnet_name --network-security-group $vnet_spoke1_front_subnet_nsg_name
 
 #######################################
 #  ____              _          ____
@@ -59,25 +103,29 @@ echo $vnet_spoke1_front_subnet_id
 #       |_|
 #######################################
 
-# Command: NETWORK-6
+# Create spoke2 virtual network
+# Command: NETWORK-13
 vnet_spoke2_id=$(az network vnet create -g $resource_group_name --name $vnet_spoke2_name \
   --address-prefix $vnet_spoke2_address_prefix \
   --query newVNet.id -o tsv)
 echo $vnet_spoke2_id
 
-# Command: NETWORK-7
+# Create aks subnet
+# Command: NETWORK-14
 vnet_spoke2_aks_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_aks_subnet_name --address-prefixes $vnet_spoke2_aks_subnet_address_prefix \
   --query id -o tsv)
 echo $vnet_spoke2_aks_subnet_id
 
-# Command: NETWORK-8
+# Create pe subnet for private endpoints
+# Command: NETWORK-15
 vnet_spoke2_pe_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_pe_subnet_name --address-prefixes $vnet_spoke2_pe_subnet_address_prefix \
   --query id -o tsv)
 echo $vnet_spoke2_pe_subnet_id
 
-# Command: NETWORK-9
+# Create Application Gateway Ingress Controller (AGIC) subnet
+# Command: NETWORK-16
 vnet_spoke2_agic_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_agic_subnet_name --address-prefixes $vnet_spoke2_agic_subnet_address_prefix \
   --query id -o tsv)
@@ -104,7 +152,7 @@ az network vnet peering create --help
 #
 
 # Hub -> Spoke 1
-# Command: NETWORK-10
+# Command: NETWORK-17
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke1_plain_name" \
   --resource-group $resource_group_name \
@@ -114,7 +162,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 1 -> Hub
-# Command: NETWORK-11
+# Command: NETWORK-18
 az network vnet peering create \
   --name "$vnet_spoke1_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
@@ -127,7 +175,7 @@ az network vnet peering create \
 # ---
 
 # Hub -> Spoke 2
-# Command: NETWORK-12
+# Command: NETWORK-19
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke2_plain_name" \
   --resource-group $resource_group_name \
@@ -137,7 +185,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 2 -> Hub
-# Command: NETWORK-13
+# Command: NETWORK-20
 az network vnet peering create \
   --name "$vnet_spoke2_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \

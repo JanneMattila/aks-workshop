@@ -199,13 +199,119 @@
 
 # Exercise 1:
 # -----------
-# Add route table to "spoke1" and prevent routing to "hub". 
+# Block traffic for port 80 to spoke1. 
+# Test and verify.
+# (Remove block after testing)
+#
+
+az network nsg rule create \
+  -g $resource_group_name \
+  --nsg-name $vnet_spoke1_front_subnet_nsg_name \
+  -n "rule1" --priority 1000 \
+  --source-address-prefixes '*' \
+  --destination-address-prefixes vnet_spoke1_front_subnet_address_prefix \
+  --destination-port-ranges '80' \
+  --access Deny \
+  --description "Deny access to port 80"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Exercise 2:
+# -----------
+# Add route table to "hub" and prevent routing to internet. 
 # Test and verify.
 #
 
-
-
-
+az network route-table route create \
+  -g $resource_group_name \
+  --route-table-name $vnet_hub_management_subnet_udr_name \ 
+  -n "route1" \
+  --next-hop-type VirtualAppliance \
+  --address-prefix 10.0.0.0/16 \
+  --next-hop-ip-address 10.0.100.4
 
 
 

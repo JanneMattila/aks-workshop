@@ -49,6 +49,7 @@ vnet_hub_infra_subnet_name="snet-infra" # For intrastructure resources e.g., DCs
 vnet_hub_infra_subnet_address_prefix="10.0.2.0/24"
 vnet_hub_management_subnet_name="snet-management"
 vnet_hub_management_subnet_address_prefix="10.0.3.0/24"
+vnet_hub_management_subnet_udr_name="nsg-$vnet_hub_plain_name-management"
 vnet_hub_bastion_subnet_name="AzureBastionSubnet"
 vnet_hub_bastion_subnet_address_prefix="10.0.4.0/24"
 
@@ -56,6 +57,7 @@ vnet_spoke1_plain_name="spoke1"
 vnet_spoke1_name="vnet-$vnet_spoke1_plain_name"
 vnet_spoke1_address_prefix="10.1.0.0/22"
 vnet_spoke1_front_subnet_name="snet-front"
+vnet_spoke1_front_subnet_nsg_name="nsg-$vnet_spoke1_plain_name-front"
 vnet_spoke1_front_subnet_address_prefix="10.1.0.0/24"
 
 vnet_spoke2_plain_name="spoke2"

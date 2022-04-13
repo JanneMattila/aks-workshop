@@ -46,7 +46,11 @@ kubectl delete -f nodepool-app/
 # Command: SCALE-5
 az aks nodepool delete -g $resource_group_name --cluster-name $aks_name --name $aks_nodepool2
 
-
-SHUTDOWN AKS
-
-NSG
+#
+# "Re-create vs. start+stop vs. scale to zero"
+# 
+# To optimize your compute costs, you might be looking for different options to achieve that.
+#
+# More information and options in here:
+# https://github.com/JanneMattila/playground-aks-scaling#re-create-vs-startstop-vs-scale-to-zero
+#
