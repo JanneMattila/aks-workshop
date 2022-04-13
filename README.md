@@ -13,4 +13,4 @@ Azure Kubernetes Service (AKS) Workshop
 
 ## Workshop architecture
 
-![Workshop architecture diagram](https://user-images.githubusercontent.com/2357647/162958003-ea9c4625-bbe0-4db0-b20b-e04600bbd817.png)
+![Workshop architecture diagram](https://user-images.githubusercontent.com/2357647/163179908-3ca8e7b0-16ab-405e-bbcf-8b1342129b37.png)
