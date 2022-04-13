@@ -45,3 +45,8 @@ kubectl delete -f nodepool-app/
 # You can remove nodepools
 # Command: SCALE-5
 az aks nodepool delete -g $resource_group_name --cluster-name $aks_name --name $aks_nodepool2
+
+
+SHUTDOWN AKS
+
+NSG

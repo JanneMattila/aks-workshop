@@ -35,3 +35,10 @@ kubectl create deployment simple-app-deployment --image "$acr_loginserver/apps/s
 kubectl get pods -n simple-app
 
 # Study ACR in Portal
+
+# QUESTION:
+# ---------
+# Is our container registry only accessible from our AKS virtual network?
+#
+# Extra "Exercise 5" in "90-bonus-exercises.sh".
+#

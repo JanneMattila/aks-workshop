@@ -12,5 +12,7 @@ kubectl apply -f monitoring-app/
 
 # Use Log Analytics workspace and learn KQL queries.
 
+#
 # More information: 
 # https://github.com/JanneMattila/playground-aks-monitoring
+#

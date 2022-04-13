@@ -299,7 +299,7 @@
 
 
 
-# Exercise 2:
+# Exercise 3:
 # -----------
 # Peer spoke1 and spoke2. 
 # Test and verify.
@@ -307,7 +307,7 @@
 #
 
 # Spoke 1 -> Spoke 2
-# Command: BONUS2-1
+# Command: BONUS3-1
 az network vnet peering create \
   --name "$vnet_spoke1_plain_name-to-$vnet_spoke2_plain_name" \
   --resource-group $resource_group_name \
@@ -316,7 +316,7 @@ az network vnet peering create \
   --allow-vnet-access
 
 # Spoke 2 -> Spoke 1
-# Command: BONUS2-2
+# Command: BONUS3-2
 az network vnet peering create \
   --name "$vnet_spoke2_plain_name-to-$vnet_spoke1_plain_name" \
   --resource-group $resource_group_name \
@@ -327,7 +327,7 @@ az network vnet peering create \
 # Test connectivity between spokes "03-networking-tests.sh".
 
 # Remove peerings
-# Command: BONUS2-3
+# Command: BONUS3-3
 az network vnet peering delete \
   --name "$vnet_spoke1_plain_name-to-$vnet_spoke2_plain_name" \
   --resource-group $resource_group_name \
@@ -338,4 +338,4 @@ az network vnet peering delete \
   --resource-group $resource_group_name \
   --vnet-name $vnet_spoke2_name
 
-# End of Exercise 2.
+# End of Exercise 3.

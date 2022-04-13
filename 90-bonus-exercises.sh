@@ -11,18 +11,25 @@
 
 # Exercise 1:
 # -----------
-# Add route table to "spoke1" and prevent routing to "hub". 
+# Block traffic for port 80 to spoke1. 
 # Test and verify.
+# (Remove block after testing)
 #
 
 # Exercise 2:
+# -----------
+# Add route table to "hub" and prevent routing to internet. 
+# Test and verify.
+#
+
+# Exercise 3:
 # -----------
 # Peer spoke1 and spoke2. 
 # Test and verify.
 # (Remove peering after testing)
 #
 
-# Exercise 3:
+# Exercise 4:
 # -----------
 # Test scaling: 
 # - Deployment of "network-app" to e.g., 100 instances
@@ -33,12 +40,12 @@
 # https://github.com/JanneMattila/playground-aks-scaling
 #
 
-# Exercise 4:
+# Exercise 5:
 # -----------
 # Enable Private DNS Zone usage in Hub virtual network
 #
 
-# Exercise 5:
+# Exercise 6:
 # -----------
 # Change ACR to be private and accessible inside AKS virtual network.
 #

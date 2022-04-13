@@ -17,6 +17,12 @@ curl $ingress_ip
 # -> <html><body>Hello there!</body></html>
 
 #
+# Study Web Application Firewall (WAF) capabilities of Application Gateway.
+#
+# https://docs.microsoft.com/en-us/azure/web-application-firewall/ag/ag-overview
+#
+
+#
 # Read more:
 # https://github.com/Azure/application-gateway-kubernetes-ingress
 # https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/annotations.md

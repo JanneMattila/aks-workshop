@@ -51,6 +51,15 @@ curl -X POST --data  "HTTP GET \"http://$network_app_internal_svc_ip\"" -H "Cont
 
 # QUESTION:
 # ---------
+# What are differences between User-Defined Routes (UDR) and 
+# Network Security Groups (NSG)?
+#
+# Extra "Exercise 1" in "90-bonus-exercises.sh".
+# Extra "Exercise 2" in "90-bonus-exercises.sh".
+#
+
+# QUESTION:
+# ---------
 # What are our options to enable spoke-to-spoke connectivity?
 #
 # Extra "Exercise 2" in "90-bonus-exercises.sh".
