@@ -1,5 +1,13 @@
 #!/bin/bash
 
+# Helper functions
+function store_variable()
+{
+    local var_name="$1"
+    local var_value=$(echo "${!var_name}")
+    echo "${var_name}=$var_value" >> saved_variables.sh
+}
+
 ###############################################
 # __     __         _       _     _
 # \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
@@ -110,38 +118,12 @@ aks_nodepool1="nodepool1"
 aks_nodepool2="nodepool2"
 
 # Additional resources used by AKS
-acr_name="cr${my_name}000000010"
-storage_name="st${my_name}000000010"
+unique_id=$(date +%s)
+acr_name="cr${my_name}${unique_id}"
+storage_name="st${my_name}${unique_id}"
 storage_share_name="nfs"
 agic_name="agw-aks"
 
-###################################
-#  _                   _
-# | |     ___    __ _ (_) _ __
-# | |    / _ \  / _` || || '_ \
-# | |___| (_) || (_| || || | | |
-# |_____|\___/  \__, ||_||_| |_|
-#               |___/
-# and set correct context
-###################################
-
-# NOTE: You can skip if using cloud shell
-# Command: VAR-1
-az login -o table --only-show-errors
-az account set --subscription $subscription_name -o table
-
-# Create resource group
-# Command: VAR-2
-az group create -l $location -n $resource_group_name -o table
-
-# Prepare extensions and providers
-# Command: VAR-3
-az extension add --upgrade --yes --name aks-preview
-az extension add --upgrade --yes --name ssh
-
-function store_variable()
-{
-    local var_name="$1"
-    local var_value=$(echo "${!var_name}")
-    echo "${var_name}=$var_value" >> saved_variables.sh
-}
+store_variable "unique_id"
+store_variable "acr_name"
+store_variable "storage_name"

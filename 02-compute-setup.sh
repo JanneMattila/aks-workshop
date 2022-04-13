@@ -162,6 +162,8 @@ az aks get-credentials -n $aks_name -g $resource_group_name --overwrite-existing
 # Test connectivity to Kubernetes
 # Command: COMPUTE-15
 kubectl get nodes
+kubectl get nodes -o wide
+kubectl get nodes -o custom-columns=NAME:'{.metadata.name}',REGION:'{.metadata.labels.topology\.kubernetes\.io/region}',ZONE:'{metadata.labels.topology\.kubernetes\.io/zone}'
 
 # Deploy simple network test application
 # Command: COMPUTE-16
