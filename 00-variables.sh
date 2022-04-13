@@ -23,9 +23,6 @@ subscription_name="AzureDev"
 
 resource_group_name="rg-aks-workshop-$my_name"
 
-# List Azure regions
-az account list-locations -o table
-
 # Azure region to use
 location="westcentralus"
 
@@ -49,7 +46,7 @@ vnet_hub_infra_subnet_name="snet-infra" # For intrastructure resources e.g., DCs
 vnet_hub_infra_subnet_address_prefix="10.0.2.0/24"
 vnet_hub_management_subnet_name="snet-management"
 vnet_hub_management_subnet_address_prefix="10.0.3.0/24"
-vnet_hub_management_subnet_udr_name="nsg-$vnet_hub_plain_name-management"
+vnet_hub_management_subnet_udr_name="udr-$vnet_hub_plain_name-management"
 vnet_hub_bastion_subnet_name="AzureBastionSubnet"
 vnet_hub_bastion_subnet_address_prefix="10.0.4.0/24"
 
@@ -82,7 +79,6 @@ vm_name="jumpbox"
 
 vm_username="azureuser"
 vm_password=$(openssl rand -base64 32)
-echo $vm_password
 store_variable "vm_password"
 
 bastion_public_ip="pip-bastion"

@@ -121,6 +121,9 @@ echo $my_ip
 #  --enable-private-cluster
 #  --private-dns-zone None|System|BYOD
 
+# For Availability Zone (AZ) aware cluster add these:
+# --zones 1 2 3
+
 # Command: COMPUTE-11
 az aks create -g $resource_group_name -n $aks_name \
  --max-pods 50 --network-plugin azure \

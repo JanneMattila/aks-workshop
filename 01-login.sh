@@ -10,6 +10,16 @@
 # and set correct context
 ###################################
 
+# List Azure regions
+az account list-locations -o table
+
+#
+# Couple of things about regions:
+# - Not all services are in all regions:
+# https://azure.microsoft.com/en-us/global-infrastructure/services/
+# - Not all regions support availability zones
+#
+
 # ----------------------------------
 # NOTE: 
 # You can skip if using cloud shell
@@ -26,4 +36,3 @@ az group create -l $location -n $resource_group_name -o table
 # Command: VAR-3
 az extension add --upgrade --yes --name aks-preview
 az extension add --upgrade --yes --name ssh
-

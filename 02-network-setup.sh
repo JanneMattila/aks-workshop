@@ -13,6 +13,7 @@
 vnet_hub_id=$(az network vnet create -g $resource_group_name --name $vnet_hub_name \
   --address-prefix $vnet_hub_address_prefix \
   --query newVNet.id -o tsv)
+store_variable "vnet_hub_id"
 echo $vnet_hub_id
 
 # Create gateway subnet
@@ -41,6 +42,7 @@ echo $vnet_hub_infra_subnet_id
 vnet_hub_management_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
   --name $vnet_hub_management_subnet_name --address-prefixes $vnet_hub_management_subnet_address_prefix \
   --query id -o tsv)
+store_variable "vnet_hub_management_subnet_id"
 echo $vnet_hub_management_subnet_id
 
 # Create bastion subnet
@@ -48,11 +50,12 @@ echo $vnet_hub_management_subnet_id
 vnet_hub_bastion_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_hub_name \
   --name $vnet_hub_bastion_subnet_name --address-prefixes $vnet_hub_bastion_subnet_address_prefix \
   --query id -o tsv)
+store_variable "vnet_hub_bastion_subnet_id"
 echo $vnet_hub_bastion_subnet_id
 
 # Create user-defined route (UDR) to management subnet
 # Command: NETWORK-7
-az network route-table route create -g $resource_group_name --route-table-name $vnet_hub_management_subnet_udr_name
+az network route-table create -g $resource_group_name -n $vnet_hub_management_subnet_udr_name
 
 # Assign user-defined route (UDR) to management subnet
 # Command: NETWORK-8
@@ -75,6 +78,7 @@ az network vnet subnet update -g $resource_group_name --vnet-name $vnet_hub_name
 vnet_spoke1_id=$(az network vnet create -g $resource_group_name --name $vnet_spoke1_name \
   --address-prefix $vnet_spoke1_address_prefix \
   --query newVNet.id -o tsv)
+store_variable "vnet_spoke1_id"
 echo $vnet_spoke1_id
 
 # Create front subnet
@@ -83,6 +87,7 @@ vnet_spoke1_front_subnet_id=$(az network vnet subnet create -g $resource_group_n
   --name $vnet_spoke1_front_subnet_name --address-prefixes $vnet_spoke1_front_subnet_address_prefix \
   --delegations "Microsoft.ContainerInstance/containerGroups" \
   --query id -o tsv)
+store_variable "vnet_spoke1_front_subnet_id"
 echo $vnet_spoke1_front_subnet_id
 
 # Create network security group (NSG) to front subnet
@@ -108,6 +113,7 @@ az network vnet subnet update -g $resource_group_name --vnet-name $vnet_spoke1_n
 vnet_spoke2_id=$(az network vnet create -g $resource_group_name --name $vnet_spoke2_name \
   --address-prefix $vnet_spoke2_address_prefix \
   --query newVNet.id -o tsv)
+store_variable "vnet_spoke2_id"
 echo $vnet_spoke2_id
 
 # Create aks subnet
@@ -115,6 +121,7 @@ echo $vnet_spoke2_id
 vnet_spoke2_aks_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_aks_subnet_name --address-prefixes $vnet_spoke2_aks_subnet_address_prefix \
   --query id -o tsv)
+store_variable "vnet_spoke2_aks_subnet_id"
 echo $vnet_spoke2_aks_subnet_id
 
 # Create pe subnet for private endpoints
@@ -122,6 +129,7 @@ echo $vnet_spoke2_aks_subnet_id
 vnet_spoke2_pe_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_pe_subnet_name --address-prefixes $vnet_spoke2_pe_subnet_address_prefix \
   --query id -o tsv)
+store_variable "vnet_spoke2_pe_subnet_id"
 echo $vnet_spoke2_pe_subnet_id
 
 # Create Application Gateway Ingress Controller (AGIC) subnet
@@ -129,6 +137,7 @@ echo $vnet_spoke2_pe_subnet_id
 vnet_spoke2_agic_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_agic_subnet_name --address-prefixes $vnet_spoke2_agic_subnet_address_prefix \
   --query id -o tsv)
+store_variable "vnet_spoke2_agic_subnet_id"
 echo $vnet_spoke2_agic_subnet_id
 
 #######################################
