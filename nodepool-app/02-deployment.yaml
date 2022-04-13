@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nodepool-app-deployment
+  namespace: nodepool-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nodepool-app
+  template:
+    metadata:
+      labels:
+        app: nodepool-app
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+        usage: tempworkloads
+      tolerations:
+      - key: "usage"
+        operator: "Equal"
+        value: "tempworkloads"
+        effect: "NoSchedule"
+      containers:
+      - image: jannemattila/catch-the-banana:1.0.57
+        name: nodepool-app
+        resources:
+          requests:
+            cpu: 100m
+            memory: 100Mi
+          limits:
+            cpu: 150m
+            memory: 150Mi
+        ports:
+        - containerPort: 80
+          name: http
+          protocol: TCP

@@ -24,6 +24,24 @@ az aks nodepool add -g $resource_group_name --cluster-name $aks_name \
   --labels usage=tempworkloads \
   --max-pods 150
 
-# You can remove nodepools
+# Schedule workloads to newly created nodepool
 # Command: SCALE-3
+kubectl apply -f nodepool-app/
+
+kubectl get nodes --show-labels=true
+kubectl get nodes -L agentpool,usage
+
+kubectl get pod -n nodepool-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
+
+kubectl get service -n demos
+
+nodepool_app_ip=$(kubectl get service -n nodepool-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
+echo $nodepool_app_ip
+
+# Remove workloads
+# Command: SCALE-4
+kubectl delete -f nodepool-app/
+
+# You can remove nodepools
+# Command: SCALE-5
 az aks nodepool delete -g $resource_group_name --cluster-name $aks_name --name $aks_nodepool2
