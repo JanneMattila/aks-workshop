@@ -201,6 +201,15 @@ curl $network_app_external_svc_ip
 curl $network_app_internal_svc_ip
 # -> Timeout (no private connectivity)
 
+# Study AKS in the portal
+
+# QUESTION:
+# ---------
+# What are resource groups that start with "MC_rg-aks-workshop-..."?
+#
+# Can you edit those resources?
+#
+
 #
 # To split your nodepools and AKS to separate subnets see this example:
 # https://github.com/JanneMattila/playground-aks-networking/tree/main/subnet-example

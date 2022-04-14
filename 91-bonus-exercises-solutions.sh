@@ -209,7 +209,7 @@ az network nsg rule create \
   --nsg-name $vnet_spoke1_front_subnet_nsg_name \
   -n "rule1" --priority 1000 \
   --source-address-prefixes '*' \
-  --destination-address-prefixes vnet_spoke1_front_subnet_address_prefix \
+  --destination-address-prefixes $vnet_spoke1_front_subnet_address_prefix \
   --destination-port-ranges '80' \
   --access Deny \
   --description "Deny access to port 80"
@@ -307,11 +307,10 @@ az network nsg rule create \
 
 az network route-table route create \
   -g $resource_group_name \
-  --route-table-name $vnet_hub_management_subnet_udr_name \ 
-  -n "route1" \
-  --next-hop-type VirtualAppliance \
-  --address-prefix 10.0.0.0/16 \
-  --next-hop-ip-address 10.0.100.4
+  --route-table-name $vnet_hub_management_subnet_udr_name \
+  -n "default" \
+  --next-hop-type None \
+  --address-prefix 0.0.0.0/0
 
 
 

@@ -37,6 +37,11 @@ curl $aci_ip
 # What did above test proove?
 #
 
+#
+# Below is using following application for network testing:
+# https://github.com/JanneMattila/webapp-network-tester
+#
+
 # Test outbound internet accesses
 # Command: NETWORK-TESTING-3
 BODY=$(echo "HTTP GET \"https://github.com\"")
@@ -45,9 +50,17 @@ curl -X POST --data "$BODY" -H "Content-Type: text/plain" "$aci_ip/api/commands"
 
 # Test spoke001 -> spoke002 connectivity
 # Command: NETWORK-TESTING-4
-curl -X POST --data  "HTTP GET \"http://$aci_ip\"" -H "Content-Type: text/plain" "$network_app_internal_svc_ip/api/commands" # Timeout
-# Test spoke002 -> spoke001 connectivity
 curl -X POST --data  "HTTP GET \"http://$network_app_internal_svc_ip\"" -H "Content-Type: text/plain" "$aci_ip/api/commands" # Timeout
+# Test spoke002 -> spoke001 connectivity
+curl -X POST --data  "HTTP GET \"http://$aci_ip\"" -H "Content-Type: text/plain" "$network_app_internal_svc_ip/api/commands" # Timeout
+
+# Exit jumpbox
+exit
+
+# QUESTION:
+# ---------
+# Why did above spoke-to-spoke tests timeout?
+#
 
 # QUESTION:
 # ---------
@@ -64,6 +77,3 @@ curl -X POST --data  "HTTP GET \"http://$network_app_internal_svc_ip\"" -H "Cont
 #
 # Extra "Exercise 2" in "90-bonus-exercises.sh".
 #
-
-# Exit jumpbox
-exit
