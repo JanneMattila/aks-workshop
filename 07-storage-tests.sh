@@ -17,7 +17,7 @@ curl --no-progress-meter -X POST --data '{"path": "/mnt/nfs","folders": 3,"subFo
 # - Enumerate files
 curl --no-progress-meter -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$storage_app_ip/api/files" | jq .milliseconds
 
-# Go to Azure Portal and see generated files.
+# Go to Azure Portal and study storage account.
 
 ###########################
 #  _____
@@ -35,10 +35,10 @@ kubectl exec --stdin --tty $storage_app_pod1 -n storage-app -- /bin/sh
 
 # Run commands inside pod
 mount
-fdisk -l
 df -h
 
 cd /mnt/nfs
+mkdir perf-test
 
 # Write test with 4 x 4MBs for 20 seconds
 fio --directory=perf-test --direct=1 --rw=randwrite --bs=4k --ioengine=libaio --iodepth=256 --runtime=20 --numjobs=4 --time_based --group_reporting --size=4m --name=iops-test-job --eta-newline=1
@@ -56,3 +56,24 @@ exit
 #  / /  | |___  >  <|  __/| (__
 # /_/   |_____|/_/\_\\___| \___|
 #################################
+
+#
+# QUESTION:
+# ---------
+# What different topics impact persistant storage overall performance?
+#
+
+#
+# QUESTION:
+# ---------
+# Scenario:
+# - You AKS deployed with Availability Zones
+# - You have Azure Disk from Zone-1
+# - Workload is using Azure Disk
+#   - It's deployed into Zone-1
+#
+# What happens in AKS fails in Zone-1?
+#
+# More information:
+# https://docs.microsoft.com/en-us/azure/aks/availability-zones#azure-disk-availability-zone-support
+#

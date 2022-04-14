@@ -9,9 +9,11 @@
 
 # You can scale existing nodepool manually
 # Command: SCALE-1
-az aks nodepool scale -g $resource_group_name --cluster-name $aks_name \
+kubectl get nodes
+
+az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
   --name $aks_nodepool1 \
-  --node-count 2
+  --disable-cluster-autoscaler
 
 # You can create new nodepools
 # Command: SCALE-2
@@ -37,6 +39,10 @@ kubectl get service -n demos
 
 nodepool_app_ip=$(kubectl get service -n nodepool-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
 echo $nodepool_app_ip
+
+az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
+  --name $aks_nodepool1 \
+  --enable-cluster-autoscaler
 
 # Remove workloads
 # Command: SCALE-4

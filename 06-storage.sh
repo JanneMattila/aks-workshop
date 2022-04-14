@@ -205,8 +205,7 @@ curl -X POST --data  "NSLOOKUP \"$storage_name.privatelink.file.core.windows.net
 
 # QUESTION:
 # ---------
-# Explain how DNS process works in Private Endpoint scenarios
-# such as above?
+# Explain how DNS process works in Private Endpoint scenarios such as above?
 #
 
 # QUESTION:
