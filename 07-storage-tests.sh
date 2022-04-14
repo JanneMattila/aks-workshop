@@ -30,7 +30,7 @@ curl --no-progress-meter -X POST --data '{"path": "/mnt/nfs","filter": "*.*","re
 ###########################
 
 storage_app_pod1=$(kubectl get pod -n storage-app -o name | head -n 1)
-echo $pod1
+echo $storage_app_pod1
 kubectl exec --stdin --tty $storage_app_pod1 -n storage-app -- /bin/sh
 
 # Run commands inside pod

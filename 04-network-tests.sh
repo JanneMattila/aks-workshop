@@ -75,5 +75,5 @@ exit
 # ---------
 # What are our options to enable spoke-to-spoke connectivity?
 #
-# Extra "Exercise 2" in "90-bonus-exercises.sh".
+# Extra "Exercise 3" in "90-bonus-exercises.sh".
 #

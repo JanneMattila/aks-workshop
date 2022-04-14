@@ -7,6 +7,7 @@
 #   The NFS protocol does not support encryption and relies on network-level security. 
 #   This setting must be disabled for NFS to work.
 #
+
 # Create storage account
 # Command: STORAGE-1
 storage_id=$(az storage account create \
@@ -20,6 +21,7 @@ storage_id=$(az storage account create \
   --public-network-access Disabled \
   --https-only false \
   --query id -o tsv)
+store_variable "storage_id"
 echo $storage_id
 
 # Get storage account access key
@@ -29,6 +31,7 @@ storage_key=$(az storage account keys list \
   --resource-group $resource_group_name \
   --query [0].value \
   -o tsv)
+store_variable "storage_key"
 echo $storage_key
 
 # Create NFS file share
@@ -47,10 +50,17 @@ az storage share-rm create \
 # Burst IO/s       4000
 # Throughput rate  70.0 MiBytes / s
 
+#
+# Note: 
+# Dynamic provisioning will create resources
+# into "MC_..." resource group -> Lifecycle follows AKS resource!
+#
+
 # Follow instructions from here:
 # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
 # Disable private endpoint network policies
 #
+
 # Command: STORAGE-4
 az network vnet subnet update \
   --ids $vnet_spoke2_pe_subnet_id \
@@ -161,21 +171,42 @@ EOF
 
 cat storage-app/01-persistent-volume.yaml
 
-# Execute static provisioning
-kubectl apply -f storage-app/01-persistent-volume.yaml
+# Execute deployment
+kubectl apply -f storage-app/
 
-kubectl get pv -n demos
-kubectl get pvc -n demos
+kubectl get pv -n storage-app
+kubectl get pvc -n storage-app
+kubectl get pod -n storage-app
 
-kubectl describe pv nfs-pv -n demos
-kubectl describe pvc nfs-pvc -n demos
+kubectl describe pv nfs-pv -n storage-app
+kubectl describe pvc nfs-pvc -n storage-app
+
+
+storage_address=$(az storage account show --name $storage_name --resource-group $resource_group_name --query primaryEndpoints.file -o tsv)
+store_variable "storage_address"
+echo $storage_address
+storage_address_hostname=$(echo $storage_address | cut -d'/' -f3 | cut -d':' -f1)
+store_variable "storage_address_hostname"
+echo $storage_address_hostname
 
 # QUESTION:
 # ---------
 # If you do "nslookup" from jumpbox targeting newly created storage account, 
 # then what ip do you get and why?
 #
-# Extra "Exercise 4" in "90-bonus-exercises.sh".
+# Extra "Exercise 5" in "90-bonus-exercises.sh".
+#
+
+# From this machine:
+nslookup $storage_address_hostname
+# From AKS:
+curl -X POST --data  "NSLOOKUP \"$storage_address_hostname\"" -H "Content-Type: text/plain" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data  "NSLOOKUP \"$storage_name.privatelink.file.core.windows.net\"" -H "Content-Type: text/plain" "$network_app_external_svc_ip/api/commands"
+
+# QUESTION:
+# ---------
+# Explain how DNS process works in Private Endpoint scenarios
+# such as above?
 #
 
 # QUESTION:

@@ -24,15 +24,20 @@ az acr import -n $acr_name -t "bad/vulnerables/mail-haraka-2.8.9-rce" --source "
 
 # Build
 # Command: REGISTRY-3
-az acr build --registry $acr_name --image "apps/simple-app:v1" ./simple-app/src
+az acr build --registry $acr_name --image "apps/simple-app:v2" ./simple-app/src
 
-acr_loginserver=$(az acr list -g $resource_group_name -n $acr_name --query loginServer -o tsv)
+acr_loginserver=$(az acr show -g $resource_group_name -n $acr_name --query loginServer -o tsv)
 echo $acr_loginserver
 
 kubectl create ns simple-app
-kubectl create deployment simple-app-deployment --image "$acr_loginserver/apps/simple-app:v1" --replicas 1 -n simple-app
+kubectl create deployment simple-app-deployment --image "$acr_loginserver/apps/simple-app:v2" --replicas 1 -n simple-app
 
 kubectl get pods -n simple-app
+
+simple_app_pod1=$(kubectl get pod -n simple-app -o name | head -n 1)
+echo $simple_app_pod1
+
+kubectl logs $simple_app_pod1 -n simple-app
 
 # Study ACR in Portal
 
@@ -40,5 +45,5 @@ kubectl get pods -n simple-app
 # ---------
 # Is our container registry only accessible from our AKS virtual network?
 #
-# Extra "Exercise 5" in "90-bonus-exercises.sh".
+# Extra "Exercise 4" in "90-bonus-exercises.sh".
 #

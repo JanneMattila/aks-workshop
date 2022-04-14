@@ -31,6 +31,18 @@
 
 # Exercise 4:
 # -----------
+# Change ACR to be private and accessible inside AKS virtual network.
+#
+
+
+# Exercise 5:
+# -----------
+# Enable Private DNS Zone usage in Hub virtual network
+#
+
+
+# Exercise 5:
+# -----------
 # Test scaling: 
 # - Deployment of "network-app" to e.g., 100 instances
 # - Cluster nodes
@@ -38,14 +50,4 @@
 #
 # More information:
 # https://github.com/JanneMattila/playground-aks-scaling
-#
-
-# Exercise 5:
-# -----------
-# Enable Private DNS Zone usage in Hub virtual network
-#
-
-# Exercise 6:
-# -----------
-# Change ACR to be private and accessible inside AKS virtual network.
 #

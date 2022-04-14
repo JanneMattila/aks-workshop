@@ -1,4 +1,4 @@
-FROM alpine:3.14.4
+FROM bash
 
 COPY init.sh /bin/
 RUN chmod 755 /bin/init.sh
