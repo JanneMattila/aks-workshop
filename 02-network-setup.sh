@@ -62,7 +62,7 @@ az network route-table create -g $resource_group_name -n $vnet_hub_management_su
 az network vnet subnet update -g $resource_group_name --vnet-name $vnet_hub_name \
   --name $vnet_hub_management_subnet_name --route-table $vnet_hub_management_subnet_udr_name
 
-# Study Hub virtual network in Portal
+# Study hub virtual network in the portal
 
 ####################################
 #  ____              _          _
@@ -140,6 +140,13 @@ vnet_spoke2_agic_subnet_id=$(az network vnet subnet create -g $resource_group_na
 store_variable "vnet_spoke2_agic_subnet_id"
 echo $vnet_spoke2_agic_subnet_id
 
+# Study virtual networks in the portal
+
+# QUESTION:
+# ---------
+# Is there connectivity between created virtual networks?
+#
+
 #######################################
 #  ____                _
 # |  _ \ ___  ___ _ __(_)_ __   __ _
@@ -209,4 +216,4 @@ az network vnet peering create \
 # Can "spoke1" and "spoke2" communicate with each other?
 #
 
-# Study virtual network setup in Portal
+# Study peering setup in the portal

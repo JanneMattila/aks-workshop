@@ -16,14 +16,15 @@ az account list-locations -o table
 #
 # Couple of things about regions:
 # - Not all services are in all regions:
-# https://azure.microsoft.com/en-us/global-infrastructure/services/
+#   https://azure.microsoft.com/en-us/global-infrastructure/services/
 # - Not all regions support availability zones
+#   https://docs.microsoft.com/en-us/azure/availability-zones/az-region#azure-regions-with-availability-zones
 #
 
-# ----------------------------------
+# ----------------------------------------
 # NOTE: 
-# You can skip if using cloud shell
-# ----------------------------------
+# You can skip login if using cloud shell
+# ----------------------------------------
 # Command: VAR-1
 az login -o table --only-show-errors
 az account set --subscription $subscription_name -o table

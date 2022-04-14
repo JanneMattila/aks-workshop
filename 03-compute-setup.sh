@@ -8,7 +8,7 @@
 # Deployment
 #######################
 
-# Create jumpbox virtual machine
+# Create jumpbox virtual machine into management subnet
 # Command: COMPUTE-1
 vm_id=$(az vm create \
   --resource-group $resource_group_name  \
@@ -130,9 +130,10 @@ az aks create -g $resource_group_name -n $aks_name \
  --node-count 2 --enable-cluster-autoscaler --min-count 2 --max-count 4 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.22.5 \
+ --kubernetes-version 1.23.3 \
  --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
  --enable-aad \
+ --enable-azure-rbac \
  --enable-managed-identity \
  --disable-local-accounts \
  --aad-admin-group-object-ids $aks_azure_ad_admin_group_object_id \
@@ -143,6 +144,10 @@ az aks create -g $resource_group_name -n $aks_name \
  --assign-identity $aks_identity_id \
  --api-server-authorized-ip-ranges $my_ip \
  -o table 
+
+# In case your ip changes, then you can re-run following command:
+my_ip=$(curl --no-progress-meter https://api.ipify.org)
+az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
 
 # QUESTION:
 # ---------
@@ -195,3 +200,8 @@ curl $network_app_external_svc_ip
 
 curl $network_app_internal_svc_ip
 # -> Timeout (no private connectivity)
+
+#
+# To split your nodepools and AKS to separate subnets see this example:
+# https://github.com/JanneMattila/playground-aks-networking/tree/main/subnet-example
+#

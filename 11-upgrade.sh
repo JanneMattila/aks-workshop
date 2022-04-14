@@ -1,5 +1,12 @@
 #!/bin/bash
 
+#
+# Understand the Kubernetes release cycle & AKS Release Calendar
+#
+# More information here:
+# https://github.com/JanneMattila/kubernetes-notes#super-important-topics-to-understand
+#
+
 # See all available Kubernetes versions
 # Command: UPGRADE-1
 az aks get-versions -l $location -o table
@@ -25,15 +32,15 @@ az aks nodepool update -n nodepool1 -g $resource_group_name --cluster-name $aks_
 # Option 1: Upgrade is steps
 # Upgrade only control plane
 # Command: UPGRADE-5
-az aks upgrade -g $resource_group_name -n $aksName --kubernetes-version 1.22.6 --control-plane-only --yes
+az aks upgrade -g $resource_group_name -n $aksName --kubernetes-version 1.23.5 --control-plane-only --yes
 
 # Upgrade nodepool
 # Command: UPGRADE-6
-az aks nodepool upgrade --name $aks_nodepool1 -g $resource_group_name --cluster-name $aks_name --kubernetes-version 1.22.6
+az aks nodepool upgrade --name $aks_nodepool1 -g $resource_group_name --cluster-name $aks_name --kubernetes-version 1.23.5
 
 # Option 2: Let AKS manage the upgrade
 # Command: UPGRADE-7
-az aks upgrade -g $resource_group_name -n $aks_name --kubernetes-version 1.22.6 --yes
+az aks upgrade -g $resource_group_name -n $aks_name --kubernetes-version 1.23.5 --yes
 
 #
 # More information in here:

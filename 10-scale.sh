@@ -51,6 +51,6 @@ az aks nodepool delete -g $resource_group_name --cluster-name $aks_name --name $
 # 
 # To optimize your compute costs, you might be looking for different options to achieve that.
 #
-# More information and options in here:
+# More information and options here:
 # https://github.com/JanneMattila/playground-aks-scaling#re-create-vs-startstop-vs-scale-to-zero
 #
