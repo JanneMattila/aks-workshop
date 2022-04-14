@@ -7,16 +7,23 @@
 # Extra "Exercise 3" in "90-bonus-exercises.sh".
 #
 
-# You can scale existing nodepool manually
-# Command: SCALE-1
 kubectl get nodes
 
+# You can scale existing nodepool manually
+# Command: SCALE-1
 az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
   --name $aks_nodepool1 \
-  --disable-cluster-autoscaler
+  --disable-cluster-autoscaler \
+  -o none
+
+# Command: SCALE-2
+az aks nodepool scale -g $resource_group_name --cluster-name $aks_name \
+  --name $aks_nodepool1 \
+  --node-count 1 \
+  -o none
 
 # You can create new nodepools
-# Command: SCALE-2
+# Command: SCALE-3
 az aks nodepool add -g $resource_group_name --cluster-name $aks_name \
   --name $aks_nodepool2 \
   --node-count 2 \
@@ -24,10 +31,10 @@ az aks nodepool add -g $resource_group_name --cluster-name $aks_name \
   --node-vm-size Standard_D8ds_v4 \
   --node-taints "usage=tempworkloads:NoSchedule" \
   --labels usage=tempworkloads \
-  --max-pods 150
+  --max-pods 50
 
 # Schedule workloads to newly created nodepool
-# Command: SCALE-3
+# Command: SCALE-4
 kubectl apply -f nodepool-app/
 
 kubectl get nodes --show-labels=true
@@ -35,22 +42,28 @@ kubectl get nodes -L agentpool,usage
 
 kubectl get pod -n nodepool-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
 
-kubectl get service -n demos
+kubectl get service -n nodepool-app
 
 nodepool_app_ip=$(kubectl get service -n nodepool-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
 echo $nodepool_app_ip
+# Open this address in your browser 🤓
 
-az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
-  --name $aks_nodepool1 \
-  --enable-cluster-autoscaler
+# Study nodepools in the portal.
 
 # Remove workloads
-# Command: SCALE-4
+# Command: SCALE-5
 kubectl delete -f nodepool-app/
 
 # You can remove nodepools
-# Command: SCALE-5
+# Command: SCALE-6
 az aks nodepool delete -g $resource_group_name --cluster-name $aks_name --name $aks_nodepool2
+
+# Enable cluster autoscaler
+# Command: SCALE-7
+az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
+  --name $aks_nodepool1 \
+  --enable-cluster-autoscaler --min-count 1 --max-count 2 \
+  -o none
 
 #
 # "Re-create vs. start+stop vs. scale to zero"
