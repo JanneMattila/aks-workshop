@@ -62,7 +62,7 @@ az aks nodepool delete -g $resource_group_name --cluster-name $aks_name --name $
 # Command: SCALE-7
 az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
   --name $aks_nodepool1 \
-  --enable-cluster-autoscaler --min-count 1 --max-count 2 \
+  --enable-cluster-autoscaler --min-count 1 --max-count 3 \
   -o none
 
 #

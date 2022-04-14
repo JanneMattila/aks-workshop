@@ -127,7 +127,7 @@ echo $my_ip
 # Command: COMPUTE-11
 az aks create -g $resource_group_name -n $aks_name \
  --max-pods 50 --network-plugin azure \
- --node-count 2 --enable-cluster-autoscaler --min-count 2 --max-count 4 \
+ --node-count 2 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
  --kubernetes-version 1.23.3 \

@@ -34,14 +34,12 @@
 # Change ACR to be private and accessible inside AKS virtual network.
 #
 
-
 # Exercise 5:
 # -----------
 # Enable Private DNS Zone usage in Hub virtual network
 #
 
-
-# Exercise 5:
+# Exercise 6:
 # -----------
 # Test scaling: 
 # - Deployment of "network-app" to e.g., 100 instances
