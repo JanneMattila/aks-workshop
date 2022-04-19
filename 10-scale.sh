@@ -73,3 +73,11 @@ az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
 # More information and options here:
 # https://github.com/JanneMattila/playground-aks-scaling#re-create-vs-startstop-vs-scale-to-zero
 #
+
+# QUESTION:
+# ---------
+# What happens if you have autoscaler enabled and
+# you scale deployment up to e.g., 100 replicas?
+#
+# Extra "Exercise 6" in "90-bonus-exercises.sh".
+#

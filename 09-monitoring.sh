@@ -8,11 +8,15 @@ kubectl apply -f others/container-azm-ms-agentconfig.yaml
 
 kubectl apply -f monitoring-app/
 
-# Use Container Insights.
-
-# Use Log Analytics workspace and learn KQL queries.
+#
+# Study Container Insights
+#
+# More information here:
+# https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-overview
+# https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-integration
 
 #
-# More information: 
-# https://github.com/JanneMattila/playground-aks-monitoring
+# Study KQL queries
 #
+# More information here:
+# https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-log-query
