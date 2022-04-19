@@ -23,9 +23,12 @@ curl $ingress_ip
 #
 # Study Web Application Firewall (WAF) capabilities of Application Gateway.
 #
+# More information here:
 # https://docs.microsoft.com/en-us/azure/web-application-firewall/ag/ag-overview
-#
+# https://docs.microsoft.com/en-us/azure/application-gateway/tutorial-ingress-controller-add-on-new#deploy-an-aks-cluster-with-the-add-on-enabled
 
+#
+# Study Application Gateway Ingress Controller (AGIC) configuration options.
 #
 # More information here:
 # https://github.com/Azure/application-gateway-kubernetes-ingress

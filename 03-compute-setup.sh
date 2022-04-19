@@ -154,6 +154,21 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 # How is AKS Identity connected to ACR?
 #
 
+# QUESTION:
+# ---------
+# Above create command used following parameter:
+#   --network-plugin azure
+#
+# It means that it creates cluster using "Azure Container Networking Interface (CNI)".
+# Other option would have been "Kubenet".
+#
+# What are differences between these two?
+#
+# More information here:
+# https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni
+# https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
+#
+
 # Note: In case your own ip changes, 
 # then you need to update it in order to access Kubernetes api server
 # Command: COMPUTE-12

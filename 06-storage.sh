@@ -1,12 +1,33 @@
 #!/bin/bash
 
-# Create Premium ZRS file share ahead of time => static provisioning
+# List installed Container Storage Interfaces (CSI)
+# More information here:
+# https://docs.microsoft.com/en-us/azure/aks/csi-storage-drivers
+# https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/driver-parameters.md
+kubectl get storageclasses
+
+kubectl describe storageclass azurefile-csi
+kubectl describe storageclass azurefile-csi-premium
+kubectl describe storageclass azurefile-premium
+
+# In simple diff view
+diff <(kubectl describe storageclass azurefile-csi-premium) <(kubectl describe storageclass azurefile-premium)
+diff <(kubectl describe storageclass azurefile-csi) <(kubectl describe storageclass azurefile-premium)
+
+##########################################
+#  ____  _
+# / ___|| |_ ___  _ __ __ _  __ _  ___
+# \___ \| __/ _ \| '__/ _` |/ _` |/ _ \
+#  ___) | || (_) | | | (_| | (_| |  __/
+# |____/ \__\___/|_|  \__,_|\__, |\___|
+#                           |___/
+##########################################
 #
-# NFS related notes from Azure portal if "Secure transfer required" is enabled:
-#   "Secure transfer required" is a setting that is enabled for this storage account. 
-#   The NFS protocol does not support encryption and relies on network-level security. 
-#   This setting must be disabled for NFS to work.
+# Below implementation will create Premium Zone-redundant storage (ZRS)
+# NFS file share ahead of time (=static provisioning).
 #
+# More information here:
+# https://docs.microsoft.com/en-us/azure/aks/azure-files-volume
 
 # Create storage account
 # Command: STORAGE-1
@@ -50,17 +71,10 @@ az storage share-rm create \
 # Burst IO/s       4000
 # Throughput rate  70.0 MiBytes / s
 
-#
-# Note: 
-# Dynamic provisioning will create resources
-# into "MC_..." resource group -> Lifecycle follows AKS resource!
-#
-
 # Follow instructions from here:
 # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
 # Disable private endpoint network policies
 #
-
 # Command: STORAGE-4
 az network vnet subnet update \
   --ids $vnet_spoke2_pe_subnet_id \
@@ -211,4 +225,12 @@ curl -X POST --data  "NSLOOKUP \"$storage_name.privatelink.file.core.windows.net
 # QUESTION:
 # ---------
 # List persistent storage options and their use cases for AKS?
+#
+
+# QUESTION:
+# ---------
+# In above implementation, we've created storage using static provisioning.
+#
+# If we would use use dynamic provisioning instead (let AKS create resources as needed),
+# then what are the things we should consider in this scenario?
 #
