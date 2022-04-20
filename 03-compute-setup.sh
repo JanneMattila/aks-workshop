@@ -227,6 +227,9 @@ curl $network_app_internal_svc_ip
 # Can you edit those resources?
 #
 
+# More information about load balancer annotations:
+# https://docs.microsoft.com/en-us/azure/aks/load-balancer-standard#additional-customizations-via-kubernetes-annotations
+
 #
 # To split your nodepools and AKS to separate subnets see this example:
 # https://github.com/JanneMattila/playground-aks-networking/tree/main/subnet-example
