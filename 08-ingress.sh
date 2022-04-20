@@ -34,3 +34,15 @@ curl $ingress_ip
 # https://github.com/Azure/application-gateway-kubernetes-ingress
 # https://github.com/Azure/application-gateway-kubernetes-ingress/blob/master/docs/annotations.md
 #
+
+#
+# QUESTION:
+# ---------
+# AKS has "extensions" and "add-ons" which are both
+# supported ways to add functionality to your cluster.
+#
+# What are the differencies between these two?
+#
+# More information here:
+# https://docs.microsoft.com/en-us/azure/aks/integrations
+#
