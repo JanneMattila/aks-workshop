@@ -50,3 +50,6 @@ az aks get-upgrades -g $resource_group_name -n $aks_name
 # More information in here:
 # https://github.com/JanneMattila/playground-aks-maintenance
 #
+
+# For node update management more information here:
+# https://docs.microsoft.com/en-us/azure/aks/node-updates-kured
