@@ -111,7 +111,7 @@ az aks get-versions -l $location -o table
 
 # Note: for public cluster you need to authorize your ip to use api
 # Command: COMPUTE-10
-my_ip=$(curl --no-progress-meter https://api.ipify.org)
+my_ip=$(curl -s https://api.ipify.org)
 echo $my_ip
 
 # Note about private clusters:
@@ -136,6 +136,7 @@ az aks create -g $resource_group_name -n $aks_name \
  --enable-azure-rbac \
  --enable-managed-identity \
  --disable-local-accounts \
+ --no-ssh-key \
  --aad-admin-group-object-ids $aks_azure_ad_admin_group_object_id \
  --workspace-resource-id $aks_workspace_id \
  --attach-acr $acr_id \
@@ -146,7 +147,7 @@ az aks create -g $resource_group_name -n $aks_name \
  -o table 
 
 # In case your ip changes, then you can re-run following command:
-my_ip=$(curl --no-progress-meter https://api.ipify.org)
+my_ip=$(curl -s https://api.ipify.org)
 az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
 
 # QUESTION:
