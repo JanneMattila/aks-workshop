@@ -29,11 +29,15 @@ az account list-locations -o table
 az login -o table --only-show-errors
 az account set --subscription $subscription_name -o table
 
-# Create resource group
+# Show current context
 # Command: VAR-2
+az account show -o table
+
+# Create resource group
+# Command: VAR-3
 az group create -l $location -n $resource_group_name -o table
 
 # Prepare extensions and providers
-# Command: VAR-3
+# Command: VAR-4
 az extension add --upgrade --yes --name aks-preview
 az extension add --upgrade --yes --name ssh
