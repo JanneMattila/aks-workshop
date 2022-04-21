@@ -3,8 +3,8 @@
 # In order to have spoke-to-spoke connectivity, you need:
 # 1. Router / Virtual application / Firewall
 #    - We'll use our jumpbox as router
-# 1. Spoke1 UDR to point to hub
-# 2. Spoke2 URD to point to hub
+# 2. Spoke1 UDR to point to hub
+# 3. Spoke2 URD to point to hub
 
 #
 # Enable jumpbox to be router
