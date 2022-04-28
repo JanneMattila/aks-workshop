@@ -81,7 +81,6 @@ vm_name="jumpbox"
 
 vm_username="azureuser"
 vm_password=$(openssl rand -base64 32)
-store_variable "vm_password"
 
 bastion_public_ip="pip-bastion"
 bastion_name="bas-management"
@@ -124,6 +123,64 @@ storage_name="st${my_name}${unique_id}"
 storage_share_name="nfs"
 agic_name="agw-aks"
 
-store_variable "unique_id"
-store_variable "acr_name"
-store_variable "storage_name"
+###############################
+#  ____
+# / ___|   __ _ __   __ ___
+# \___ \  / _` |\ \ / // _ \
+#  ___) || (_| | \ V /|  __/
+# |____/  \__,_|  \_/  \___|
+# state to file
+###############################
+
+store_variable my_name
+store_variable subscription_name
+store_variable resource_group_name
+store_variable location
+store_variable vnet_hub_plain_name
+store_variable vnet_hub_name
+store_variable vnet_hub_address_prefix
+store_variable vnet_hub_gateway_subnet_name
+store_variable vnet_hub_gateway_subnet_address_prefix
+store_variable vnet_hub_firewall_subnet_name
+store_variable vnet_hub_firewall_subnet_address_prefix
+store_variable vnet_hub_infra_subnet_name
+store_variable vnet_hub_infra_subnet_address_prefix
+store_variable vnet_hub_management_subnet_name
+store_variable vnet_hub_management_subnet_address_prefix
+store_variable vnet_hub_management_subnet_udr_name
+store_variable vnet_hub_bastion_subnet_name
+store_variable vnet_hub_bastion_subnet_address_prefix
+store_variable vnet_spoke1_plain_name
+store_variable vnet_spoke1_name
+store_variable vnet_spoke1_address_prefix
+store_variable vnet_spoke1_front_subnet_name
+store_variable vnet_spoke1_front_subnet_nsg_name
+store_variable vnet_spoke1_front_subnet_udr_name
+store_variable vnet_spoke1_front_subnet_address_prefix
+store_variable vnet_spoke2_plain_name
+store_variable vnet_spoke2_name
+store_variable vnet_spoke2_address_prefix
+store_variable vnet_spoke2_aks_subnet_name
+store_variable vnet_spoke2_aks_subnet_address_prefix
+store_variable vnet_spoke2_aks_subnet_udr_name
+store_variable vnet_spoke2_agic_subnet_name
+store_variable vnet_spoke2_agic_subnet_address_prefix
+store_variable vnet_spoke2_pe_subnet_name
+store_variable vnet_spoke2_pe_subnet_address_prefix
+store_variable vm_name
+store_variable vm_username
+store_variable vm_password
+store_variable bastion_public_ip
+store_variable bastion_name
+store_variable aci_name
+store_variable aks_azure_ad_admin_group_contains
+store_variable aks_name
+store_variable aks_workspace_name
+store_variable aks_identity_name
+store_variable aks_nodepool1
+store_variable aks_nodepool2
+store_variable unique_id
+store_variable acr_name
+store_variable storage_name
+store_variable storage_share_name
+store_variable agic_name

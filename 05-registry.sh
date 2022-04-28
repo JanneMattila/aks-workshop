@@ -27,6 +27,7 @@ az acr import -n $acr_name -t "bad/vulnerables/mail-haraka-2.8.9-rce" --source "
 az acr build --registry $acr_name --image "apps/simple-app:v2" ./simple-app/src
 
 acr_loginserver=$(az acr show -g $resource_group_name -n $acr_name --query loginServer -o tsv)
+store_variable acr_loginserver
 echo $acr_loginserver
 
 kubectl create ns simple-app
@@ -35,6 +36,7 @@ kubectl create deployment simple-app-deployment --image "$acr_loginserver/apps/s
 kubectl get pods -n simple-app
 
 simple_app_pod1=$(kubectl get pod -n simple-app -o name | head -n 1)
+store_variable simple_app_pod1
 echo $simple_app_pod1
 
 kubectl logs $simple_app_pod1 -n simple-app

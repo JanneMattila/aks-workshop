@@ -5,6 +5,7 @@
 kubectl get service -n storage-app
 
 storage_app_ip=$(kubectl get service -n storage-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
+store_variable "storage_app_ip"
 echo $storage_app_ip
 
 curl $storage_app_ip/swagger/index.html
@@ -30,6 +31,7 @@ curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' 
 ###########################
 
 storage_app_pod1=$(kubectl get pod -n storage-app -o name | head -n 1)
+store_variable "storage_app_pod1"
 echo $storage_app_pod1
 kubectl exec --stdin --tty $storage_app_pod1 -n storage-app -- /bin/sh
 

@@ -72,8 +72,8 @@ aci_ip=$(az container create \
   --ip-address Private \
   --subnet $vnet_spoke1_front_subnet_id \
   --query ipAddress.ip -o tsv)
-echo $aci_ip
 store_variable "aci_ip"
+echo $aci_ip
 
 #######################################
 #     _     _  __ ____
@@ -87,23 +87,26 @@ store_variable "aci_ip"
 # Create identity for AKS
 # Command: COMPUTE-5
 aks_identity_id=$(az identity create --name $aks_identity_name --resource-group $resource_group_name --query id -o tsv)
+store_variable aks_identity_id
 echo $aks_identity_id
 
 # Find Azure AD Group for AKS Admins
 # Command: COMPUTE-6
 aks_azure_ad_admin_group_object_id=$(az ad group list --display-name $aks_azure_ad_admin_group_contains --query [].objectId -o tsv)
+store_variable aks_azure_ad_admin_group_object_id
 echo $aks_azure_ad_admin_group_object_id
 
 # Create Log Analytics workspace for our AKS
 # Command: COMPUTE-7
 aks_workspace_id=$(az monitor log-analytics workspace create -g $resource_group_name -n $aks_workspace_name --query id -o tsv)
+store_variable aks_workspace_id
 echo $aks_workspace_id
 
 # Create Container Registry
 # Command: COMPUTE-8
 acr_id=$(az acr create -l $location -g $resource_group_name -n $acr_name --sku Basic --query id -o tsv)
+store_variable acr_id
 echo $acr_id
-store_variable "acr_id"
 
 # See all available Kubernetes versions
 # Command: COMPUTE-9
@@ -200,15 +203,19 @@ kubectl get service -n network-app
 kubectl get pod -n network-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
 
 network_app_pod1=$(kubectl get pod -n network-app -o name | head -n 1)
+store_variable network_app_pod1
 echo $network_app_pod1
 
 network_app_pod1_ip=$(kubectl get pod -n network-app -o name -o jsonpath="{.items[0].status.podIPs[0].ip}")
+store_variable network_app_pod1_ip
 echo $network_app_pod1_ip
 
 network_app_external_svc_ip=$(kubectl get service network-app-external-svc -n network-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+store_variable network_app_external_svc_ip
 echo $network_app_external_svc_ip
 
 network_app_internal_svc_ip=$(kubectl get service network-app-internal-svc -n network-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+store_variable network_app_internal_svc_ip
 echo $network_app_internal_svc_ip
 
 curl $network_app_external_svc_ip

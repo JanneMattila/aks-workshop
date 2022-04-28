@@ -91,6 +91,7 @@ storage_pe_id=$(az network private-endpoint create \
   --group-id file \
   --connection-name storage-connection \
   --query id -o tsv)
+store_variable "storage_pe_id"
 echo $storage_pe_id
 
 # Create Private DNS Zone
@@ -99,6 +100,7 @@ file_private_dns_zone_id=$(az network private-dns zone create \
   --resource-group $resource_group_name \
   --name "privatelink.file.core.windows.net" \
   --query id -o tsv)
+store_variable "file_private_dns_zone_id"
 echo $file_private_dns_zone_id
 
 # Link Private DNS Zone to VNET
@@ -115,6 +117,7 @@ az network private-dns link vnet create \
 storage_pe_nic_id=$(az network private-endpoint show \
   --ids $storage_pe_id \
   --query "networkInterfaces[0].id" -o tsv)
+store_variable "storage_pe_nic_id"
 echo $storage_pe_nic_id
 
 # Get ip of private endpoint nic
@@ -122,6 +125,7 @@ echo $storage_pe_nic_id
 storage_pe_ip=$(az network nic show \
   --ids $storage_pe_nic_id \
   --query "ipConfigurations[0].privateIpAddress" -o tsv)
+store_variable "storage_pe_ip"
 echo $storage_pe_ip
 
 # Map private endpoint ip to A record in Private DNS Zone

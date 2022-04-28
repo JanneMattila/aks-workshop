@@ -11,7 +11,8 @@ Azure Kubernetes Service (AKS) Workshop
 1. Open [Azure Cloud Shell](https://shell.azure.com/)
   - Use [clouddrive](https://docs.microsoft.com/en-us/azure/cloud-shell/persisting-shell-storage) folder
     for persisting files in Azure Cloud Shell
-  - To prevent cloud shell for timing out, you can use `while :; do echo 'Hit CTRL+C'; sleep 1; done` trick.
+  - To prevent cloud shell for timing out, you can use `while :; do echo 'Hit CTRL+C'; sleep 1; done` trick
+  - If cloud shell *does* timeout, then you can recover variable state by running `source saved_variables.sh`
   - Alternative environment options: Use WSL or Linux
   - Pre-reqs for alternative environment: 
     - [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt)

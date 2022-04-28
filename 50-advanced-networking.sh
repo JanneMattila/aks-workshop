@@ -20,6 +20,7 @@
 # Command: ADVANCED-NETWORKING-1
 az network nic update --name jumpboxVMNic --resource-group $resource_group_name	--ip-forwarding true
 vm_private_ip=$(az network nic show --name jumpboxVMNic --resource-group $resource_group_name --query ipConfigurations[0].privateIpAddress -o tsv)
+store_variable "vm_private_ip"
 echo $vm_private_ip
 
 # Create user-defined route (UDR) to front subnet
