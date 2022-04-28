@@ -134,7 +134,6 @@ az aks create -g $resource_group_name -n $aks_name \
  --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
- --enable-managed-identity \
  --disable-local-accounts \
  --no-ssh-key \
  --aad-admin-group-object-ids $aks_azure_ad_admin_group_object_id \
