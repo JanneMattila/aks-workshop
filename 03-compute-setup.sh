@@ -92,7 +92,7 @@ echo $aks_identity_id
 
 # Find Azure AD Group for AKS Admins
 # Command: COMPUTE-6
-aks_azure_ad_admin_group_object_id=$(az ad group list --display-name $aks_azure_ad_admin_group_contains --query [].objectId -o tsv)
+aks_azure_ad_admin_group_object_id=$(az ad group list --display-name $aks_azure_ad_admin_group_contains --query [].id -o tsv)
 store_variable aks_azure_ad_admin_group_object_id
 echo $aks_azure_ad_admin_group_object_id
 
