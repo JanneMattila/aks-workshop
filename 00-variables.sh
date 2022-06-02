@@ -111,7 +111,8 @@ aks_azure_ad_admin_group_contains="janne''s"
 # AKS specific
 aks_name="aks-$my_name"
 aks_workspace_name="log-$my_name"
-aks_identity_name="id-$my_name"
+aks_cluster_identity_name="id-$my_name-cluster"
+aks_kubelet_identity_name="id-$my_name-kubelet"
 
 aks_nodepool1="nodepool1"
 aks_nodepool2="nodepool2"
@@ -176,7 +177,8 @@ store_variable aci_name
 store_variable aks_azure_ad_admin_group_contains
 store_variable aks_name
 store_variable aks_workspace_name
-store_variable aks_identity_name
+store_variable aks_cluster_identity_name
+store_variable aks_kubelet_identity_name
 store_variable aks_nodepool1
 store_variable aks_nodepool2
 store_variable unique_id

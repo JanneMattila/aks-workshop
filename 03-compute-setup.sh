@@ -84,36 +84,42 @@ echo $aci_ip
 # Azure Kubernetes Service deployment
 #######################################
 
-# Create identity for AKS
+# Create identity for AKS cluster
 # Command: COMPUTE-5
-aks_identity_id=$(az identity create --name $aks_identity_name --resource-group $resource_group_name --query id -o tsv)
-store_variable aks_identity_id
-echo $aks_identity_id
+aks_cluster_identity_id=$(az identity create --name $aks_cluster_identity_name --resource-group $resource_group_name --query id -o tsv)
+store_variable aks_cluster_identity_id
+echo $aks_cluster_identity_id
+
+# Create identity for AKS kubelet / nodepool
+# Command: COMPUTE-6
+aks_kubelet_identity_id=$(az identity create --name $aks_kubelet_identity_name --resource-group $resource_group_name --query id -o tsv)
+store_variable aks_kubelet_identity_id
+echo $aks_kubelet_identity_id
 
 # Find Azure AD Group for AKS Admins
-# Command: COMPUTE-6
+# Command: COMPUTE-7
 aks_azure_ad_admin_group_object_id=$(az ad group list --display-name $aks_azure_ad_admin_group_contains --query [].id -o tsv)
 store_variable aks_azure_ad_admin_group_object_id
 echo $aks_azure_ad_admin_group_object_id
 
 # Create Log Analytics workspace for our AKS
-# Command: COMPUTE-7
+# Command: COMPUTE-8
 aks_workspace_id=$(az monitor log-analytics workspace create -g $resource_group_name -n $aks_workspace_name --query id -o tsv)
 store_variable aks_workspace_id
 echo $aks_workspace_id
 
 # Create Container Registry
-# Command: COMPUTE-8
+# Command: COMPUTE-9
 acr_id=$(az acr create -l $location -g $resource_group_name -n $acr_name --sku Basic --query id -o tsv)
 store_variable acr_id
 echo $acr_id
 
 # See all available Kubernetes versions
-# Command: COMPUTE-9
+# Command: COMPUTE-10
 az aks get-versions -l $location -o table
 
 # Note: for public cluster you need to authorize your ip to use api
-# Command: COMPUTE-10
+# Command: COMPUTE-11
 my_ip=$(curl -s https://api.ipify.org)
 echo $my_ip
 
@@ -127,7 +133,7 @@ echo $my_ip
 # For Availability Zone (AZ) aware cluster add these:
 # --zones 1 2 3
 
-# Command: COMPUTE-11
+# Command: COMPUTE-12
 az aks create -g $resource_group_name -n $aks_name \
  --max-pods 50 --network-plugin azure \
  --node-count 2 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
@@ -144,13 +150,14 @@ az aks create -g $resource_group_name -n $aks_name \
  --attach-acr $acr_id \
  --load-balancer-sku standard \
  --vnet-subnet-id $vnet_spoke2_aks_subnet_id \
- --assign-identity $aks_identity_id \
+ --assign-identity $aks_cluster_identity_id \
+ --assign-kubelet-identity $aks_kubelet_identity_id \
  --api-server-authorized-ip-ranges $my_ip \
  -o table 
 
 # In case your ip changes, then you can re-run following
 # command in order to access Kubernetes api server
-# Command: COMPUTE-12
+# Command: COMPUTE-13
 my_ip=$(curl -s https://api.ipify.org)
 az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
 
@@ -179,25 +186,25 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
 
 # Install kubectl
-# Command: COMPUTE-13
+# Command: COMPUTE-14
 sudo az aks install-cli
 
 # Get credentials, so that you can access Kubernetes api server
-# Command: COMPUTE-14
+# Command: COMPUTE-15
 az aks get-credentials -n $aks_name -g $resource_group_name --overwrite-existing
 
 # Test connectivity to Kubernetes
-# Command: COMPUTE-15
+# Command: COMPUTE-16
 kubectl get nodes
 kubectl get nodes -o wide
 kubectl get nodes -o custom-columns=NAME:'{.metadata.name}',REGION:'{.metadata.labels.topology\.kubernetes\.io/region}',ZONE:'{metadata.labels.topology\.kubernetes\.io/zone}'
 
 # Deploy simple network test application
-# Command: COMPUTE-16
+# Command: COMPUTE-17
 kubectl apply -f network-app/
 
 # Validate
-# Command: COMPUTE-17
+# Command: COMPUTE-18
 kubectl get deployment -n network-app
 kubectl get service -n network-app
 kubectl get pod -n network-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
