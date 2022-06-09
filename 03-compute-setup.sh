@@ -191,7 +191,8 @@ sudo az aks install-cli
 
 # Get credentials, so that you can access Kubernetes api server
 # Command: COMPUTE-15
-az aks get-credentials -n $aks_name -g $resource_group_name --overwrite-existing
+az aks get-credentials -n $aksName -g $resourceGroupName --overwrite-existing
+kubelogin convert-kubeconfig
 
 # Test connectivity to Kubernetes
 # Command: COMPUTE-16
