@@ -181,17 +181,13 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 # https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
 #
 
-# Note: In case your own ip changes, 
-# then you need to update it in order to access Kubernetes api server
-az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
-
 # Install kubectl
 # Command: COMPUTE-14
 sudo az aks install-cli
 
 # Get credentials, so that you can access Kubernetes api server
 # Command: COMPUTE-15
-az aks get-credentials -n $aksName -g $resourceGroupName --overwrite-existing
+az aks get-credentials -n $aks_name -g $resource_group_name --overwrite-existing
 kubelogin convert-kubeconfig -l azurecli
 
 # Test connectivity to Kubernetes
