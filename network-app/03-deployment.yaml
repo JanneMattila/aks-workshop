@@ -16,16 +16,16 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-      - image: jannemattila/webapp-network-tester:1.0.50
-        name: network-app
-        resources:
-          requests:
-            cpu: 100m
-            memory: 100Mi
-          limits:
-            cpu: 150m
-            memory: 150Mi
-        ports:
-        - containerPort: 80
-          name: http
-          protocol: TCP
+        - image: jannemattila/webapp-network-tester:1.0.53
+          name: network-app
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 150m
+              memory: 150Mi
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP

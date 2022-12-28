@@ -10,11 +10,11 @@
 ###################
 
 # Echo important variables
-echo "Environment vars->"
-echo network_app_internal_svc_ip=\"$network_app_internal_svc_ip\"
-echo network_app_pod1_ip=\"$network_app_pod1_ip\"
-echo aci_ip=\"$aci_ip\"
-echo "<-Environment vars"
+echo -e "Environment vars->" \
+     \\nnetwork_app_internal_svc_ip=\"$network_app_internal_svc_ip\" \
+     \\nnetwork_app_pod1_ip=\"$network_app_pod1_ip\" \
+     \\naci_ip=\"$aci_ip\" \
+     \\n"<-Environment vars"
 
 echo $vm_password
 
@@ -45,14 +45,14 @@ curl $aci_ip
 # Test outbound internet accesses
 # Command: NETWORK-TESTING-3
 BODY=$(echo "HTTP GET \"https://github.com\"")
-curl -X POST --data "$BODY" -H "Content-Type: text/plain" "$network_app_internal_svc_ip/api/commands" # OK
-curl -X POST --data "$BODY" -H "Content-Type: text/plain" "$aci_ip/api/commands" # OK
+curl -X POST --data "$BODY" "$network_app_internal_svc_ip/api/commands" # OK
+curl -X POST --data "$BODY" "$aci_ip/api/commands" # OK
 
 # Test spoke001 -> spoke002 connectivity
 # Command: NETWORK-TESTING-4
-curl -X POST --data  "HTTP GET \"http://$network_app_internal_svc_ip\"" -H "Content-Type: text/plain" "$aci_ip/api/commands" # Timeout
+curl -X POST --data  "HTTP GET \"http://$network_app_internal_svc_ip\"" "$aci_ip/api/commands" # Timeout
 # Test spoke002 -> spoke001 connectivity
-curl -X POST --data  "HTTP GET \"http://$aci_ip\"" -H "Content-Type: text/plain" "$network_app_internal_svc_ip/api/commands" # Timeout
+curl -X POST --data  "HTTP GET \"http://$aci_ip\"" "$network_app_internal_svc_ip/api/commands" # Timeout
 
 # Exit jumpbox
 exit

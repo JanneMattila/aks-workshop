@@ -19,7 +19,7 @@ function store_variable()
 my_name="janne" # Lower caps!
 
 # Your subscription name
-subscription_name="AzureDev"
+subscription_name="development"
 
 resource_group_name="rg-aks-workshop-$my_name"
 
@@ -106,7 +106,7 @@ aci_name="ci-$vnet_spoke1_plain_name"
 ################################
 
 # Azure AD Group name used for AKS admins
-aks_azure_ad_admin_group_contains="janne''s"
+aks_azure_ad_admin_group_contains="janneops"
 
 # AKS specific
 aks_name="aks-$my_name"

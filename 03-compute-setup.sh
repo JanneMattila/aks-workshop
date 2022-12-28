@@ -30,8 +30,7 @@ store_variable "vm_id"
 # Create Bastion
 # Command: COMPUTE-2
 az network public-ip create --resource-group $resource_group_name --name $bastion_public_ip --sku Standard --location $location
-bastion_id=$(az network bastion create --name $bastion_name --public-ip-address $bastion_public_ip --resource-group $resource_group_name --vnet-name $vnet_hub_name --location $location --query id -o tsv)
-az resource update --ids $bastion_id --set properties.enableTunneling=true
+bastion_id=$(az network bastion create --name $bastion_name --public-ip-address $bastion_public_ip --enable-tunneling true --resource-group $resource_group_name --vnet-name $vnet_hub_name --location $location --query id -o tsv)
 
 ###################
 #          _ 
@@ -139,7 +138,7 @@ az aks create -g $resource_group_name -n $aks_name \
  --node-count 2 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.23.3 \
+ --kubernetes-version 1.25.4 \
  --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \

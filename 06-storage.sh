@@ -218,8 +218,8 @@ echo $storage_address_hostname
 # From this machine:
 nslookup $storage_address_hostname
 # From AKS:
-curl -X POST --data  "NSLOOKUP \"$storage_address_hostname\"" -H "Content-Type: text/plain" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data  "NSLOOKUP \"$storage_name.privatelink.file.core.windows.net\"" -H "Content-Type: text/plain" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "NSLOOKUP \"$storage_address_hostname\"" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "NSLOOKUP \"$storage_name.privatelink.file.core.windows.net\"" "$network_app_external_svc_ip/api/commands"
 
 # QUESTION:
 # ---------

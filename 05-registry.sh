@@ -2,7 +2,7 @@
 
 # Import images
 # Command: REGISTRY-1
-az acr import -n $acr_name -t "apps/jannemattila/webapp-fs-tester:1.1.7" --source "docker.io/jannemattila/webapp-fs-tester:1.1.7" 
+az acr import -n $acr_name -t "apps/jannemattila/webapp-fs-tester:1.1.8" --source "docker.io/jannemattila/webapp-fs-tester:1.1.8" 
 
 # Enable "Defender for Containers" in the Portal
 
