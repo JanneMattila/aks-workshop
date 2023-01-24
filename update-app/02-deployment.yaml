@@ -1,27 +1,33 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: network-app-deployment
-  namespace: network-app
+  name: update-app-deployment
+  namespace: update-app
 spec:
-  replicas: 1
+  replicas: 3
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+    type: RollingUpdate
   selector:
     matchLabels:
-      app: network-app
+      app: update-app
   template:
     metadata:
       labels:
-        app: network-app
+        app: update-app
     spec:
       nodeSelector:
         kubernetes.io/os: linux
+      terminationGracePeriodSeconds: 10
       containers:
-        - image: jannemattila/webapp-network-tester:1.0.53
-          name: network-app
+        - image: jannemattila/webapp-update:1.0.9
+          name: update-app
           resources:
             requests:
               cpu: 100m
-              memory: 100Mi
+              memory: 50Mi
             limits:
               cpu: 150m
               memory: 150Mi
@@ -33,11 +39,11 @@ spec:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 5
           readinessProbe:
             httpGet:
               path: /
               port: 80
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 5
