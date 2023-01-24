@@ -121,8 +121,8 @@ kubectl get secret mysecret -o jsonpath='{.data.password}'
 kubectl get secret mysecret -o jsonpath='{.data.password}' | base64 -d
 
 # ---
-# Patching resources
-# https://kubernetes.io/docs/reference/kubectl/cheatsheet/#patching-resources
+# Viewing and finding resources
+# https://kubernetes.io/docs/reference/kubectl/cheatsheet/#viewing-and-finding-resources
 # ---
 
 # Get commands with basic output
@@ -219,6 +219,34 @@ for pod in $(kubectl get po --output=jsonpath={.items..metadata.name}); do echo 
 kubectl get deployment nginx --subresource=status
 
 # ---
+# Updating resources
+# https://kubernetes.io/docs/reference/kubectl/cheatsheet/#updating-resources
+# ---
+
+kubectl set image deployment/frontend www=image:v2               # Rolling update "www" containers of "frontend" deployment, updating the image
+kubectl rollout history deployment/frontend                      # Check the history of deployments including the revision
+kubectl rollout undo deployment/frontend                         # Rollback to the previous deployment
+kubectl rollout undo deployment/frontend --to-revision=2         # Rollback to a specific revision
+kubectl rollout status -w deployment/frontend                    # Watch rolling update status of "frontend" deployment until completion
+kubectl rollout restart deployment/frontend                      # Rolling restart of the "frontend" deployment
+
+cat pod.json | kubectl replace -f -                              # Replace a pod based on the JSON passed into stdin
+
+# Force replace, delete and then re-create the resource. Will cause a service outage.
+kubectl replace --force -f ./pod.json
+
+# Create a service for a replicated nginx, which serves on port 80 and connects to the containers on port 8000
+kubectl expose rc nginx --port=80 --target-port=8000
+
+# Update a single-container pod's image version (tag) to v4
+kubectl get pod mypod -o yaml | sed 's/\(image: myimage\):.*$/\1:v4/' | kubectl replace -f -
+
+kubectl label pods my-pod new-label=awesome                      # Add a Label
+kubectl label pods my-pod new-label-                             # Remove a label
+kubectl annotate pods my-pod icon-url=http://goo.gl/XXBTWq       # Add an annotation
+kubectl autoscale deployment foo --min=2 --max=10                # Auto scale a deployment "foo"
+
+# ---
 # Patching resources
 # https://kubernetes.io/docs/reference/kubectl/cheatsheet/#patching-resources
 # ---
@@ -274,6 +302,32 @@ kubectl -n my-ns delete pod,svc --all                             # Delete all p
 
 # Delete all pods matching the awk pattern1 or pattern2
 kubectl get pods  -n mynamespace --no-headers=true | awk '/pattern1|pattern2/{print $1}' | xargs  kubectl delete -n mynamespace pod
+
+# ---
+# Interacting with running Pods
+# https://kubernetes.io/docs/reference/kubectl/cheatsheet/#interacting-with-running-pods
+# ---
+
+kubectl logs my-pod                                 # dump pod logs (stdout)
+kubectl logs -l name=myLabel                        # dump pod logs, with label name=myLabel (stdout)
+kubectl logs my-pod --previous                      # dump pod logs (stdout) for a previous instantiation of a container
+kubectl logs my-pod -c my-container                 # dump pod container logs (stdout, multi-container case)
+kubectl logs -l name=myLabel -c my-container        # dump pod logs, with label name=myLabel (stdout)
+kubectl logs my-pod -c my-container --previous      # dump pod container logs (stdout, multi-container case) for a previous instantiation of a container
+kubectl logs -f my-pod                              # stream pod logs (stdout)
+kubectl logs -f my-pod -c my-container              # stream pod container logs (stdout, multi-container case)
+kubectl logs -f -l name=myLabel --all-containers    # stream all pods logs with label name=myLabel (stdout)
+kubectl run -i --tty busybox --image=busybox:1.28 -- sh  # Run pod as interactive shell
+kubectl run nginx --image=nginx -n mynamespace      # Start a single instance of nginx pod in the namespace of mynamespace
+kubectl run nginx --image=nginx --dry-run=client -o yaml > pod.yaml
+                                                    # Generate spec for running pod nginx and write it into a file called pod.yaml
+kubectl attach my-pod -i                            # Attach to Running Container
+kubectl port-forward my-pod 5000:6000               # Listen on port 5000 on the local machine and forward to port 6000 on my-pod
+kubectl exec my-pod -- ls /                         # Run command in existing pod (1 container case)
+kubectl exec --stdin --tty my-pod -- /bin/sh        # Interactive shell access to a running pod (1 container case)
+kubectl exec my-pod -c my-container -- ls /         # Run command in existing pod (multi-container case)
+kubectl top pod POD_NAME --containers               # Show metrics for a given pod and its containers
+kubectl top pod POD_NAME --sort-by=cpu              # Show metrics for a given pod and sort it by 'cpu' or 'memory'
 
 # ----
 # Remember to restore the correct context
