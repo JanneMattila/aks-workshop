@@ -163,6 +163,7 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 # QUESTION:
 # ---------
 # How is AKS Identity connected to ACR?
+# Why would you prefer User-assigned Managed identity over System-assigned Managed identity?
 #
 
 # QUESTION:
