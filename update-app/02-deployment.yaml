@@ -22,7 +22,7 @@ spec:
         kubernetes.io/os: linux
       terminationGracePeriodSeconds: 10
       containers:
-        - image: jannemattila/webapp-update:1.0.9
+        - image: jannemattila/webapp-update:1.0.11
           name: update-app
           resources:
             requests:
@@ -35,15 +35,21 @@ spec:
             - containerPort: 80
               name: http
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
           livenessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: 80
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             periodSeconds: 5
           readinessProbe:
             httpGet:
-              path: /
+              path: /healthz
               port: 80
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             periodSeconds: 5

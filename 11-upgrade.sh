@@ -25,7 +25,7 @@ az aks nodepool get-upgrades --nodepool-name $aks_nodepool1 -g $resource_group_n
 az aks nodepool update -n nodepool1 -g $resource_group_name --cluster-name $aks_name --max-surge 1 -o none
 
 # Options:
-# 1. Upgrade is steps: First control plane and then nodepools one-by-one
+# 1. Upgrade in steps: First control plane and then nodepools one-by-one
 # 2. Let AKS manage the upgrade according to this:
 #    https://docs.microsoft.com/en-us/azure/aks/upgrade-cluster#upgrade-an-aks-cluster
 

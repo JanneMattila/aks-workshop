@@ -31,8 +31,8 @@ pwsh deployment-monitor.ps1 -Url http://$update_app_svc_ip/api/update -Delay 100
 pwsh deployment-request-tester.ps1 -Url http://$update_app_svc_ip/api/update -Delay 1000
 
 # Test updating
-kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.9 -n update-app
-kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.10 -n update-app
+kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.11 -n update-app
+kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.12 -n update-app
 
 kubectl edit deployment/update-app-deployment -n update-app
 
@@ -50,4 +50,13 @@ kubectl rollout restart deployment/update-app-deployment -n update-app          
 # ----
 # Use "network-app" to connect to our update-app:
 # HTTP GET http://update-app-svc.update-app.svc.cluster.local
+#
+
+# TRY:
+# ----
+# Use ingress to publish update-app.
+#
+# QUESTION:
+# ---------
+# Do you see difference in the rolling update behavior?
 #
