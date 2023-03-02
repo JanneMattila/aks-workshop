@@ -18,6 +18,20 @@ spec:
       labels:
         app: update-app
     spec:
+      # affinity:
+      #   podAntiAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       - topologyKey: kubernetes.io/hostname
+      #         labelSelector:
+      #           matchLabels:
+      #             app: update-app
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - podAffinityTerm:
+      #           labelSelector:
+      #             matchLabels:
+      #               app: update-app
+      #           topologyKey: topology.kubernetes.io/zone
+      #         weight: 100
       nodeSelector:
         kubernetes.io/os: linux
       terminationGracePeriodSeconds: 10
