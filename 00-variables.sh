@@ -1,11 +1,24 @@
 #!/bin/bash
 
+set -a
+
 # Helper functions
 function store_variable()
 {
     local var_name="$1"
     local var_value=$(echo "${!var_name}")
+
     echo "${var_name}=$var_value" >> saved_variables.sh
+}
+
+function restore_variables()
+{
+    source saved_variables.sh
+}
+
+function keep_alive()
+{
+    while :; do echo "$(date) - Hit CTRL+C"; sleep 1; done
 }
 
 ###############################################
@@ -80,7 +93,14 @@ vnet_spoke2_pe_subnet_address_prefix="10.2.2.0/24"
 vm_name="jumpbox"
 
 vm_username="azureuser"
-vm_password=$(openssl rand -base64 32)
+if test -f ".env"; then
+  # Password has been created so load it
+  source .env
+else
+  # Generate password and store it
+  vm_password=$(openssl rand -base64 32)
+  echo "vm_password=$vm_password" > .env
+fi
 
 bastion_public_ip="pip-bastion"
 bastion_name="bas-management"
@@ -186,3 +206,5 @@ store_variable acr_name
 store_variable storage_name
 store_variable storage_share_name
 store_variable agic_name
+
+restore_variables

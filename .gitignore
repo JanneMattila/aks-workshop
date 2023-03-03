@@ -352,3 +352,4 @@ MigrationBackup/
 **/*-secret.yaml
 saved_variables.sh
 **/*.ps1
+**/.env
