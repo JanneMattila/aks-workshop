@@ -66,7 +66,26 @@ kubectl create deployment nginx --image=nginx  # start a single instance of ngin
 kubectl get deployments
 kubectl get deployments nginx -o yaml
 
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+spec:
+  containers:
+  - name: nginx
+    image: nginx:1.15.0
+    ports:
+    - containerPort: 80
+EOF
+
 kubectl get pods
+kubectl get pods -w
+kubectl get pods -o yaml
+kubectl port-forward nginx 5000:80
+kubectl logs nginx
+kubectl logs nginx -p
+kubectl delete pods nginx
 
 # create a Job which prints "Hello World"
 kubectl create job hello --image=busybox:1.28 -- echo "Hello World"
@@ -115,10 +134,12 @@ data:
   username: $(echo -n "jane" | base64 -w0)
 EOF
 
+kubectl get secret mysecret
 kubectl get secret mysecret -o yaml
 kubectl get secret mysecret -o json
 kubectl get secret mysecret -o jsonpath='{.data.password}'
 kubectl get secret mysecret -o jsonpath='{.data.password}' | base64 -d
+kubectl delete secret mysecret
 
 # ---
 # Viewing and finding resources
@@ -329,7 +350,17 @@ kubectl exec my-pod -c my-container -- ls /         # Run command in existing po
 kubectl top pod POD_NAME --containers               # Show metrics for a given pod and its containers
 kubectl top pod POD_NAME --sort-by=cpu              # Show metrics for a given pod and sort it by 'cpu' or 'memory'
 
+
+# ---
+# Example cluster info deployment:
+helm repo add scubakiz https://scubakiz.github.io/clusterinfo/
+helm repo update
+helm install clusterinfo scubakiz/clusterinfo
+helm list
+
+kubectl port-forward svc/clusterinfo 5252:5252 -n clusterinfo
 # ----
+
 # Remember to restore the correct context
 kubectl config get-contexts
 kubectl config current-context
