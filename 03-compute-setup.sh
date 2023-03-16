@@ -138,7 +138,7 @@ az aks create -g $resource_group_name -n $aks_name \
  --node-count 2 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.25.4 \
+ --kubernetes-version 1.24.6 \
  --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
