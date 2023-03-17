@@ -124,7 +124,7 @@ echo $storage_pe_nic_id
 # Command: STORAGE-9
 storage_pe_ip=$(az network nic show \
   --ids $storage_pe_nic_id \
-  --query "ipConfigurations[0].privateIpAddress" -o tsv)
+  --query "ipConfigurations[0].privateIPAddress" -o tsv)
 store_variable "storage_pe_ip"
 echo $storage_pe_ip
 

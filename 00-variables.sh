@@ -8,7 +8,7 @@ function store_variable()
     local var_name="$1"
     local var_value=$(echo "${!var_name}")
 
-    echo "${var_name}=$var_value" >> saved_variables.sh
+    echo "${var_name}=\"$var_value\"" >> saved_variables.sh
 }
 
 function restore_variables()
