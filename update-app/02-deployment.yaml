@@ -34,6 +34,7 @@ spec:
       #         weight: 100
       nodeSelector:
         kubernetes.io/os: linux
+        # kubernetes.azure.com/mode: user
       terminationGracePeriodSeconds: 10
       containers:
         - image: jannemattila/webapp-update:1.0.11
