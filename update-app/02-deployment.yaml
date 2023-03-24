@@ -18,6 +18,11 @@ spec:
       labels:
         app: update-app
     spec:
+      # https://kubernetes.io/docs/concepts/scheduling-eviction/topology-spread-constraints/
+      # topologySpreadConstraints:
+      #   - maxSkew: 1
+      #     topologyKey: topology.kubernetes.io/zone
+      #     whenUnsatisfiable: ScheduleAnyway
       # affinity:
       #   podAntiAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
