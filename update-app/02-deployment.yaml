@@ -23,6 +23,10 @@ spec:
       #   - maxSkew: 1
       #     topologyKey: topology.kubernetes.io/zone
       #     whenUnsatisfiable: ScheduleAnyway
+      #     labelSelector:
+      #       matchLabels:
+      #         app: update-app
+      # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
       # affinity:
       #   podAntiAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
