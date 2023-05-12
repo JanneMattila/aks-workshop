@@ -121,8 +121,11 @@ echo $vnet_spoke2_id
 
 # Create aks subnet
 # Command: NETWORK-14
+# https://learn.microsoft.com/en-us/azure/virtual-network/virtual-network-service-endpoints-overview#key-benefits
+# "Service endpoint routes override any BGP or UDR routes for the address prefix match of an Azure service"
 vnet_spoke2_aks_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_aks_subnet_name --address-prefixes $vnet_spoke2_aks_subnet_address_prefix \
+  --service-endpoints "Microsoft.Storage" \
   --query id -o tsv)
 store_variable "vnet_spoke2_aks_subnet_id"
 echo $vnet_spoke2_aks_subnet_id
