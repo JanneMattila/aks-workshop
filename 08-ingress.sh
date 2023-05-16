@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Enable Application Gateway Ingress Controller (AGIC)
 # Command: INGRESS-1
 az aks enable-addons -g $resource_group_name -n $aks_name \

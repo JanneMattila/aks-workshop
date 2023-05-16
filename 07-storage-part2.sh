@@ -1,24 +1,60 @@
-#!/bin/bash
+#####################
+#  ____  _     _    
+# |  _ \(_)___| | __
+# | | | | / __| |/ /
+# | |_| | \__ \   < 
+# |____/|_|___/_|\_\
+# 
+# Command: STORAGE-PART2-1
+kubectl apply -f storage-app/10-azuredisk-sc.yaml
+kubectl apply -f storage-app/11-persistent-volume-claim-disk.yaml
+kubectl apply -f storage-app/12-statefulset.yaml
 
-# Test that setup is correctly running
-# Command: STORAGE-TESTS-1
-kubectl get service -n storage-app
+kubectl get pv -n storage-app
+kubectl get pvc -n storage-app
 
-storage_app_ip=$(kubectl get service -n storage-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
-store_variable "storage_app_ip"
-echo $storage_app_ip
+kubectl describe pv -n storage-app
+kubectl describe pvc -n storage-app
 
-curl $storage_app_ip/swagger/index.html
-# -> OK!
+# Note: Your Azure Region must support availability zones in order to use ZRS disks.
+# Otherwise you'll get error:
+# "message": "SKU Premium_ZRS is not supported for resource type Disk in this region. 
+#             Supported SKUs for this region are Premium_LRS,StandardSSD_LRS,Standard_LRS"
 
-# Quick tests for our Azure Files NFSv4.1 share:
-# Command: STORAGE-TESTS-2
-# - Generate files
-curl -s -X POST --data '{"path": "/mnt/nfs","folders": 3,"subFolders": 5,"filesPerFolder": 10,"fileSize": 1024}' -H "Content-Type: application/json" "http://$storage_app_ip/api/generate" | jq .milliseconds
-# - Enumerate files
-curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$storage_app_ip/api/files" | jq .milliseconds
+kubectl get pod -n storage-app
+kubectl get statefulset -n storage-app
+kubectl describe statefulset -n storage-app
 
-# Go to Azure Portal and study storage account.
+# QUESTION:
+# ---------
+# Can you explain what happens if you change the 
+# replica count in our statefulset from 1 to 3?
+#
+
+# QUESTION:
+# ---------
+# If you run following commands:
+kubectl get pv -n storage-app
+kubectl get pvc -n storage-app
+# Can you explain the output?
+#
+
+# QUESTION:
+# ---------
+# If you run following command:
+kubectl delete -f storage-app/04-statefulset.yaml
+# How many persistent volumes will be there after
+# that command and why?
+#
+# More information here:
+# https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+
+# QUESTION:
+# ---------
+# If you run following command:
+#   kubectl delete namespace storage-app
+# What would happen?
+#
 
 ###########################
 #  _____
@@ -27,9 +63,7 @@ curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' 
 # | |___  >  <|  __/| (__
 # |_____|/_/\_\\___| \___|
 # Connect to first pod
-# Command: STORAGE-TESTS-3
-###########################
-
+# Command: STORAGE-PART2-2
 storage_app_pod1=$(kubectl get pod -n storage-app -o name | head -n 1)
 store_variable "storage_app_pod1"
 echo $storage_app_pod1

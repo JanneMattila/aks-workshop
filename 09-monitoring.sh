@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Apply log and prometheus data collection settings 
 kubectl apply -f others/container-azm-ms-agentconfig.yaml
 

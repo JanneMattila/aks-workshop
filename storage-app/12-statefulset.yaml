@@ -33,9 +33,33 @@ spec:
               name: http
               protocol: TCP
           volumeMounts:
+            # - name: empty
+            #   mountPath: /mnt/empty
+            # - name: hostpath
+            #   mountPath: /mnt/hostpath
             - name: nfs
               mountPath: /mnt/nfs
+            - name: premiumdisk
+              mountPath: /mnt/premiumdisk
       volumes:
+        # - name: empty
+        #   emptyDir: {}
+        # - name: hostpath
+        #   hostPath:
+        #     path: /mnt
         - name: nfs
           persistentVolumeClaim:
             claimName: nfs-pvc
+        - name: premiumdisk
+          persistentVolumeClaim:
+            claimName: premiumdisk-pvc
+  volumeClaimTemplates:
+    - metadata:
+        name: premiumdisk
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: managed-csi-premium-sc
+        resources:
+          requests:
+            storage: 5Gi

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # List installed Container Storage Interfaces (CSI)
 # More information here:
 # https://docs.microsoft.com/en-us/azure/aks/csi-storage-drivers
@@ -14,23 +12,21 @@ kubectl describe storageclass azurefile-premium
 diff <(kubectl describe storageclass azurefile-csi-premium) <(kubectl describe storageclass azurefile-premium)
 diff <(kubectl describe storageclass azurefile-csi) <(kubectl describe storageclass azurefile-premium)
 
-##########################################
-#  ____  _
-# / ___|| |_ ___  _ __ __ _  __ _  ___
-# \___ \| __/ _ \| '__/ _` |/ _` |/ _ \
-#  ___) | || (_) | | | (_| | (_| |  __/
-# |____/ \__\___/|_|  \__,_|\__, |\___|
-#                           |___/
-##########################################
+#######################
+#  _   _ _____ ____  
+# | \ | |  ___/ ___| 
+# |  \| | |_  \___ \ 
+# | |\  |  _|  ___) |
+# |_| \_|_|   |____/ 
 #
-# Below implementation will create Premium Zone-redundant storage (ZRS)
-# NFS file share ahead of time (=static provisioning).
+# Below implementation will create Premium NFS file share ahead of time (=static provisioning).
 #
 # More information here:
 # https://docs.microsoft.com/en-us/azure/aks/azure-files-volume
+#
 
 # Create storage account
-# Command: STORAGE-1
+# Command: STORAGE-PART1-1
 storage_id=$(az storage account create \
   --name $storage_name \
   --resource-group $resource_group_name \
@@ -46,7 +42,7 @@ store_variable "storage_id"
 echo $storage_id
 
 # Get storage account access key
-# Command: STORAGE-2
+# Command: STORAGE-PART1-2
 storage_key=$(az storage account keys list \
   --account-name $storage_name \
   --resource-group $resource_group_name \
@@ -56,7 +52,7 @@ store_variable "storage_key"
 echo $storage_key
 
 # Create NFS file share
-# Command: STORAGE-3
+# Command: STORAGE-PART1-3
 az storage share-rm create \
   --access-tier Premium \
   --enabled-protocols NFS \
@@ -75,14 +71,14 @@ az storage share-rm create \
 # https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
 # Disable private endpoint network policies
 #
-# Command: STORAGE-4
+# Command: STORAGE-PART1-4
 az network vnet subnet update \
   --ids $vnet_spoke2_pe_subnet_id \
   --disable-private-endpoint-network-policies \
   --output none
 
 # Create private endpoint to "snet-pe"
-# Command: STORAGE-5
+# Command: STORAGE-PART1-5
 storage_pe_id=$(az network private-endpoint create \
   --name storage-pe \
   --resource-group $resource_group_name \
@@ -95,7 +91,7 @@ store_variable "storage_pe_id"
 echo $storage_pe_id
 
 # Create Private DNS Zone
-# Command: STORAGE-6
+# Command: STORAGE-PART1-6
 file_private_dns_zone_id=$(az network private-dns zone create \
   --resource-group $resource_group_name \
   --name "privatelink.file.core.windows.net" \
@@ -104,7 +100,7 @@ store_variable "file_private_dns_zone_id"
 echo $file_private_dns_zone_id
 
 # Link Private DNS Zone to VNET
-# Command: STORAGE-7
+# Command: STORAGE-PART1-7
 az network private-dns link vnet create \
   --resource-group $resource_group_name \
   --zone-name "privatelink.file.core.windows.net" \
@@ -113,7 +109,7 @@ az network private-dns link vnet create \
   --registration-enabled false
 
 # Get private endpoint nic
-# Command: STORAGE-8
+# Command: STORAGE-PART1-8
 storage_pe_nic_id=$(az network private-endpoint show \
   --ids $storage_pe_id \
   --query "networkInterfaces[0].id" -o tsv)
@@ -121,7 +117,7 @@ store_variable "storage_pe_nic_id"
 echo $storage_pe_nic_id
 
 # Get ip of private endpoint nic
-# Command: STORAGE-9
+# Command: STORAGE-PART1-9
 storage_pe_ip=$(az network nic show \
   --ids $storage_pe_nic_id \
   --query "ipConfigurations[0].privateIPAddress" -o tsv)
@@ -129,14 +125,14 @@ store_variable "storage_pe_ip"
 echo $storage_pe_ip
 
 # Map private endpoint ip to A record in Private DNS Zone
-# Command: STORAGE-10
+# Command: STORAGE-PART1-10
 az network private-dns record-set a create \
   --resource-group $resource_group_name \
   --zone-name "privatelink.file.core.windows.net" \
   --name $storage_name \
   --output none
 
-# Command: STORAGE-11
+# Command: STORAGE-PART1-11
 az network private-dns record-set a add-record \
   --resource-group $resource_group_name \
   --zone-name "privatelink.file.core.windows.net" \
@@ -145,7 +141,7 @@ az network private-dns record-set a add-record \
   --output none
 
 # Deploy storage secret
-# Command: STORAGE-12
+# Command: STORAGE-PART1-12
 kubectl create secret generic azurefile-secret \
   --from-literal=azurestorageaccountname=$storage_name \
   --from-literal=azurestorageaccountkey=$storage_key \
@@ -153,7 +149,7 @@ kubectl create secret generic azurefile-secret \
 cat azurefile-secret.yaml
 
 # Deploy storage app
-# Command: STORAGE-13
+# Command: STORAGE-PART1-13
 kubectl apply -f storage-app/00-namespace.yaml
 kubectl apply -f azurefile-secret.yaml
 
@@ -187,10 +183,12 @@ spec:
       namespace: storage-app
 EOF
 
-cat storage-app/01-persistent-volume.yaml
+cat storage-app/01-persistent-volume-nfs.yaml
 
 # Execute deployment
-kubectl apply -f storage-app/02-persistent-volume-claim.yaml
+# Command: STORAGE-PART1-14
+kubectl apply -f storage-app/01-persistent-volume-nfs.yaml
+kubectl apply -f storage-app/02-persistent-volume-claim-nfs.yaml
 kubectl apply -f storage-app/03-service.yaml
 kubectl apply -f storage-app/04-statefulset.yaml
 
@@ -234,63 +232,34 @@ curl -X POST --data "NSLOOKUP \"$storage_name.privatelink.file.core.windows.net\
 
 # QUESTION:
 # ---------
-# In above implementation, we've created storage using static provisioning.
+# In above implementation, we've created NFS fileshare using static provisioning.
 #
-# If we would use use dynamic provisioning instead (let AKS create resources as needed),
+# If we would use dynamic provisioning instead (let AKS create resources as needed),
 # then what are the things we should consider in this scenario?
 #
 
-##########################################
-#   ___        _   _                   _ 
-#  / _ \ _ __ | |_(_) ___  _ __   __ _| |
-# | | | | '_ \| __| |/ _ \| '_ \ / _` | |
-# | |_| | |_) | |_| | (_) | | | | (_| | |
-#  \___/| .__/ \__|_|\___/|_| |_|\__,_|_|
-#       |_|                              
-# Deploy Azure Disk using our own storage class and dynamic provisioning
-# Command: STORAGE-14
-kubectl apply -f storage-app/10-azuredisk-sc.yaml
-kubectl apply -f storage-app/11-persistent-volume-claim.yaml
+#######################
+#  _____         _   
+# |_   _|__  ___| |_ 
+#   | |/ _ \/ __| __|
+#   | |  __/\__ \ |_ 
+#   |_|\___||___/\__|
+# Test that setup is correctly running
+# Command: STORAGE-PART1-15
+kubectl get service -n storage-app
 
-# Uncomment "premiumdisk" in storage-app/04-statefulset.yaml
-# Update deployment
-# Command: STORAGE-15
-kubectl apply -f storage-app/04-statefulset.yaml
+storage_app_ip=$(kubectl get service -n storage-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
+store_variable "storage_app_ip"
+echo $storage_app_ip
 
-kubectl get pv -n storage-app
-kubectl get pvc -n storage-app
+curl $storage_app_ip/swagger/index.html
+# -> OK!
 
-kubectl describe pv -n storage-app
-kubectl describe pvc -n storage-app
+# Quick tests for our Azure Files NFSv4.1 share:
+# Command: STORAGE-PART1-16
+# - Generate files
+curl -s -X POST --data '{"path": "/mnt/nfs","folders": 3,"subFolders": 5,"filesPerFolder": 10,"fileSize": 1024}' -H "Content-Type: application/json" "http://$storage_app_ip/api/generate" | jq .milliseconds
+# - Enumerate files
+curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$storage_app_ip/api/files" | jq .milliseconds
 
-# Note: Your Azure Region must support availability zones in order to use ZRS disks.
-# Otherwise you'll get error:
-# "message": "SKU Premium_ZRS is not supported for resource type Disk in this region. 
-#             Supported SKUs for this region are Premium_LRS,StandardSSD_LRS,Standard_LRS"
-
-kubectl get pod -n storage-app
-kubectl get statefulset -n storage-app
-kubectl describe statefulset -n storage-app
-
-# QUESTION:
-# ---------
-# Can you explain what happens if you change the 
-# replica count in our statefulset from 1 to 3?
-#
-
-# QUESTION:
-# ---------
-# If you run following command:
-kubectl get pv -n storage-app
-# Can you explain users of all those persistent volumes?
-#
-
-# QUESTION:
-# ---------
-# If you run following command:
-kubectl delete -f storage-app/04-statefulset.yaml
-# How many persistent volumes will be there after
-# that command and why?
-#
-# More information here:
-# https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
+# Go to Azure Portal and study storage account.

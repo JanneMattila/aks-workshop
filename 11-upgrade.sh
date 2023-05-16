@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #
 # Understand the Kubernetes release cycle & AKS Release Calendar
 #

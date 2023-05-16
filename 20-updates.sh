@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Deploy webapp update application
 # https://github.com/JanneMattila/webapp-update
 

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # In order to have spoke-to-spoke connectivity, you need:
 # 1. Router / Virtual application / Firewall
 #    - We'll use our jumpbox as router

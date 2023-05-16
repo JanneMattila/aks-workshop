@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # QUESTION:
 # ---------
 # What are our scaling options with Kubernetes/AKS?

@@ -1,5 +1,3 @@
-#!/bin/bash
-
 #
 # Use Azure Cost Management in the portal and analyze your environment costs.
 #
