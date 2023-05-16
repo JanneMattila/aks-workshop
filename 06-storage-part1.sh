@@ -148,13 +148,18 @@ kubectl create secret generic azurefile-secret \
   -n storage-app --type Opaque --dry-run=client -o yaml > azurefile-secret.yaml
 cat azurefile-secret.yaml
 
+# QUESTION:
+# ---------
+# Is above Kubernetes secret really a secret?
+#
+
 # Deploy storage app
 # Command: STORAGE-PART1-13
 kubectl apply -f storage-app/00-namespace.yaml
 kubectl apply -f azurefile-secret.yaml
 
 # Update persistent volume to refer to correct storage account
-cat <<EOF > storage-app/01-persistent-volume.yaml
+cat <<EOF > storage-app/01-persistent-volume-nfs.yaml
 apiVersion: v1
 kind: PersistentVolume
 metadata:
@@ -252,14 +257,31 @@ storage_app_ip=$(kubectl get service -n storage-app -o jsonpath="{.items[0].stat
 store_variable "storage_app_ip"
 echo $storage_app_ip
 
+curl $storage_app_ip
+# -> <html><body>Hello there!</body></html>
+
 curl $storage_app_ip/swagger/index.html
-# -> OK!
+# -> Swagger OK!
 
 # Quick tests for our Azure Files NFSv4.1 share:
 # Command: STORAGE-PART1-16
 # - Generate files
-curl -s -X POST --data '{"path": "/mnt/nfs","folders": 3,"subFolders": 5,"filesPerFolder": 10,"fileSize": 1024}' -H "Content-Type: application/json" "http://$storage_app_ip/api/generate" | jq .milliseconds
+curl -s -X POST --data '{"path": "/mnt/nfs","folders": 2,"subFolders": 3,"filesPerFolder": 5,"fileSize": 1024}' -H "Content-Type: application/json" "http://$storage_app_ip/api/generate" | jq .milliseconds
 # - Enumerate files
-curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$storage_app_ip/api/files" | jq .milliseconds
+curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$storage_app_ip/api/files" | jq .
 
-# Go to Azure Portal and study storage account.
+# QUESTION:
+# ---------
+# Are there any resources created to the "MC_" resource group
+# from this NFS fileshare deployment?
+#
+
+# Go to Azure Portal and study:
+# - Storage account
+#   - Public network access?
+# - File share
+# - Private endpoint
+# - Private DNS zone
+# - Private DNS record
+# - Private DNS virtual network link
+# etc.
