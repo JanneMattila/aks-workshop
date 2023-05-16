@@ -190,7 +190,9 @@ EOF
 cat storage-app/01-persistent-volume.yaml
 
 # Execute deployment
-kubectl apply -f storage-app/
+kubectl apply -f storage-app/02-persistent-volume-claim.yaml
+kubectl apply -f storage-app/03-service.yaml
+kubectl apply -f storage-app/04-statefulset.yaml
 
 kubectl get pv -n storage-app
 kubectl get pvc -n storage-app
@@ -198,7 +200,6 @@ kubectl get pod -n storage-app
 
 kubectl describe pv nfs-pv -n storage-app
 kubectl describe pvc nfs-pvc -n storage-app
-
 
 storage_address=$(az storage account show --name $storage_name --resource-group $resource_group_name --query primaryEndpoints.file -o tsv)
 store_variable "storage_address"
@@ -238,3 +239,58 @@ curl -X POST --data "NSLOOKUP \"$storage_name.privatelink.file.core.windows.net\
 # If we would use use dynamic provisioning instead (let AKS create resources as needed),
 # then what are the things we should consider in this scenario?
 #
+
+##########################################
+#   ___        _   _                   _ 
+#  / _ \ _ __ | |_(_) ___  _ __   __ _| |
+# | | | | '_ \| __| |/ _ \| '_ \ / _` | |
+# | |_| | |_) | |_| | (_) | | | | (_| | |
+#  \___/| .__/ \__|_|\___/|_| |_|\__,_|_|
+#       |_|                              
+# Deploy Azure Disk using our own storage class and dynamic provisioning
+# Command: STORAGE-14
+kubectl apply -f storage-app/10-azuredisk-sc.yaml
+kubectl apply -f storage-app/11-persistent-volume-claim.yaml
+
+# Uncomment "premiumdisk" in storage-app/04-statefulset.yaml
+# Update deployment
+# Command: STORAGE-15
+kubectl apply -f storage-app/04-statefulset.yaml
+
+kubectl get pv -n storage-app
+kubectl get pvc -n storage-app
+
+kubectl describe pv -n storage-app
+kubectl describe pvc -n storage-app
+
+# Note: Your Azure Region must support availability zones in order to use ZRS disks.
+# Otherwise you'll get error:
+# "message": "SKU Premium_ZRS is not supported for resource type Disk in this region. 
+#             Supported SKUs for this region are Premium_LRS,StandardSSD_LRS,Standard_LRS"
+
+kubectl get pod -n storage-app
+kubectl get statefulset -n storage-app
+kubectl describe statefulset -n storage-app
+
+# QUESTION:
+# ---------
+# Can you explain what happens if you change the 
+# replica count in our statefulset from 1 to 3?
+#
+
+# QUESTION:
+# ---------
+# If you run following command:
+kubectl get pv -n storage-app
+# Can you explain users of all those persistent volumes?
+#
+
+# QUESTION:
+# ---------
+# If you run following command:
+kubectl delete -f storage-app/04-statefulset.yaml
+# How many persistent volumes will be there after
+# that command and why?
+#
+# More information here:
+# https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
