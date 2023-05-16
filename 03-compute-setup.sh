@@ -20,6 +20,10 @@ vm_id=$(az vm create \
   --query id -o tsv)
 store_variable "vm_id"
 
+# Go to Azure Portal and study:
+# - Virtual Machine
+# etc.
+
 # QUESTION:
 # ---------
 # Can you access jumpbox virtual machine?
@@ -71,6 +75,10 @@ aci_ip=$(az container create \
   --query ipAddress.ip -o tsv)
 store_variable "aci_ip"
 echo $aci_ip
+
+# Go to Azure Portal and study:
+# - Azure Container Instances
+# etc.
 
 #######################################
 #     _     _  __ ____
@@ -158,9 +166,26 @@ az aks create -g $resource_group_name -n $aks_name \
 my_ip=$(curl -s https://api.ipify.org)
 az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
 
+# Go to Azure Portal and study:
+# - Azure Container Registry
+# - Azure Kubernetes Service
+# - Managed Identities
+# etc.
+
 # QUESTION:
 # ---------
 # How is AKS Identity connected to ACR?
+#
+
+# QUESTION:
+# ---------
+# What is difference between:
+# - Service Principal
+# - Managed Identity
+#
+
+# QUESTION:
+# ---------
 # Why would you prefer User-assigned Managed identity over System-assigned Managed identity?
 #
 
@@ -170,10 +195,12 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 #   --network-plugin azure
 #
 # It means that it creates cluster using "Azure Container Networking Interface (CNI)".
-# Other option would have been "Kubenet".
+# Other options would have been "Kubenet" or then "Azure CNI Overlay".
 #
-# What are differences between these two?
+# What are differences and benefits in these options?
 #
+# Verify from portal.
+# 
 # More information here:
 # https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni
 # https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md

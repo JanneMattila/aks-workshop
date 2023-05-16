@@ -266,7 +266,7 @@ curl $storage_app_ip/swagger/index.html
 # Quick tests for our Azure Files NFSv4.1 share:
 # Command: STORAGE-PART1-16
 # - Generate files
-curl -s -X POST --data '{"path": "/mnt/nfs","folders": 2,"subFolders": 3,"filesPerFolder": 5,"fileSize": 1024}' -H "Content-Type: application/json" "http://$storage_app_ip/api/generate" | jq .milliseconds
+curl -s -X POST --data '{"path": "/mnt/nfs","folders": 2,"subFolders": 3,"filesPerFolder": 5,"fileSize": 1024}' -H "Content-Type: application/json" "http://$storage_app_ip/api/generate" | jq .
 # - Enumerate files
 curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' -H "Content-Type: application/json" "http://$storage_app_ip/api/files" | jq .
 
@@ -284,4 +284,5 @@ curl -s -X POST --data '{"path": "/mnt/nfs","filter": "*.*","recursive": true}' 
 # - Private DNS zone
 # - Private DNS record
 # - Private DNS virtual network link
+# - AKS resource & Storage from blade
 # etc.
