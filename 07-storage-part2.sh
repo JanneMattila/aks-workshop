@@ -101,7 +101,7 @@ kubectl delete -f storage-app/12-statefulset.yaml
 # ---------
 # If you run following command:
 #   kubectl delete namespace storage-app
-# What would happen?
+# What would happen and why?
 #
 
 ###########################
