@@ -140,6 +140,7 @@ echo $my_ip
 
 # Command: COMPUTE-12
 az aks create -g $resource_group_name -n $aks_name \
+ --tier standard \
  --max-pods 50 --network-plugin azure \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
