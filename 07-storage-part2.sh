@@ -165,3 +165,15 @@ exit
 # More information:
 # https://docs.microsoft.com/en-us/azure/aks/availability-zones#azure-disk-availability-zone-support
 #
+
+#
+# QUESTION:
+# ---------
+# You have large volume with a lots of files in it.
+# You start to experience slow startup times for your application.
+#
+# Why?
+#
+# More information:
+# https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#configure-volume-permission-and-ownership-change-policy-for-pods
+#

@@ -79,3 +79,18 @@ az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
 #
 # Extra "Exercise 6" in "90-bonus-exercises.sh".
 #
+
+# QUESTION:
+# ---------
+# How to make sure that your workloads are isolated from critical system pods?
+#
+# More information here:
+# https://learn.microsoft.com/en-us/azure/aks/use-system-pools#system-and-user-node-pools
+#
+
+kubectl get nodes -o json | jq .
+az aks nodepool show -g $resource_group_name --cluster-name $aks_name --name nodepool1 -o json | jq .
+
+az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
+  --name nodepool1 \
+  --node-taints CriticalAddonsOnly=true:NoSchedule
