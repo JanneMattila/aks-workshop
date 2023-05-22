@@ -236,7 +236,7 @@ network_app_pod1=$(kubectl get pod -n network-app -o name | head -n 1)
 store_variable network_app_pod1
 echo $network_app_pod1
 
-network_app_pod1_ip=$(kubectl get pod -n network-app -o name -o jsonpath="{.items[0].status.podIPs[0].ip}")
+network_app_pod1_ip=$(kubectl get pod -n network-app -o jsonpath="{.items[0].status.podIPs[0].ip}")
 store_variable network_app_pod1_ip
 echo $network_app_pod1_ip
 

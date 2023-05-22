@@ -75,3 +75,26 @@ exit
 #
 # Extra "Exercise 3" in "90-bonus-exercises.sh".
 #
+
+# QUESTION:
+# ---------
+# How does name resolution work in Kubernetes?
+#
+# How do you access services and pods from different namespaces?
+#
+# Explain how it works and test it.
+#
+# https://kubernetes.io/docs/concepts/services-networking/dns-pod-service/
+#
+# Advanced follow-up question:
+# If you do a lot of external DNS queries, 
+# why it *may* negatively impact performance?
+#
+# https://github.com/JanneMattila/some-questions-and-some-answers/blob/master/q%26a/azure_kubernetes_service.md#dns
+#
+
+kubectl get services -A
+
+curl -X POST --data  "IPLOOKUP kube-dns.kube-system.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data  "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data  "IPLOOKUP network-app-internal-svc" "$network_app_external_svc_ip/api/commands"

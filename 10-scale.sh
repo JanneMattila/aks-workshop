@@ -91,6 +91,12 @@ az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
 kubectl get nodes -o json | jq .
 az aks nodepool show -g $resource_group_name --cluster-name $aks_name --name nodepool1 -o json | jq .
 
+# Set taints
 az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
   --name nodepool1 \
   --node-taints CriticalAddonsOnly=true:NoSchedule
+
+# Remove taints
+az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
+  --name nodepool1 \
+  --node-taints ""
