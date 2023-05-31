@@ -195,10 +195,18 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 # Above create command used following parameter:
 #   --network-plugin azure
 #
-# It means that it creates cluster using "Azure Container Networking Interface (CNI)".
-# Other options would have been "Kubenet" or then "Azure CNI Overlay".
+# It means that it creates cluster using "Azure Container Networking Interface (CNI)"
+# (a.k.a. "Azure CNI with static IP allocation").
+#
+# Other options would have been:
+# - Azure CNI with dynamic IP allocation
+# - Azure CNI Powered by Cilium
+# - AAzure CNI Overlay
+# - BYO CNI
+# - Kubenet
 #
 # What are differences and benefits in these options?
+# You can focus only to "Azure CNI" and "Kubenet".
 #
 # Verify from portal.
 # 
