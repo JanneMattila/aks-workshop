@@ -11,7 +11,7 @@
 vm_id=$(az vm create \
   --resource-group $resource_group_name  \
   --name $vm_name \
-  --image UbuntuLTS \
+  --image Ubuntu2204 \
   --size Standard_DS2_v2 \
   --public-ip-address "" \
   --subnet $vnet_hub_management_subnet_id \
