@@ -95,6 +95,8 @@ exit
 
 kubectl get services -A
 
+curl -X POST --data  "FILE READ /etc/hosts" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data  "FILE READ /etc/nsswitch.conf" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data  "FILE READ /etc/resolv.conf" "$network_app_external_svc_ip/api/commands"
 # Why is "network-app.svc.cluster.local" first in the list?
 
