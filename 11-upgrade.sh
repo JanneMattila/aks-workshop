@@ -34,7 +34,7 @@ az aks upgrade -g $resource_group_name -n $aks_name --kubernetes-version 1.25.6 
 
 # Upgrade nodepool
 # Command: UPGRADE-6
-az aks nodepool upgrade --name $aks_nodepool1 -g $resource_group_name --cluster-name $aks_name --kubernetes-version 1.25.6
+az aks nodepool upgrade --name $aks_nodepool1 -g $resource_group_name --cluster-name $aks_name --kubernetes-version 1.25.6 --yes
 
 # Option 2: Let AKS manage the upgrade
 # Command: UPGRADE-7
