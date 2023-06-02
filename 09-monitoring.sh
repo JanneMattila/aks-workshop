@@ -6,6 +6,14 @@ kubectl apply -f others/container-azm-ms-agentconfig.yaml
 
 kubectl apply -f monitoring-app/
 
+kubectl get service -n monitoring-app
+
+monitoring_app_ip=$(kubectl get service -n monitoring-app -o jsonpath="{.items[0].status.loadBalancer.ingress[0].ip}")
+store_variable "monitoring_app_ip"
+echo $monitoring_app_ip
+
+curl $monitoring_app_ip
+
 #
 # Study Container Insights
 #

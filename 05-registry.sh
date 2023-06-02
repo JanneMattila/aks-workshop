@@ -1,6 +1,6 @@
 # Import images
 # Command: REGISTRY-1
-az acr import -n $acr_name -t "apps/jannemattila/webapp-fs-tester:1.1.8" --source "docker.io/jannemattila/webapp-fs-tester:1.1.8" 
+az acr import -n $acr_name -t "apps/jannemattila/webapp-fs-tester:1.1.13" --source "docker.io/jannemattila/webapp-fs-tester:1.1.13" 
 
 # Enable "Defender for Containers" in the Portal
 
@@ -46,4 +46,12 @@ kubectl logs $simple_app_pod1 -n simple-app
 # Is our container registry only accessible from our AKS virtual network?
 #
 # Extra "Exercise 4" in "90-bonus-exercises.sh".
+#
+
+# QUESTION:
+# ---------
+# What are the different authentication methods for ACR?
+#
+# See some examples:
+# https://github.com/JanneMattila/playground-aks-acr/blob/main/setup.sh
 #

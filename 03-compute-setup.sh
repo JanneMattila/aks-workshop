@@ -33,6 +33,7 @@ store_variable "vm_id"
 # Command: COMPUTE-2
 az network public-ip create --resource-group $resource_group_name --name $bastion_public_ip --sku Standard --location $location
 bastion_id=$(az network bastion create --name $bastion_name --public-ip-address $bastion_public_ip --enable-tunneling true --resource-group $resource_group_name --vnet-name $vnet_hub_name --location $location --query id -o tsv)
+store_variable "bastion_id"
 
 ###################
 #          _ 

@@ -20,6 +20,10 @@ kubectl delete -f storage-app/04-statefulset.yaml
 # Command: STORAGE-PART2-2
 kubectl apply -f storage-app/12-statefulset.yaml
 
+kubectl get statefulset -n storage-app
+kubectl get pod -n storage-app
+kubectl describe pod -n storage-app
+
 kubectl get pv -n storage-app
 kubectl get pvc -n storage-app
 
@@ -32,6 +36,7 @@ kubectl describe pvc -n storage-app
 #             Supported SKUs for this region are Premium_LRS,StandardSSD_LRS,Standard_LRS"
 
 kubectl get pod -n storage-app
+kubectl describe pod -n storage-app
 kubectl get statefulset -n storage-app
 kubectl describe statefulset -n storage-app
 
@@ -89,7 +94,7 @@ kubectl get pvc -n storage-app
 # QUESTION:
 # ---------
 # If you run following command:
-kubectl delete -f storage-app/12-statefulset.yaml
+#   kubectl delete -f storage-app/12-statefulset.yaml
 # How many persistent volumes will be there after
 # that command and why?
 #
@@ -102,6 +107,8 @@ kubectl delete -f storage-app/12-statefulset.yaml
 # If you run following command:
 #   kubectl delete namespace storage-app
 # What would happen and why?
+#
+# DON'T RUN THAT COMMAND!
 #
 
 ###########################

@@ -34,6 +34,8 @@ curl $aci_ip
 # ---------
 # What did above test proove?
 #
+# Open architecture diagram and see how traffic flows.
+#
 
 #
 # Below is using following application for network testing:
@@ -42,9 +44,8 @@ curl $aci_ip
 
 # Test outbound internet accesses
 # Command: NETWORK-TESTING-3
-BODY=$(echo "HTTP GET \"https://github.com\"")
-curl -X POST --data "$BODY" "$network_app_internal_svc_ip/api/commands" # OK
-curl -X POST --data "$BODY" "$aci_ip/api/commands" # OK
+curl -X POST --data "HTTP GET \"https://github.com\"" "$network_app_internal_svc_ip/api/commands" # OK
+curl -X POST --data "HTTP GET \"https://github.com\"" "$aci_ip/api/commands" # OK
 
 # Test spoke001 -> spoke002 connectivity
 # Command: NETWORK-TESTING-4
