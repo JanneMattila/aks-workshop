@@ -12,6 +12,12 @@ kubectl describe storageclass azurefile-premium
 diff <(kubectl describe storageclass azurefile-csi-premium) <(kubectl describe storageclass azurefile-premium)
 diff <(kubectl describe storageclass azurefile-csi) <(kubectl describe storageclass azurefile-premium)
 
+kubectl api-resources --namespaced=false
+kubectl get csidrivers
+
+kubectl get csidrivers file.csi.azure.com -o yaml
+kubectl get csidrivers disk.csi.azure.com -o yaml
+
 #######################
 #  _   _ _____ ____  
 # | \ | |  ___/ ___| 
