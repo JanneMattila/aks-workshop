@@ -18,8 +18,9 @@ curl $monitoring_app_ip
 # Study Container Insights
 #
 # More information here:
-# https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-overview
-# https://docs.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-integration
+# https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-overview
+# https://learn.microsoft.com/en-us/azure/azure-monitor/containers/container-insights-prometheus-integration
+# https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/prometheus-metrics-scrape-configuration
 
 #
 # Study KQL queries
