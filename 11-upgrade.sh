@@ -5,6 +5,9 @@
 # https://github.com/JanneMattila/kubernetes-notes#super-important-topics-to-understand
 #
 
+# See use of deprecated APIs
+kubectl get --raw /metrics | grep apiserver_requested_deprecated_apis
+
 # See all available Kubernetes versions
 # Command: UPGRADE-1
 az aks get-versions -l $location -o table
