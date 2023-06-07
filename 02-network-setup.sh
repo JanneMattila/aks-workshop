@@ -219,5 +219,7 @@ az network vnet peering create \
 # ---------
 # Can "spoke1" and "spoke2" communicate with each other?
 #
+# See "50-advanced-networking.sh" more more details.
+#
 
 # Study peering setup in the portal

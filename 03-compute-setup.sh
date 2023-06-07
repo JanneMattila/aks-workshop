@@ -29,6 +29,11 @@ store_variable "vm_id"
 # Can you access jumpbox virtual machine?
 #
 
+# QUESTION:
+# ---------
+# How can you understand routing behavior better from that VM?
+#
+
 # Create Bastion
 # Command: COMPUTE-2
 az network public-ip create --resource-group $resource_group_name --name $bastion_public_ip --sku Standard --location $location
@@ -202,7 +207,7 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 # Other options would have been:
 # - Azure CNI with dynamic IP allocation
 # - Azure CNI Powered by Cilium
-# - AAzure CNI Overlay
+# - Azure CNI Overlay
 # - BYO CNI
 # - Kubenet
 #

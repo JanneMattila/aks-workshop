@@ -96,17 +96,23 @@ exit
 
 kubectl get services -A
 
-curl -X POST --data  "FILE READ /etc/hosts" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data  "FILE READ /etc/nsswitch.conf" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data  "FILE READ /etc/resolv.conf" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /etc/hosts" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /etc/nsswitch.conf" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /etc/resolv.conf" "$network_app_external_svc_ip/api/commands"
 # Why is "network-app.svc.cluster.local" first in the list?
 
-curl -X POST --data  "NSLOOKUP bing.com" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data  "NSLOOKUP cluster.local" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data  "NSLOOKUP kubernetes.default.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "NSLOOKUP bing.com" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "NSLOOKUP cluster.local" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "NSLOOKUP kubernetes.default.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 
-curl -X POST --data  "IPLOOKUP kube-dns.kube-system.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "IPLOOKUP kube-dns.kube-system.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 
-curl -X POST --data  "IPLOOKUP network-app-internal-svc" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data  "IPLOOKUP network-app-internal-svc.network-app" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data  "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "IPLOOKUP network-app-internal-svc" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+
+# QUESTION:
+# ---------
+# Is other apps service reachable from network-app?
+#
+curl -X POST --data "IPLOOKUP other-app-svc.other-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"

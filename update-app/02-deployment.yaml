@@ -44,7 +44,11 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
         # kubernetes.azure.com/mode: user
-      terminationGracePeriodSeconds: 10
+      # terminationGracePeriodSeconds: 30
+      # lifecycle:
+      #   preStop:
+      #     exec:
+      #       command: ["/bin/sh", "-c", "sleep 15"]
       containers:
         - image: jannemattila/webapp-update:1.0.11
           name: update-app
