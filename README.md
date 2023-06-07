@@ -6,19 +6,35 @@ Azure Kubernetes Service (AKS) Workshop
 
 ![Workshop architecture diagram](https://user-images.githubusercontent.com/2357647/163179908-3ca8e7b0-16ab-405e-bbcf-8b1342129b37.png)
 
-## Workshop pre-reqs
+## Workshop Pre-reqs
 
 - Azure subscription with `Owner` role
   - Why? Because we need to assign permissions e.g., `AcrPull` and others
 - Each person should have their own dedicated resource group
   - Why? Because we need to test AKS cluster upgrades and other operations 
     that require personal environments
-- [Azure Cloud Shell](https://shell.azure.com/)
+- [Azure Cloud Shell](https://shell.azure.com/) available
 - Azure AD Group that contains all workshop participants
   - Why? Because we need have group for AKS cluster admin access
     - You only need to have `Object ID` of the group
     - You can use [My Groups](https://myaccount.microsoft.com/groups)
       to find group that you're member of. You can see `Object ID` of the group in URL.
+
+Following resources will be created during workshop:
+- Multiple Azure Virtual Networks
+  - User Defined Routes (UDR)
+  - Network Security Groups (NSG)
+- Private DNS Zone
+- Virtual Machine
+- Bastion Host
+- Azure Container Registry (ACR)
+- Azure Kubernetes Service (AKS)
+- Azure Container Instances (ACI)
+- Azure Storage Account
+  - NFS fileshare
+  - Private endpoint
+- Azure Application Gateway
+- Azure Log Analytics Workspace
 
 ## Usage
 
