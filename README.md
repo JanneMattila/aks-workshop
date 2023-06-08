@@ -10,6 +10,21 @@ Azure Kubernetes Service (AKS) Workshop
 
 - Azure subscription with `Owner` role
   - Why? Because we need to assign permissions e.g., `AcrPull` and others
+- Azure subscription should be enabled for creating following resources:
+  - Multiple Azure Virtual Networks
+    - User Defined Routes (UDR)
+    - Network Security Groups (NSG)
+  - Private DNS Zone
+  - Virtual Machine
+  - Bastion Host
+  - Azure Container Registry (ACR)
+  - Azure Kubernetes Service (AKS)
+  - Azure Container Instances (ACI)
+  - Azure Storage Account
+    - NFS fileshare
+    - Private endpoint
+  - Azure Application Gateway
+  - Azure Log Analytics Workspace
 - Each person should have their own dedicated resource group
   - Why? Because we need to test AKS cluster upgrades and other operations 
     that require personal environments
@@ -19,22 +34,6 @@ Azure Kubernetes Service (AKS) Workshop
     - You only need to have `Object ID` of the group
     - You can use [My Groups](https://myaccount.microsoft.com/groups)
       to find group that you're member of. You can see `Object ID` of the group in URL.
-
-Following resources will be created during workshop:
-- Multiple Azure Virtual Networks
-  - User Defined Routes (UDR)
-  - Network Security Groups (NSG)
-- Private DNS Zone
-- Virtual Machine
-- Bastion Host
-- Azure Container Registry (ACR)
-- Azure Kubernetes Service (AKS)
-- Azure Container Instances (ACI)
-- Azure Storage Account
-  - NFS fileshare
-  - Private endpoint
-- Azure Application Gateway
-- Azure Log Analytics Workspace
 
 ## Usage
 

@@ -353,3 +353,4 @@ MigrationBackup/
 saved_variables.sh
 **/*.ps1
 **/.env
+redis-values.yaml

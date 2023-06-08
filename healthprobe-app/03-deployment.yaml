@@ -5,6 +5,11 @@ metadata:
   namespace: healthprobe-app
 spec:
   replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 0
+    type: RollingUpdate
   selector:
     matchLabels:
       app: healthprobe-app
@@ -17,7 +22,7 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-        - image: jannemattila/k8s-probe-demo:1.0.12
+        - image: jannemattila/k8s-probe-demo:1.0.14
           name: healthprobe-app
           resources:
             requests:
@@ -28,9 +33,9 @@ spec:
               memory: 150Mi
           startupProbe:
             httpGet:
-              path: /api/HealthCheck/Liveness
+              path: /api/HealthCheck/Startup
               port: 80
-            initialDelaySeconds: 5
+            initialDelaySeconds: 15
             timeoutSeconds: 1
             periodSeconds: 10
             failureThreshold: 1
@@ -38,7 +43,6 @@ spec:
             httpGet:
               path: /api/HealthCheck/Liveness
               port: 80
-            initialDelaySeconds: 5
             timeoutSeconds: 1
             periodSeconds: 10
             failureThreshold: 1
@@ -46,13 +50,12 @@ spec:
             httpGet:
               path: /api/HealthCheck/Readiness
               port: 80
-            initialDelaySeconds: 10
             timeoutSeconds: 1
             periodSeconds: 10
             failureThreshold: 1
           env:
-            # - name: webhook
-            #   value: "http://echo:31111/api/echo"
+            - name: webhook
+              value: http://echo-app-svc.echo-app.svc.cluster.local/api/echo
             - name: livenessCheck
               value: "true"
             - name: readinessCheck
