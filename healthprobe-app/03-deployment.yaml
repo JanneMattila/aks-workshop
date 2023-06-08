@@ -19,10 +19,16 @@ spec:
         app: healthprobe-app
     spec:
       restartPolicy: Always
+      terminationGracePeriodSeconds: 30
+      # https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+      # lifecycle:
+      #   preStop:
+      #     exec:
+      #       command: ["/bin/sh", "-c", "sleep 15"]
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-        - image: jannemattila/k8s-probe-demo:1.0.14
+        - image: jannemattila/k8s-probe-demo:1.0.15
           name: healthprobe-app
           resources:
             requests:
@@ -60,3 +66,7 @@ spec:
               value: "true"
             - name: readinessCheck
               value: "true"
+            - name: delayStartup
+              value: "0"
+            - name: delayShutdown
+              value: "10"
