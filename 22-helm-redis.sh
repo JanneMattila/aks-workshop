@@ -50,21 +50,29 @@ redis-cli -h my-redis-master.redis-app.svc.cluster.local -p 6379 -a $REDIS_PASSW
 # Run commands using redis-cli
 SET myvalue1 "Hello World"
 GET myvalue1
+INCR mynumber1
 QUIT # Exit from redis-cli
 exit # Exit from container
 # Delete the pod
 kubectl delete pod redis-client -n redis-app
 
 # Connect locally to the Redis using port forwarding
-kubectl port-forward --namespace redis-app svc/my-redis-master 6379:6379 
+kubectl port-forward --namespace redis-app svc/my-redis-master 6379:6379
+
+# Check IP Addresses of Redis services
+curl -X POST --data "IPLOOKUP my-redis-master.redis-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "IPLOOKUP my-redis-replicas.redis-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+
+# Check connectivity to Redis services
+curl -X POST --data "TCP my-redis-master.redis-app.svc.cluster.local 6379" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "TCP my-redis-replicas.redis-app.svc.cluster.local 6379" "$network_app_external_svc_ip/api/commands"
 
 # Store value to the cache
-echo "REDIS SET value1 mycache \"$redis_connection_string\""
-curl -X POST --data "REDIS SET value1 mycache \"$redis_connection_string\"" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "REDIS SET value1 mycache \"$redis_connection_string\"" "$network_app_external_svc_ip/api/commands"
 
 # Get value from the cache
 curl -X POST --data "REDIS GET mycache \"$redis_connection_string\"" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data "REDIS SET value1 mycache my-redis-master.redis-app.svc.cluster.local:6379,password=password,ssl=False,abortConnect=False" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "REDIS GET mycache \"$redis_connection_string_replicas\"" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "REDIS GET mynumber1 \"$redis_connection_string_replicas\"" "$network_app_external_svc_ip/api/commands"
 
 helm delete my-redis -n redis-app
