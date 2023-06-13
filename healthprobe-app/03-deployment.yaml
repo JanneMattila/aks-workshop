@@ -32,14 +32,18 @@ spec:
           name: healthprobe-app
           resources:
             requests:
-              cpu: 100m
+              cpu: 500m
               memory: 100Mi
             limits:
-              cpu: 150m
+              cpu: 1000m
               memory: 150Mi
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
           startupProbe:
             httpGet:
-              path: /api/HealthCheck/Startup
+              path: /api/healthcheck/startup
               port: 80
             initialDelaySeconds: 15
             timeoutSeconds: 1
@@ -47,14 +51,14 @@ spec:
             failureThreshold: 1
           livenessProbe:
             httpGet:
-              path: /api/HealthCheck/Liveness
+              path: /api/healthcheck/liveness
               port: 80
             timeoutSeconds: 1
             periodSeconds: 10
             failureThreshold: 1
           readinessProbe:
             httpGet:
-              path: /api/HealthCheck/Readiness
+              path: /api/healthcheck/readiness
               port: 80
             timeoutSeconds: 1
             periodSeconds: 10

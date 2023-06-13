@@ -1,0 +1,14 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+ name: healthprobe-app-hpa
+ namespace: healthprobe-app
+spec:
+ minReplicas: 1
+ maxReplicas: 10
+ scaleTargetRef:
+   apiVersion: apps/v1
+   kind: Deployment
+   name: healthprobe-app-deployment
+   namespace: healthprobe-app
+ targetCPUUtilizationPercentage: 50

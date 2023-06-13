@@ -9,7 +9,6 @@ kubectl apply -f update-app/
 kubectl get deployment -n update-app
 kubectl get service -n update-app
 kubectl get pod -n update-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
-kubectl top pod -n update-app
 
 update_app_svc_ip=$(kubectl get service update-app-svc -n update-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 store_variable update_app_svc_ip

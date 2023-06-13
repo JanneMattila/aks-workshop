@@ -1,6 +1,7 @@
 # Deploy health probe demo application
 #
 # https://kubernetes.io/docs/concepts/workloads/pods/pod-lifecycle/#types-of-probe
+# https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-startup-probes/
 #
 # https://github.com/JanneMattila/KubernetesProbeDemo
 # https://github.com/JanneMattila/Echo
@@ -30,6 +31,7 @@ echo $healthprobe_app_ip
 
 curl $healthprobe_app_ip
 curl -s $healthprobe_app_ip/api/healthcheck | jq .
+curl -s $healthprobe_app_ip/api/healthcheck/readiness --verbose
 
 curl -s -X POST --data '{ "readiness": true, "liveness": true }' "http://$healthprobe_app_ip/api/healthcheck" | jq .
 
