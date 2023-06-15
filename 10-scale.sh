@@ -100,3 +100,6 @@ az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
 az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
   --name nodepool1 \
   --node-taints ""
+
+# Prevent cluster autoscaler from scaling down this node:
+# kubectl annotate node <nodename> cluster-autoscaler.kubernetes.io/scale-down-disabled=true
