@@ -145,7 +145,7 @@ echo $my_ip
 # --zones 1 2 3
 
 # Command: COMPUTE-12
-az aks create -g $resource_group_name -n $aks_name \
+aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --tier standard \
  --max-pods 50 --network-plugin azure \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
@@ -165,11 +165,24 @@ az aks create -g $resource_group_name -n $aks_name \
  --assign-identity $aks_cluster_identity_id \
  --assign-kubelet-identity $aks_kubelet_identity_id \
  --api-server-authorized-ip-ranges $my_ip \
- -o table 
+ -o json)
+store_variable "aks_json"
+echo $aks_json
+
+aks_id=$(echo $aks_json | jq -r .id)
+store_variable "aks_id"
+echo $aks_id
+
+# Enable diagnostic logs for AKS
+# Command: COMPUTE-13
+az monitor diagnostic-settings create  -n diag1 \
+  --resource $aks_id \
+  --workspace $aks_workspace_id \
+  --logs "[{category:kube-apiserver,enabled:true},{category:kube-audit,enabled:true},{category:kube-audit-admin,enabled:true},{category:kube-controller-manager,enabled:true},{category:kube-scheduler,enabled:true},{category:cluster-autoscaler,enabled:true},{category:cloud-controller-manager,enabled:true},{category:guard,enabled:true},{category:csi-azuredisk-controller,enabled:true},{category:csi-azurefile-controller,enabled:true},{category:csi-snapshot-controller,enabled:true}]"
 
 # In case your ip changes, then you can re-run following
 # command in order to access Kubernetes api server
-# Command: COMPUTE-13
+# Command: COMPUTE-14
 my_ip=$(curl -s https://api.ipify.org)
 az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
 
@@ -222,26 +235,26 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 #
 
 # Install kubectl
-# Command: COMPUTE-14
+# Command: COMPUTE-15
 sudo az aks install-cli
 
 # Get credentials, so that you can access Kubernetes api server
-# Command: COMPUTE-15
+# Command: COMPUTE-16
 az aks get-credentials -n $aks_name -g $resource_group_name --overwrite-existing
 kubelogin convert-kubeconfig -l azurecli
 
 # Test connectivity to Kubernetes
-# Command: COMPUTE-16
+# Command: COMPUTE-17
 kubectl get nodes
 kubectl get nodes -o wide
 kubectl get nodes -o custom-columns=NAME:'{.metadata.name}',REGION:'{.metadata.labels.topology\.kubernetes\.io/region}',ZONE:'{metadata.labels.topology\.kubernetes\.io/zone}'
 
 # Deploy simple network test application
-# Command: COMPUTE-17
+# Command: COMPUTE-18
 kubectl apply -f network-app/
 
 # Validate
-# Command: COMPUTE-18
+# Command: COMPUTE-19
 kubectl get deployment -n network-app
 kubectl get service -n network-app
 kubectl get pod -n network-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'

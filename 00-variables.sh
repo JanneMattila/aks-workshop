@@ -19,22 +19,35 @@ function keep_alive()
     while :; do echo "$(date) - Hit CTRL+C"; sleep 1; done
 }
 
-###############################################
+###################################################################
+
 # __     __         _       _     _
 # \ \   / /_ _ _ __(_) __ _| |__ | | ___  ___
 #  \ \ / / _` | '__| |/ _` | '_ \| |/ _ \/ __|
 #   \ V / (_| | |  | | (_| | |_) | |  __/\__ \
 #    \_/ \__,_|_|  |_|\__,_|_.__/|_|\___||___/
-#     for the deployment
-###############################################
+# for the deployment that needs to be updated for your environment
+###################################################################
+
+# Your name (to separate resources from other workshop participants inside the same subscription)
 my_name="janne" # Lower caps!
 
 # Your subscription name
 subscription_name="development"
 
+# Your own dedicated resource group name
 resource_group_name="rg-aks-workshop-$my_name"
 
-# Azure region to use
+# Azure AD Group name used for AKS admins.
+#
+# In case you don't have access rights to query Azure AD Groups,
+# then at minimum you need to know Object ID of the group.
+#
+# You can use https://myaccount.microsoft.com/groups
+# to find group that you're member of. You can see "Object ID" of the group in URL.
+aks_azure_ad_admin_group_contains="janneops"
+
+# Azure region to use (remember not all regions support all services and availability zones)
 location="westcentralus"
 
 #########################
@@ -122,9 +135,6 @@ aci_name="ci-$vnet_spoke1_plain_name"
 # /_/   \_\|_|\_\|____/
 # Azure Kubernetes Service vars
 ################################
-
-# Azure AD Group name used for AKS admins
-aks_azure_ad_admin_group_contains="janneops"
 
 # AKS specific
 aks_name="aks-$my_name"
