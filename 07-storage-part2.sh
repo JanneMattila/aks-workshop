@@ -101,6 +101,15 @@ kubectl get pvc -n storage-app
 # More information here:
 # https://kubernetes.io/docs/concepts/workloads/controllers/statefulset/
 #
+# To find orphaned disks:
+# https://learn.microsoft.com/en-us/azure/virtual-machines/linux/find-unattached-disks
+# Part of that script to query disks:
+az disk list --query '[?managedBy==`null`].[id]' -o tsv
+# WARNING:
+# --------
+# If you shutdown your AKS cluster, then "managedBy" will be null for all disks.
+# So, don't run disk removal scripts if you have shutdown your AKS cluster.
+#
 
 # QUESTION:
 # ---------
