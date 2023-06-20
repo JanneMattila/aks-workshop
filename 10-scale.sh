@@ -103,3 +103,21 @@ az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
 
 # Prevent cluster autoscaler from scaling down this node:
 # kubectl annotate node <nodename> cluster-autoscaler.kubernetes.io/scale-down-disabled=true
+
+# QUESTION:
+# ---------
+# How to you scale Kubernetes?
+#
+# See "21-health-probes.sh" for more information.
+# 
+# Scaling summary:
+# - Cluster auto-scaler: You scale nodes
+# - Horizontal Pod Autoscaler: You scale pods
+# - Vertical Pod Autoscaler: You scale pod resources
+#
+# More information here:
+# https://learn.microsoft.com/en-us/azure/aks/cluster-autoscaler
+# https://learn.microsoft.com/en-us/azure/aks/tutorial-kubernetes-scale
+# https://learn.microsoft.com/en-us/azure/aks/vertical-pod-autoscaler
+# https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+#
