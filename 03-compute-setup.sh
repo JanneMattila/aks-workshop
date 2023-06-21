@@ -281,6 +281,21 @@ curl $network_app_external_svc_ip
 curl $network_app_internal_svc_ip
 # -> Timeout (no private connectivity)
 
+# Deploy simple echo application
+# Command: COMPUTE-20
+kubectl apply -f echo-app/
+
+kubectl get deployment -n echo-app
+kubectl get pod -n echo-app
+kubectl get service -n echo-app
+
+echo_app_ip=$(kubectl get service echo-app-svc -n echo-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+store_variable echo_app_ip
+echo $echo_app_ip
+
+curl $echo_app_ip
+# -> <!DOCTYPE html><html>...</html>
+
 # Study AKS in the portal
 
 # QUESTION:

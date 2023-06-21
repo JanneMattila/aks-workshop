@@ -1,0 +1,18 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: echoer-cronjob
+spec:
+  schedule: "* * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+            - name: echoer
+              image: busybox
+              command:
+                - /bin/sh
+                - -c
+                - 'wget -O- --post-data="{ ""cronjob"": ""$(date +%s)"" }" --header="Content-Type: application/json" http://echo-app-svc.echo-app.svc.cluster.local/api/echo'
+          restartPolicy: OnFailure

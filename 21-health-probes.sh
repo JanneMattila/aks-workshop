@@ -7,16 +7,6 @@
 # https://github.com/JanneMattila/Echo
 
 # Command: HEALTH-PROBE-1
-kubectl apply -f echo-app/
-
-kubectl get deployment -n echo-app
-kubectl get pod -n echo-app
-kubectl get service -n echo-app
-
-echo_app_ip=$(kubectl get service echo-app-svc -n echo-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-store_variable echo_app_ip
-echo $echo_app_ip
-
 kubectl apply -f healthprobe-app/
 
 # Validate
