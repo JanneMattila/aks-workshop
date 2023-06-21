@@ -1,0 +1,15 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: echo-job
+spec:
+  template:
+    spec:
+      containers:
+        - name: echoer
+          image: busybox
+          command:
+            - /bin/sh
+            - -c
+            - 'wget -O- --post-data="{ ""job"": ""$(date +%s)"" }" --header="Content-Type: application/json" http://echo-app-svc.echo-app.svc.cluster.local/api/echo'
+      restartPolicy: OnFailure
