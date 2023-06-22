@@ -52,4 +52,5 @@ kubectl delete -f others/echoer-cronjob.yaml
 # How long do they stay there?
 #
 # Hint: Study properties of the job
+kubectl describe job echo-job
 kubectl describe cronjob echoer-cronjob

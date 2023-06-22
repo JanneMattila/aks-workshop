@@ -167,7 +167,11 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --api-server-authorized-ip-ranges $my_ip \
  -o json)
 store_variable "aks_json"
-echo $aks_json
+echo $aks_json | jq .
+
+aks_api_server=$(echo $aks_json | jq -r .azurePortalFQDN)
+store_variable "aks_api_server"
+echo $aks_api_server
 
 aks_id=$(echo $aks_json | jq -r .id)
 store_variable "aks_id"
