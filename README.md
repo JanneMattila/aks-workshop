@@ -49,7 +49,7 @@ Azure Kubernetes Service (AKS) Workshop
       1. Run `00-variables.sh` to restore variable values
       2. Update authorized IP ranges to AKS:
       ```bash
-      my_ip=$(curl -s https://api.ipify.org)
+      my_ip=$(curl -s https://myip.jannemattila.com)
       az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ranges $my_ip
       ```
       3. Get credentials for connecting to AKS:
