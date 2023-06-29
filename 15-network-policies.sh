@@ -14,6 +14,15 @@
 
 # QUESTION:
 # ---------
+# Can you later update your existing AKS and enable network policy?
+#
+# E.g., az aks update -g $resource_group_name -n $aks_name --network-policy azure
+#
+# https://learn.microsoft.com/en-us/azure/aks/use-network-policies#create-an-aks-cluster-and-enable-network-policy
+#
+
+# QUESTION:
+# ---------
 # What are differences between Network policies and 
 # Network Security Groups (NSG)?
 #
@@ -37,3 +46,6 @@ curl $network_app2_external_svc_ip
 # Full access between namespaces
 curl -X POST --data "HTTP GET \"http://network-app-internal2-svc.network-app2.svc.cluster.local\"" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "HTTP GET \"http://network-app-internal-svc.network-app.svc.cluster.local\"" "$network_app2_external_svc_ip/api/commands"
+
+az aks update --help
+az aks update -g $resource_group_name -n $aks_name --network-policy azure

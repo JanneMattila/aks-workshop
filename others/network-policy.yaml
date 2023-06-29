@@ -2,12 +2,12 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: echo-app-network-policy
-  namespace: echo-app
+  name: network-app2-network-policy
+  namespace: network-app2
 spec:
   podSelector:
     matchLabels:
-      app: echo-app
+      app: network-app2
   ingress:
     - from:
         - podSelector:
