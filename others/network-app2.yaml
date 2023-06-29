@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: network-app2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: network-app2-external-svc
+  namespace: network-app2
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+  selector:
+    app: network-app2
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: network-app-internal2-svc
+  namespace: network-app2
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+  selector:
+    app: network-app2
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-app2-deployment
+  namespace: network-app2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network-app2
+  template:
+    metadata:
+      labels:
+        app: network-app2
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - image: jannemattila/webapp-network-tester:1.0.58
+          name: network-app2
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 150m
+              memory: 150Mi
+          ports:
+            - containerPort: 80
+              name: http
+              protocol: TCP
