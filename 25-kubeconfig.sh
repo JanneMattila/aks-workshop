@@ -30,6 +30,7 @@ kubectl get namespaces
 
 curl -X DELETE -H "Authorization: Bearer $aks_api_server_accesstoken" https://$aks_api_server/api/v1/namespaces/shiny
 
+kubectl get --raw "/api/v1/namespaces"
 kubectl get namespaces
 
 ### Deprecation: Fetch deployment list
