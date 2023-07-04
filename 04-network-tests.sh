@@ -117,3 +117,23 @@ curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.l
 #
 curl -X POST --data "IPLOOKUP echo-app-svc.echo-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "HTTP GET \"http://echo-app-svc.echo-app.svc.cluster.local\"" "$network_app_external_svc_ip/api/commands"
+
+# For accessing host files you can use following commands:
+curl -X POST --data "FILE LIST /mnt/host/var/log/azure" "$network_app_external_svc_ip/api/commands"
+
+curl -X POST --data "FILE READ /mnt/host/var/log/azure/containerd-status.log" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /mnt/host/var/log/azure/cluster-provision.log" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /mnt/host/var/log/azure/kubelet-status.log" "$network_app_external_svc_ip/api/commands"
+
+curl -X POST --data "FILE LIST /mnt/host/var/log/azure/Microsoft.Azure.Extensions.CustomScript" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /mnt/host/var/log/azure/Microsoft.Azure.Extensions.CustomScript/CommandExecution.log" "$network_app_external_svc_ip/api/commands"
+
+curl -X POST --data "FILE LIST /mnt/host/var/log/azure/Microsoft.AKS.Compute.AKS.Linux.AKSNode" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /mnt/host/var/log/azure/Microsoft.AKS.Compute.AKS.Linux.AKSNode/CommandExecution.log" "$network_app_external_svc_ip/api/commands"
+
+curl -X POST --data "FILE LIST /mnt/host/var/log/azure/custom-script" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "FILE READ /mnt/host/var/log/azure/custom-script/handler.log" "$network_app_external_svc_ip/api/commands"
+
+curl -X POST --data "FILE LIST /mnt/host/var/log/azure/aks" "$network_app_external_svc_ip/api/commands"
+
+curl -X POST --data "FILE LIST /mnt/host/etc" "$network_app_external_svc_ip/api/commands"

@@ -29,7 +29,7 @@ spec:
       #       value: "2"
       #     - name: edns0
       containers:
-        - image: jannemattila/webapp-network-tester:1.0.58
+        - image: jannemattila/webapp-network-tester:1.0.60
           name: network-app
           resources:
             requests:
@@ -54,3 +54,10 @@ spec:
               port: 80
             initialDelaySeconds: 5
             periodSeconds: 5
+          volumeMounts:
+            - name: hostpath
+              mountPath: /mnt/host
+      volumes:
+        - name: hostpath
+          hostPath:
+            path: /
