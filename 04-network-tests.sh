@@ -137,3 +137,35 @@ curl -X POST --data "FILE READ /mnt/host/var/log/azure/custom-script/handler.log
 curl -X POST --data "FILE LIST /mnt/host/var/log/azure/aks" "$network_app_external_svc_ip/api/commands"
 
 curl -X POST --data "FILE LIST /mnt/host/etc" "$network_app_external_svc_ip/api/commands"
+
+# https://kubernetes.io/docs/concepts/cluster-administration/logging/
+curl -X POST --data "FILE LIST /mnt/host/var/log/pods" "$network_app_external_svc_ip/api/commands"
+pod_log_root_path=$(curl -s -X POST --data "FILE LIST /mnt/host/var/log/pods" "$network_app_external_svc_ip/api/commands" | head -2 | tail -1)
+echo $pod_log_root_path
+
+curl -X POST --data "FILE LIST $pod_log_root_path" "$network_app_external_svc_ip/api/commands"
+pod_log_folder=$(curl -s -X POST --data "FILE LIST $pod_log_root_path" "$network_app_external_svc_ip/api/commands" | head -2 | tail -1)
+echo $pod_log_folder
+
+curl -X POST --data "FILE LIST $pod_log_folder" "$network_app_external_svc_ip/api/commands"
+pod_log_file=$(curl -s -X POST --data "FILE LIST $pod_log_folder" "$network_app_external_svc_ip/api/commands" | head -2 | tail -1)
+echo $pod_log_file
+
+curl -X POST --data "FILE READ $pod_log_file" "$network_app_external_svc_ip/api/commands"
+
+# QUESTION:
+# ---------
+# How does connectivity to "ExternalName" Service works?
+#
+# <clip>
+# apiVersion: v1
+# kind: Service
+# metadata:
+#   name: externalname-svc
+# spec:
+#   type: ExternalName
+# </clip>
+#
+# Test and explain what happens when you run following commands:
+kubectl apply -f others/service-externalname.yaml
+curl -X POST --data "HTTP GET \"http://externalname-svc.default.svc.cluster.local\"" "$network_app_external_svc_ip/api/commands"
