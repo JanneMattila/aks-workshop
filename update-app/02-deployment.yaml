@@ -28,6 +28,23 @@ spec:
       #         app: update-app
       # https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/
       # affinity:
+      #   nodeAffinity:
+      #     preferredDuringSchedulingIgnoredDuringExecution:
+      #       - weight: 100
+      #         preference:
+      #           matchExpressions:
+      #             - key: topology.kubernetes.io/zone
+      #               operator: In
+      #               values:
+      #                 - northeurope-1
+      # requiredDuringSchedulingIgnoredDuringExecution:
+      #   nodeSelectorTerms:
+      #     - matchExpressions:
+      #         - key: topology.kubernetes.io/zone
+      #           operator: In
+      #           values:
+      #             - northeurope-1
+      # affinity:
       #   podAntiAffinity:
       #     requiredDuringSchedulingIgnoredDuringExecution:
       #       - topologyKey: kubernetes.io/hostname
