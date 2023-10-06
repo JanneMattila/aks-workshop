@@ -22,9 +22,10 @@ az aks nodepool scale -g $resource_group_name --cluster-name $aks_name \
 
 # You can create new nodepools
 # Command: SCALE-3
+# --zones 1 2 3 \
 az aks nodepool add -g $resource_group_name --cluster-name $aks_name \
   --name $aks_nodepool2 \
-  --node-count 2 \
+  --node-count 1 \
   --node-osdisk-type Ephemeral \
   --node-vm-size Standard_D8ds_v4 \
   --node-taints "usage=tempworkloads:NoSchedule" \
@@ -38,6 +39,7 @@ kubectl apply -f nodepool-app/
 kubectl get nodes --show-labels=true
 kubectl get nodes -L agentpool,usage
 
+kubectl get deployment -n nodepool-app
 kubectl get pod -n nodepool-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
 
 kubectl get service -n nodepool-app
@@ -121,3 +123,13 @@ az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
 # https://learn.microsoft.com/en-us/azure/aks/vertical-pod-autoscaler
 # https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
 #
+
+# Scale by placeholder-app
+kubectl apply -f placeholder-app/
+
+kubectl get deployment -n placeholder-app
+kubectl get pod -n placeholder-app
+kubectl describe pod -n placeholder-app
+kubectl get pod -n placeholder-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
+
+list_pods placeholder-app

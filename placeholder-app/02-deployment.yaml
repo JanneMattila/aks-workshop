@@ -25,13 +25,19 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
         kubernetes.azure.com/mode: user
+        usage: tempworkloads
+      tolerations:
+        - key: "usage"
+          operator: "Equal"
+          value: "tempworkloads"
+          effect: "NoSchedule"
       containers:
         - name: placeholder-app
           image: jannemattila/webapp-network-tester:1.0.60
           resources:
             requests:
-              cpu: 7Gi
+              cpu: 6000m
               memory: 12Gi
             limits:
-              cpu: 7Gi
+              cpu: 6000m
               memory: 12Gi

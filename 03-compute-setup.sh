@@ -152,7 +152,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.25.6 \
+ --kubernetes-version 1.27.1 \
  --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
@@ -251,7 +251,7 @@ kubelogin convert-kubeconfig -l azurecli
 # Test connectivity to Kubernetes
 # Command: COMPUTE-17
 kubectl get nodes
-kubectl get nodes -o wide
+kubectl get nodes -o wide --show-labels
 kubectl get nodes -o custom-columns=NAME:'{.metadata.name}',REGION:'{.metadata.labels.topology\.kubernetes\.io/region}',ZONE:'{metadata.labels.topology\.kubernetes\.io/zone}'
 
 # Deploy simple network test application
@@ -263,6 +263,7 @@ kubectl apply -f network-app/
 kubectl get deployment -n network-app
 kubectl get service -n network-app
 kubectl get pod -n network-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
+list_pods network-app
 
 network_app_pod1=$(kubectl get pod -n network-app -o name | head -n 1)
 store_variable network_app_pod1
