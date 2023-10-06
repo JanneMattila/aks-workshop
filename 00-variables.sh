@@ -19,6 +19,18 @@ function keep_alive()
     while :; do echo "$(date) - Hit CTRL+C"; sleep 1; done
 }
 
+function list_pods()
+{
+  declare -A node_map
+  while read node zone; do
+    node_map["$node"]="$zone"
+  done <<< $(kubectl get nodes --no-headers -o custom-columns=NAME:'{.metadata.name}',ZONE:'{metadata.labels.topology\.kubernetes\.io/zone}')
+
+  while read pod node; do
+      echo "Pod: $pod, Node: $node, Zone: ${node_map[$node]}"
+  done <<< $(kubectl get pod -n "$1" --no-headers -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}')
+}
+
 ###################################################################
 
 # __     __         _       _     _

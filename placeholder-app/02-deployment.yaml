@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: placeholder-app-deployment
+  namespace: placeholder-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: placeholder-app
+  template:
+    metadata:
+      labels:
+        app: placeholder-app
+    spec:
+      priorityClassName: placeholder-priority
+      terminationGracePeriodSeconds: 0
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: placeholder-app
+      nodeSelector:
+        kubernetes.io/os: linux
+        kubernetes.azure.com/mode: user
+      containers:
+        - name: placeholder-app
+          image: jannemattila/webapp-network-tester:1.0.60
+          resources:
+            requests:
+              cpu: 7Gi
+              memory: 12Gi
+            limits:
+              cpu: 7Gi
+              memory: 12Gi
