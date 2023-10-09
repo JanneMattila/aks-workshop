@@ -183,6 +183,7 @@ echo $aks_id
 az monitor diagnostic-settings create  -n diag1 \
   --resource $aks_id \
   --workspace $aks_workspace_id \
+  --export-to-resource-specific \
   --logs "[{category:kube-apiserver,enabled:true},{category:kube-audit,enabled:true},{category:kube-audit-admin,enabled:true},{category:kube-controller-manager,enabled:true},{category:kube-scheduler,enabled:true},{category:cluster-autoscaler,enabled:true},{category:cloud-controller-manager,enabled:true},{category:guard,enabled:true},{category:csi-azuredisk-controller,enabled:true},{category:csi-azurefile-controller,enabled:true},{category:csi-snapshot-controller,enabled:true}]"
 
 # In case your ip changes, then you can re-run following
