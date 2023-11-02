@@ -60,7 +60,7 @@ resource_group_name="rg-aks-workshop-$my_name"
 aks_azure_ad_admin_group_contains="janneops"
 
 # Azure region to use (remember not all regions support all services and availability zones)
-location="westcentralus"
+location="uksouth"
 
 #########################
 #                   _

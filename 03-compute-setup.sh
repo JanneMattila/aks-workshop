@@ -152,7 +152,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.27.1 \
+ --kubernetes-version 1.26.3 \
  --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
@@ -170,7 +170,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
 store_variable "aks_json"
 echo $aks_json | jq .
 
-aks_api_server=$(echo $aks_json | jq -r .azurePortalFQDN)
+aks_api_server=$(echo $aks_json | jq -r .azurePortalFqdn)
 store_variable "aks_api_server"
 echo $aks_api_server
 
