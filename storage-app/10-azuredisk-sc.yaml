@@ -5,10 +5,10 @@ metadata:
 provisioner: disk.csi.azure.com
 parameters:
   # Important:
-  # https://docs.microsoft.com/en-us/azure/aks/availability-zones#azure-disk-availability-zone-support
-  # https://docs.microsoft.com/en-us/azure/virtual-machines/disks-redundancy
+  # https://learn.microsoft.com/en-us/azure/aks/availability-zones#azure-disk-availability-zone-support
+  # https://learn.microsoft.com/en-us/azure/virtual-machines/disks-redundancy
   # ZRS = Zone-redundant storage
-  # https://docs.microsoft.com/en-us/azure/storage/common/storage-redundancy#redundancy-in-the-primary-region
+  # https://learn.microsoft.com/en-us/azure/storage/common/storage-redundancy#redundancy-in-the-primary-region
   # skuName: Premium_ZRS
   skuName: Premium_LRS
 reclaimPolicy: Delete

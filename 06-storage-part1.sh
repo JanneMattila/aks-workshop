@@ -1,6 +1,6 @@
 # List installed Container Storage Interfaces (CSI)
 # More information here:
-# https://docs.microsoft.com/en-us/azure/aks/csi-storage-drivers
+# https://learn.microsoft.com/en-us/azure/aks/csi-storage-drivers
 # https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/driver-parameters.md
 kubectl get storageclasses
 
@@ -28,7 +28,7 @@ kubectl get csidrivers disk.csi.azure.com -o yaml
 # Below implementation will create Premium NFS file share ahead of time (=static provisioning).
 #
 # More information here:
-# https://docs.microsoft.com/en-us/azure/aks/azure-files-volume
+# https://learn.microsoft.com/en-us/azure/aks/azure-csi-files-storage-provision
 #
 
 # Create storage account
@@ -74,7 +74,7 @@ az storage share-rm create \
 # Throughput rate  70.0 MiBytes / s
 
 # Follow instructions from here:
-# https://docs.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints?tabs=azure-cli
+# https://learn.microsoft.com/en-us/azure/storage/files/storage-files-networking-endpoints
 # Disable private endpoint network policies
 #
 # Command: STORAGE-PART1-4

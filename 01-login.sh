@@ -16,7 +16,7 @@ az account list-locations -o table
 # - Not all services are in all regions:
 #   https://azure.microsoft.com/en-us/global-infrastructure/services/
 # - Not all regions support availability zones
-#   https://docs.microsoft.com/en-us/azure/availability-zones/az-region#azure-regions-with-availability-zones
+#   https://learn.microsoft.com/en-us/azure/reliability/availability-zones-service-support#azure-regions-with-availability-zones
 #
 
 # ----------------------------------------

@@ -11,8 +11,8 @@
 # Route traffic between spoke1 and spoke2 using this router.
 #
 # More information here:
-# https://docs.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview
-# https://docs.microsoft.com/en-us/azure/virtual-network/tutorial-create-route-table-portal
+# https://learn.microsoft.com/en-us/azure/virtual-network/virtual-networks-udr-overview
+# https://learn.microsoft.com/en-us/azure/virtual-network/tutorial-create-route-table-portal
 
 # Enable IP Forwarding for nic of jumpbox vm
 # Command: ADVANCED-NETWORKING-1
@@ -81,5 +81,5 @@ curl -X POST --data  "HTTP GET \"http://$aci_ip\"" -H "Content-Type: text/plain"
 # In case of issues you can use NSG Flow logs to study the traffic
 #
 # More information here:
-# https://docs.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-overview
+# https://learn.microsoft.com/en-us/azure/network-watcher/network-watcher-nsg-flow-logging-overview
 #

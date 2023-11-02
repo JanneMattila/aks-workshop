@@ -89,7 +89,7 @@ store_variable "vnet_spoke1_front_subnet_id"
 echo $vnet_spoke1_front_subnet_id
 
 # What is subnet delegation?
-# https://docs.microsoft.com/en-us/azure/virtual-network/subnet-delegation-overview
+# https://learn.microsoft.com/en-us/azure/virtual-network/subnet-delegation-overview
 
 # Create network security group (NSG) to front subnet
 # Command: NETWORK-11

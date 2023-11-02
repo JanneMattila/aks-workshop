@@ -179,7 +179,7 @@ exit
 # What happens in AKS fails in Zone-1?
 #
 # More information:
-# https://docs.microsoft.com/en-us/azure/aks/availability-zones#azure-disk-availability-zone-support
+# https://learn.microsoft.com/en-us/azure/aks/availability-zones#azure-disk-availability-zone-support
 #
 
 #

@@ -49,7 +49,7 @@ store_variable "bastion_id"
 # to jumpbox 
 ###################
 # Connect to a VM using Bastion and the native client on your Windows computer
-# https://docs.microsoft.com/en-us/azure/bastion/connect-native-client-windows
+# https://learn.microsoft.com/en-us/azure/bastion/native-client
 
 echo $vm_password
 # Command: COMPUTE-3
@@ -135,7 +135,7 @@ my_ip=$(curl -s https://myip.jannemattila.com)
 echo $my_ip
 
 # Note about private clusters:
-# https://docs.microsoft.com/en-us/azure/aks/private-clusters
+# https://learn.microsoft.com/en-us/azure/aks/private-clusters
 #
 # For private cluster add these:
 #  --enable-private-cluster
@@ -236,7 +236,7 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 # Verify from portal.
 # 
 # More information here:
-# https://docs.microsoft.com/en-us/azure/aks/configure-azure-cni
+# https://learn.microsoft.com/en-us/azure/aks/configure-azure-cni
 # https://github.com/Azure/azure-container-networking/blob/master/docs/cni.md
 #
 
@@ -313,7 +313,7 @@ curl $echo_app_ip
 #
 
 # More information about load balancer annotations:
-# https://docs.microsoft.com/en-us/azure/aks/load-balancer-standard#additional-customizations-via-kubernetes-annotations
+# https://learn.microsoft.com/en-us/azure/aks/load-balancer-standard#customizations-via-kubernetes-annotations
 
 #
 # To split your nodepools and AKS to separate subnets see this example:
