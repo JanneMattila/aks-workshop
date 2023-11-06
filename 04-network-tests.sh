@@ -113,7 +113,7 @@ curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.l
 
 # QUESTION:
 # ---------
-# Is other apps service reachable from network-app?
+# Are other apps service reachable from network-app?
 #
 curl -X POST --data "IPLOOKUP echo-app-svc.echo-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "HTTP GET \"http://echo-app-svc.echo-app.svc.cluster.local\"" "$network_app_external_svc_ip/api/commands"
