@@ -64,8 +64,8 @@ spec:
             periodSeconds: 10
             failureThreshold: 1
           env:
-            - name: webhook
-              value: http://echo-app-svc.echo-app.svc.cluster.local/api/echo
+            # - name: webhook
+            #   value: http://echo-app-svc.echo-app.svc.cluster.local/api/echo
             - name: livenessCheck
               value: "true"
             - name: readinessCheck
