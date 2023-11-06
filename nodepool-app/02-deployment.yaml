@@ -15,6 +15,7 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/os: linux
+        # kubernetes.azure.com/mode: user
         usage: tempworkloads
       tolerations:
         - key: "usage"
@@ -22,7 +23,7 @@ spec:
           value: "tempworkloads"
           effect: "NoSchedule"
       containers:
-        - image: jannemattila/catch-the-banana:1.0.57
+        - image: jannemattila/catch-the-banana:1.0.68
           name: nodepool-app
           resources:
             requests:

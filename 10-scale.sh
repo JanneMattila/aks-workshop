@@ -41,6 +41,7 @@ kubectl get nodes -L agentpool,usage
 
 kubectl get deployment -n nodepool-app
 kubectl get pod -n nodepool-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
+list_pods nodepool-app
 
 kubectl get service -n nodepool-app
 
