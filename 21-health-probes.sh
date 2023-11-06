@@ -13,6 +13,7 @@ kubectl apply -f healthprobe-app/
 # Command: HEALTH-PROBE-2
 kubectl get deployment -n healthprobe-app
 kubectl get pod -n healthprobe-app
+kubectl get hpa -n healthprobe-app
 kubectl get service -n healthprobe-app
 
 healthprobe_app_ip=$(kubectl get service healthprobe-app-svc -n healthprobe-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
@@ -31,3 +32,8 @@ echo $healthprobe_app_server
 curl -s -X POST --data "{ \"shutdown\": true, \"condition\": \"$healthprobe_app_server\" }" -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/healthcheck" --verbose
 
 curl -s -X POST --data '{ "readiness": true, "liveness": true }' -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/healthcheck" | jq .
+
+curl -s -X POST --data '{ "duration": 60 }' -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/resourceusage"
+kubectl top pod -n healthprobe-app
+kubectl get deployment -n healthprobe-app
+kubectl get pod -n healthprobe-app
