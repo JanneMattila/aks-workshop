@@ -264,7 +264,7 @@ store_variable "storage_app_ip"
 echo $storage_app_ip
 
 curl $storage_app_ip
-# -> <html><body>Hello there!</body></html>
+# -> Hello there!
 
 curl $storage_app_ip/swagger/index.html
 # -> Swagger OK!

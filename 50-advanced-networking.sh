@@ -68,13 +68,13 @@ az network route-table route create \
 # Command: NETWORK-TESTING-4
 curl -X POST --data  "HTTP GET \"http://$network_app_internal_svc_ip\"" -H "Content-Type: text/plain" "$aci_ip/api/commands" # Timeout
 # -> Start: HTTP GET "http://10.2.0.4"
-# <html><body>Hello there!</body></html>
+# -> Hello there!
 # <- End: HTTP GET "http://10.2.0.4" 5.51ms
 
 # Test spoke002 -> spoke001 connectivity
 curl -X POST --data  "HTTP GET \"http://$aci_ip\"" -H "Content-Type: text/plain" "$network_app_internal_svc_ip/api/commands" # Timeout
 # -> Start: HTTP GET "http://10.1.0.4"
-# <html><body>Hello there!</body></html>
+# -> Hello there!
 # <- End: HTTP GET "http://10.1.0.4" 5.39ms
 # <---
 

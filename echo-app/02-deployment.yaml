@@ -16,7 +16,7 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-        - image: jannemattila/echo:1.0.105
+        - image: jannemattila/echo:1.0.107
           name: echo-app
           resources:
             requests:

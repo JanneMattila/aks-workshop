@@ -17,7 +17,7 @@ store_variable "ingress_ip"
 echo $ingress_ip
 
 curl $ingress_ip
-# -> <html><body>Hello there!</body></html>
+# -> Hello there!
 
 #
 # Study Web Application Firewall (WAF) capabilities of Application Gateway.
