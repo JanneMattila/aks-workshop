@@ -1,0 +1,8 @@
+apiVersion: alb.networking.azure.io/v1
+kind: ApplicationLoadBalancer
+metadata:
+  name: alb-demo
+  namespace: alb-ns
+spec:
+  associations:
+    - $vnet_spoke2_agc_subnet_id

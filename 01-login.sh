@@ -41,3 +41,9 @@ az extension add --upgrade --yes --name aks-preview
 az extension add --upgrade --yes --name bastion
 az extension add --upgrade --yes --name ssh
 az extension add --upgrade --yes --name alb
+
+# Register required resource providers on Azure.
+az provider register --namespace Microsoft.ContainerService
+az provider register --namespace Microsoft.Network
+az provider register --namespace Microsoft.NetworkFunction
+az provider register --namespace Microsoft.ServiceNetworking

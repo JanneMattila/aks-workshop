@@ -144,6 +144,15 @@ vnet_spoke2_agic_subnet_id=$(az network vnet subnet create -g $resource_group_na
 store_variable "vnet_spoke2_agic_subnet_id"
 echo $vnet_spoke2_agic_subnet_id
 
+# Create Application Gateway for Containers (AGC) subnet
+# Command: NETWORK-17
+vnet_spoke2_agc_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
+  --name $vnet_spoke2_agc_subnet_name --address-prefixes $vnet_spoke2_agc_subnet_address_prefix \
+  -delegations "Microsoft.ServiceNetworking/trafficControllers" \
+  --query id -o tsv)
+store_variable "vnet_spoke2_agc_subnet_id"
+echo $vnet_spoke2_agc_subnet_id
+
 # Study virtual networks in the portal
 
 # QUESTION:
@@ -172,7 +181,7 @@ az network vnet peering create --help
 #
 
 # Hub -> Spoke 1
-# Command: NETWORK-17
+# Command: NETWORK-18
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke1_plain_name" \
   --resource-group $resource_group_name \
@@ -182,7 +191,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 1 -> Hub
-# Command: NETWORK-18
+# Command: NETWORK-19
 az network vnet peering create \
   --name "$vnet_spoke1_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \
@@ -195,7 +204,7 @@ az network vnet peering create \
 # ---
 
 # Hub -> Spoke 2
-# Command: NETWORK-19
+# Command: NETWORK-20
 az network vnet peering create \
   --name "$vnet_hub_plain_name-to-$vnet_spoke2_plain_name" \
   --resource-group $resource_group_name \
@@ -205,7 +214,7 @@ az network vnet peering create \
   --allow-gateway-transit
 
 # Spoke 2 -> Hub
-# Command: NETWORK-20
+# Command: NETWORK-21
 az network vnet peering create \
   --name "$vnet_spoke2_plain_name-to-$vnet_hub_plain_name" \
   --resource-group $resource_group_name \

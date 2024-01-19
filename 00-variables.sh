@@ -102,8 +102,10 @@ vnet_spoke2_aks_subnet_address_prefix="10.2.0.0/24"
 vnet_spoke2_aks_subnet_udr_name="udr-$vnet_spoke2_plain_name-aks"
 vnet_spoke2_agic_subnet_name="snet-agic"
 vnet_spoke2_agic_subnet_address_prefix="10.2.1.0/24"
+vnet_spoke2_agc_subnet_name="snet-agc"
+vnet_spoke2_agc_subnet_address_prefix="10.2.2.0/24"
 vnet_spoke2_pe_subnet_name="snet-pe"
-vnet_spoke2_pe_subnet_address_prefix="10.2.2.0/24"
+vnet_spoke2_pe_subnet_address_prefix="10.2.3.0/24"
 
 #######################
 # __   ___ __ ___
@@ -207,6 +209,8 @@ store_variable vnet_spoke2_aks_subnet_address_prefix
 store_variable vnet_spoke2_aks_subnet_udr_name
 store_variable vnet_spoke2_agic_subnet_name
 store_variable vnet_spoke2_agic_subnet_address_prefix
+store_variable vnet_spoke2_agc_subnet_name
+store_variable vnet_spoke2_agc_subnet_address_prefix
 store_variable vnet_spoke2_pe_subnet_name
 store_variable vnet_spoke2_pe_subnet_address_prefix
 store_variable vm_name
