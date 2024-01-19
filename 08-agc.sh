@@ -69,7 +69,6 @@ kubectl apply -f others/agc/02-gateway.yaml
 kubectl get gateway -n alb-ns -o yaml
 
 kubectl apply -f others/agc/03-route.yaml
-kubectl delete -f others/agc/03-route.yaml
 
 kubectl get gateway -n alb-ns
 kubectl get httproute -n network-app -o yaml
@@ -79,3 +78,9 @@ store_variable aks_agc_gateway_address
 echo $aks_agc_gateway_address
 
 curl $aks_agc_gateway_address
+
+# kubectl apply -f others/agc/04-routepolicy.yaml
+# kubectl get routepolicy -n network-app -o yaml
+# kubectl get routepolicy -n network-app
+
+# curl $aks_agc_gateway_address --verbose

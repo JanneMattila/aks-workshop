@@ -1,0 +1,16 @@
+apiVersion: alb.networking.azure.io/v1
+kind: RoutePolicy
+metadata:
+  name: session-affinity-route-policy
+  namespace: network-app
+spec:
+  targetRef:
+    kind: HTTPRoute
+    name: network-app-route
+    namespace: network-app
+    group: ""
+  default:
+    sessionAffinity:
+      affinityType: "application-cookie"
+      cookieName: "myaffinity"
+      cookieDuration: "3600"
