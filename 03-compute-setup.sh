@@ -152,8 +152,8 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.26.3 \
- --enable-addons monitoring,azure-policy,azure-keyvault-secrets-provider \
+ --kubernetes-version 1.28.3 \
+ --enable-addons monitoring,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
  --disable-local-accounts \
@@ -173,6 +173,10 @@ echo $aks_json | jq .
 aks_api_server=$(echo $aks_json | jq -r .azurePortalFqdn)
 store_variable "aks_api_server"
 echo $aks_api_server
+
+aks_node_resource_group_name=$(echo $aks_json | jq -r .nodeResourceGroup)
+store_variable "aks_node_resource_group_name"
+echo $aks_node_resource_group_name
 
 aks_id=$(echo $aks_json | jq -r .id)
 store_variable "aks_id"
@@ -283,7 +287,7 @@ store_variable network_app_internal_svc_ip
 echo $network_app_internal_svc_ip
 
 curl $network_app_external_svc_ip
-# -> <html><body>Hello there!</body></html>
+# -> Hello there!
 
 curl $network_app_internal_svc_ip
 # -> Timeout (no private connectivity)
@@ -318,4 +322,43 @@ curl $echo_app_ip
 #
 # To split your nodepools and AKS to separate subnets see this example:
 # https://github.com/JanneMattila/playground-aks-networking/tree/main/subnet-example
+#
+
+# Connect to network app pod
+# Command: COMPUTE-21
+kubectl exec --stdin --tty $network_app_pod1 -n network-app -- /bin/bash
+
+# Run commands inside pod
+
+# Study environment variables
+set
+set | grep DB_
+
+# Study mounts
+cd /mnt
+ls -lF
+
+cd /mnt/config
+ls -lF
+
+cat app.config
+cat delete.sh
+./delete.sh
+
+# Exit pod
+exit
+
+# Edit config map
+kubectl edit configmap network-app-configmap -n network-app
+
+# Study config map
+kubectl get configmap -n network-app
+kubectl get configmap network-app-configmap -n network-app -o yaml
+
+# QUESTION:
+# ---------
+# If you now reconnect to the network app pod,
+# then which value do you see there? Old or new value?
+#
+# https://kubernetes.io/docs/concepts/configuration/configmap
 #

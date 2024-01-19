@@ -1,0 +1,25 @@
+# https://kubernetes.io/docs/concepts/configuration/configmap/
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: network-app-configmap
+  namespace: network-app
+data:
+  DB_SERVER: this.is.my.db.server
+  app.config: |-
+    {
+        "applicationName": "MyApp",
+        "version": "1.0.0",
+        "environment": "production",
+        "logging": {
+            "level": "info",
+            "output": "file",
+            "filePath": "/var/log/myapp.log"
+        },
+        "features": {
+            "feature1": true,
+            "feature2": false
+        }
+    }
+  delete.sh: |-
+    rm app.config

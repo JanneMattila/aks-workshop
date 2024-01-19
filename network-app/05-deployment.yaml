@@ -54,10 +54,29 @@ spec:
               port: 8080
             initialDelaySeconds: 5
             periodSeconds: 5
+          env:
+            - name: DB_PORT
+              value: "1234"
+            - name: DB_CONNECTION_STRING
+              valueFrom:
+                configMapKeyRef:
+                  name: network-app-configmap
+                  key: DB_SERVER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: network-app-secret
+                  key: supersecret
           volumeMounts:
             - name: hostpath
               mountPath: /mnt/host
+            - name: configmap
+              mountPath: /mnt/config
       volumes:
         - name: hostpath
           hostPath:
             path: /
+        - name: configmap
+          configMap:
+            name: network-app-configmap
+            defaultMode: 0744
