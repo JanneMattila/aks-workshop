@@ -148,7 +148,7 @@ echo $vnet_spoke2_agic_subnet_id
 # Command: NETWORK-17
 vnet_spoke2_agc_subnet_id=$(az network vnet subnet create -g $resource_group_name --vnet-name $vnet_spoke2_name \
   --name $vnet_spoke2_agc_subnet_name --address-prefixes $vnet_spoke2_agc_subnet_address_prefix \
-  -delegations "Microsoft.ServiceNetworking/trafficControllers" \
+  --delegations "Microsoft.ServiceNetworking/trafficControllers" \
   --query id -o tsv)
 store_variable "vnet_spoke2_agc_subnet_id"
 echo $vnet_spoke2_agc_subnet_id

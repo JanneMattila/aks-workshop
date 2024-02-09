@@ -37,7 +37,7 @@ az group create -l $location -n $resource_group_name -o table
 
 # Prepare extensions and providers
 # Command: VAR-4
-az extension add --upgrade --yes --name aks-preview
+az extension add --upgrade --yes --name aks-preview --allow-preview true
 az extension add --upgrade --yes --name bastion
 az extension add --upgrade --yes --name ssh
 az extension add --upgrade --yes --name alb
