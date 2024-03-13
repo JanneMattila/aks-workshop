@@ -19,7 +19,7 @@ spec:
         kubernetes.io/os: linux
       terminationGracePeriodSeconds: 10
       containers:
-        - image: jannemattila/webapp-fs-tester:1.1.13
+        - image: jannemattila/webapp-fs-tester:1.1.14
           name: storage-app
           resources:
             requests:
@@ -29,7 +29,7 @@ spec:
               cpu: 150m
               memory: 150Mi
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
               protocol: TCP
           volumeMounts:
