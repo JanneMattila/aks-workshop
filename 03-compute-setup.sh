@@ -116,13 +116,16 @@ echo $aks_azure_ad_admin_group_object_id
 
 # Create Log Analytics workspace for our AKS
 # Command: COMPUTE-8
-aks_workspace_json=$(az monitor log-analytics workspace create -g $resource_group_name -n $aks_workspace_name -o json)
-aks_monitor_id="/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$resource_group_name/providers/microsoft.monitor/accounts/$aks_workspace_name"
-aks_workspace_id=$(echo $aks_workspace_json | jq -r .id)
-store_variable aks_monitor_id
-store_variable aks_workspace_id
-echo $aks_monitor_id
-echo $aks_workspace_id
+aks_log_analytics_workspace_json=$(az monitor log-analytics workspace create -g $resource_group_name -n $aks_log_analytics_workspace_name -o json)
+aks_log_analytics_workspace_id=$(echo $aks_log_analytics_workspace_json | jq -r .id)
+store_variable aks_log_analytics_workspace_id
+echo $aks_log_analytics_workspace_id
+
+# Create Azure Monitor  workspace for our AKS
+aks_monitor_workspace_json=$(az monitor account create -g $resource_group_name -n $aks_monitor_workspace_name -o json)
+aks_monitor_workspace_id=$(echo $aks_monitor_workspace_json | jq -r .id)
+store_variable aks_monitor_workspace_id
+echo $aks_monitor_workspace_id
 
 # Create Container Registry
 # Command: COMPUTE-9
@@ -176,9 +179,9 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --enable-oidc-issuer \
  --enable-workload-identity \
  --aad-admin-group-object-ids $aks_azure_ad_admin_group_object_id \
- --workspace-resource-id $aks_workspace_id \
+ --workspace-resource-id $aks_log_analytics_workspace_id \
  --enable-azure-monitor-metrics \
- --azure-monitor-workspace-resource-id $aks_monitor_id \
+ --azure-monitor-workspace-resource-id $aks_monitor_workspace_id \
  --attach-acr $acr_id \
  --load-balancer-sku standard \
  --vnet-subnet-id $vnet_spoke2_aks_subnet_id \
@@ -206,7 +209,7 @@ echo $aks_id
 # Command: COMPUTE-13
 az monitor diagnostic-settings create  -n diag1 \
   --resource $aks_id \
-  --workspace $aks_workspace_id \
+  --workspace $aks_log_analytics_workspace_id \
   --export-to-resource-specific \
   --logs "[{category:kube-apiserver,enabled:true},{category:kube-audit,enabled:true},{category:kube-audit-admin,enabled:true},{category:kube-controller-manager,enabled:true},{category:kube-scheduler,enabled:true},{category:cluster-autoscaler,enabled:true},{category:cloud-controller-manager,enabled:true},{category:guard,enabled:true},{category:csi-azuredisk-controller,enabled:true},{category:csi-azurefile-controller,enabled:true},{category:csi-snapshot-controller,enabled:true}]"
 

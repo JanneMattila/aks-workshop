@@ -152,7 +152,8 @@ aci_name="ci-$vnet_spoke1_plain_name"
 
 # AKS specific
 aks_name="aks-$my_name"
-aks_workspace_name="log-$my_name"
+aks_log_analytics_workspace_name="log-$my_name"
+aks_monitor_workspace_name="mon-$my_name"
 aks_cluster_identity_name="id-$my_name-cluster"
 aks_kubelet_identity_name="id-$my_name-kubelet"
 aks_agc_identity_name="id-$my_name-agc"
@@ -221,7 +222,8 @@ store_variable bastion_name
 store_variable aci_name
 store_variable aks_azure_ad_admin_group_contains
 store_variable aks_name
-store_variable aks_workspace_name
+store_variable aks_log_analytics_workspace_name
+store_variable aks_monitor_workspace_name
 store_variable aks_cluster_identity_name
 store_variable aks_kubelet_identity_name
 store_variable aks_agc_identity_name
