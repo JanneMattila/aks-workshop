@@ -146,7 +146,7 @@ az network private-dns record-set a add-record \
   --ipv4-address $storage_pe_ip \
   --output none
 
-# Deploy storage secret
+# Deploy storage secret, if you deploy SMB
 # Command: STORAGE-PART1-12
 kubectl create secret generic azurefile-secret \
   --from-literal=azurestorageaccountname=$storage_name \
@@ -162,9 +162,16 @@ cat azurefile-secret.yaml
 # Deploy storage app
 # Command: STORAGE-PART1-13
 kubectl apply -f storage-app/00-namespace.yaml
-kubectl apply -f azurefile-secret.yaml
+
+# This is required for SMB:
+# kubectl apply -f azurefile-secret.yaml
 
 # Update persistent volume to refer to correct storage account
+# Important note: If you deploy SMB, then you need to set these:
+# nodeStageSecretRef:
+#   name: azurefile-secret
+#   namespace: storage-app
+# For now, we don't need that since we deploy NFS:
 cat <<EOF > storage-app/01-persistent-volume-nfs.yaml
 apiVersion: v1
 kind: PersistentVolume
@@ -189,9 +196,6 @@ spec:
       storageAccount: $storage_name
       shareName: nfs
       protocol: nfs
-    nodeStageSecretRef:
-      name: azurefile-secret
-      namespace: storage-app
 EOF
 
 cat storage-app/01-persistent-volume-nfs.yaml
@@ -202,6 +206,10 @@ kubectl apply -f storage-app/01-persistent-volume-nfs.yaml
 kubectl apply -f storage-app/02-persistent-volume-claim-nfs.yaml
 kubectl apply -f storage-app/03-service.yaml
 kubectl apply -f storage-app/04-statefulset.yaml
+
+# kubectl delete -f storage-app/04-statefulset.yaml
+# kubectl delete -f storage-app/02-persistent-volume-claim-nfs.yaml
+# kubectl delete -f storage-app/01-persistent-volume-nfs.yaml
 
 kubectl get pv -n storage-app
 kubectl get pvc -n storage-app

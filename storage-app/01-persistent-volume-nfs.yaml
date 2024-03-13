@@ -15,12 +15,9 @@ spec:
     driver: file.csi.azure.com
     readOnly: false
     # make sure this volumeid is unique in the cluster
-    # `#` is not allowed in self defined volumeHandle
+    # '#' is not allowed in self defined volumeHandle
     volumeHandle: nfspv
     volumeAttributes:
       storageAccount: $storage_name
       shareName: nfs
       protocol: nfs
-    nodeStageSecretRef:
-      name: azurefile-secret
-      namespace: storage-app
