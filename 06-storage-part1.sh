@@ -207,10 +207,6 @@ kubectl apply -f storage-app/02-persistent-volume-claim-nfs.yaml
 kubectl apply -f storage-app/03-service.yaml
 kubectl apply -f storage-app/04-statefulset.yaml
 
-# kubectl delete -f storage-app/04-statefulset.yaml
-# kubectl delete -f storage-app/02-persistent-volume-claim-nfs.yaml
-# kubectl delete -f storage-app/01-persistent-volume-nfs.yaml
-
 kubectl get pv -n storage-app
 kubectl get pvc -n storage-app
 kubectl get pod -n storage-app
