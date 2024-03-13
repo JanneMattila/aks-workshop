@@ -26,7 +26,10 @@ az network bastion ssh --name $bastion_name --resource-group $resource_group_nam
 curl $network_app_internal_svc_ip
 # -> <html><body>Hello
 curl $network_app_pod1_ip
+# If using Azure CNI:
 # -> <html><body>Hello
+# If using Azure CNI Overlay (please explain why)
+# -> Timeout
 curl $aci_ip
 # -> <html><body>Hello
 

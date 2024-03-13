@@ -74,6 +74,7 @@ aci_ip=$(az container create \
   --ports 80 \
   --cpu 1 \
   --memory 1 \
+  --environment-variables "ASPNETCORE_URLS=http://*:80" \
   --resource-group $resource_group_name \
   --restart-policy Always \
   --ip-address Private \
@@ -115,8 +116,12 @@ echo $aks_azure_ad_admin_group_object_id
 
 # Create Log Analytics workspace for our AKS
 # Command: COMPUTE-8
-aks_workspace_id=$(az monitor log-analytics workspace create -g $resource_group_name -n $aks_workspace_name --query id -o tsv)
+aks_workspace_json=$(az monitor log-analytics workspace create -g $resource_group_name -n $aks_workspace_name -o json)
+aks_monitor_id="/subscriptions/$(az account show --query id -o tsv)/resourceGroups/$resource_group_name/providers/microsoft.monitor/accounts/$aks_workspace_name"
+aks_workspace_id=$(echo $aks_workspace_json | jq -r .id)
+store_variable aks_monitor_id
 store_variable aks_workspace_id
+echo $aks_monitor_id
 echo $aks_workspace_id
 
 # Create Container Registry
@@ -144,28 +149,43 @@ echo $my_ip
 # For Availability Zone (AZ) aware cluster add these:
 # --zones 1 2 3
 
+# If you remove these:
+# --network-plugin-mode overlay \
+# --pod-cidr 192.168.0.0/16 \
+# then you will Azure CNI and then you must set:
+# --max-pods 50
+
 # Command: COMPUTE-12
 aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --tier standard \
- --max-pods 50 --network-plugin azure \
+ --max-pods 100 \
+ --network-plugin azure \
+ --network-plugin-mode overlay \
  --network-policy azure \
+ --pod-cidr 192.168.0.0/16 \
+ --os-sku AzureLinux \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.28.3 \
+ --kubernetes-version 1.28.5 \
  --enable-addons monitoring,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
  --disable-local-accounts \
  --no-ssh-key \
+ --enable-oidc-issuer \
+ --enable-workload-identity \
  --aad-admin-group-object-ids $aks_azure_ad_admin_group_object_id \
  --workspace-resource-id $aks_workspace_id \
+ --enable-azure-monitor-metrics \
+ --azure-monitor-workspace-resource-id $aks_monitor_id \
  --attach-acr $acr_id \
  --load-balancer-sku standard \
  --vnet-subnet-id $vnet_spoke2_aks_subnet_id \
  --assign-identity $aks_cluster_identity_id \
  --assign-kubelet-identity $aks_kubelet_identity_id \
  --api-server-authorized-ip-ranges $my_ip \
+ --cluster-autoscaler-profile balance-similar-node-groups=true \
  -o json)
 store_variable "aks_json"
 echo $aks_json | jq .

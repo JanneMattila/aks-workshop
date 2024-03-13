@@ -1,4 +1,4 @@
-apiVersion: gateway.networking.k8s.io/v1beta1
+apiVersion: gateway.networking.k8s.io/v1
 kind: Gateway
 metadata:
   name: app-gateway
@@ -14,7 +14,8 @@ spec:
       protocol: HTTP
       allowedRoutes:
         namespaces:
-          from: Selector
-          selector:
-            matchLabels:
-              shared-gateway-access: "true"
+          from: All
+          # from: Selector
+          # selector:
+          #   matchLabels:
+          #     shared-gateway-access: "true"

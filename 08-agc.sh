@@ -40,7 +40,7 @@ az identity federated-credential create \
 
 helm install alb-controller \
  oci://mcr.microsoft.com/application-lb/charts/alb-controller \
- --version 0.6.3 \
+ --version 1.0.0 \
  --set albController.namespace=azure-alb-system \
  --set albController.podIdentity.clientID=$aks_agc_client_id
 
@@ -68,9 +68,11 @@ kubectl get applicationloadbalancer alb-demo -n alb-ns -o yaml
 kubectl apply -f others/agc/02-gateway.yaml
 kubectl get gateway -n alb-ns -o yaml
 
-kubectl apply -f others/agc/03-route.yaml
+kubectl apply -f others/agc/03-service.yaml
+kubectl apply -f others/agc/04-route.yaml
 
 kubectl get gateway -n alb-ns
+kubectl get svc network-app-svc -n network-app -o yaml
 kubectl get httproute -n network-app -o yaml
 
 aks_agc_gateway_address=$(kubectl get gateway -n alb-ns -o jsonpath="{.items[0].status.addresses[0].value}")
@@ -79,8 +81,8 @@ echo $aks_agc_gateway_address
 
 curl $aks_agc_gateway_address
 
-# kubectl apply -f others/agc/04-routepolicy.yaml
-# kubectl get routepolicy -n network-app -o yaml
-# kubectl get routepolicy -n network-app
+kubectl apply -f others/agc/05-routepolicy.yaml
+kubectl get routepolicy -n network-app -o yaml
+kubectl get routepolicy -n network-app
 
 # curl $aks_agc_gateway_address --verbose
