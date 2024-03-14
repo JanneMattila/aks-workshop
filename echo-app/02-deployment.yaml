@@ -16,11 +16,13 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-        - image: jannemattila/echo:1.0.109
+        - image: jannemattila/echo:1.0.116
           name: echo-app
           env:
             - name: ASPNETCORE_URLS
               value: http://*:8080
+            - name: Echo__ShowEnvironmentVariables
+              value: "true"
           resources:
             requests:
               cpu: 100m
