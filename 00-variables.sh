@@ -6,7 +6,7 @@ function store_variable()
     local var_name="$1"
     local var_value=$(echo "${!var_name}")
 
-    echo "${var_name}=\"$var_value\"" >> saved_variables.sh
+    echo "${var_name}='$var_value'" >> saved_variables.sh
 }
 
 function restore_variables()
@@ -157,6 +157,7 @@ aks_monitor_workspace_name="mon-$my_name"
 aks_cluster_identity_name="id-$my_name-cluster"
 aks_kubelet_identity_name="id-$my_name-kubelet"
 aks_agc_identity_name="id-$my_name-agc"
+aks_keyvault_identity_name="id-$my_name-keyvault"
 
 aks_nodepool1="nodepool1"
 aks_nodepool2="nodepool2"
@@ -165,6 +166,7 @@ aks_nodepool2="nodepool2"
 unique_id=$(date +%s)
 acr_name="cr${my_name}${unique_id}"
 storage_name="st${my_name}${unique_id}"
+keyvault_name="kv${my_name}${unique_id}"
 storage_share_name="nfs"
 agic_name="agw-aks"
 
@@ -227,11 +229,13 @@ store_variable aks_monitor_workspace_name
 store_variable aks_cluster_identity_name
 store_variable aks_kubelet_identity_name
 store_variable aks_agc_identity_name
+store_variable aks_keyvault_identity_name
 store_variable aks_nodepool1
 store_variable aks_nodepool2
 store_variable unique_id
 store_variable acr_name
 store_variable storage_name
+store_variable keyvault_name
 store_variable storage_share_name
 store_variable agic_name
 
