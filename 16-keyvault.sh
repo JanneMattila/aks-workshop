@@ -53,6 +53,7 @@ az role assignment create \
 aks_oidc_issuer=$(echo $aks_json | jq -r ".oidcIssuerProfile.issuerUrl")
 tenant_id=$(az account show -s $subscription_name --query tenantId -o tsv)
 keyvault_service_account_name="workload-identity-keyvault-sa"
+store_variable keyvault_service_account_name
 
 kubectl create ns secrets-app
 
