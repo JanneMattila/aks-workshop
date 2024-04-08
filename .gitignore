@@ -353,6 +353,7 @@ MigrationBackup/
 saved_variables.sh
 **/*.ps1
 **/.env
+*.env
 redis-values.yaml
 
 k9s

@@ -118,13 +118,13 @@ vnet_spoke2_pe_subnet_address_prefix="10.2.3.0/24"
 vm_name="jumpbox"
 
 vm_username="azureuser"
-if test -f ".env"; then
+if test -f "static-vm_password.env"; then
   # Password has been created so load it
-  source .env
+  source static-vm_password.env
 else
   # Generate password and store it
   vm_password=$(openssl rand -base64 32)
-  echo "vm_password=$vm_password" > .env
+  echo "vm_password=$vm_password" > static-vm_password.env
 fi
 
 bastion_public_ip="pip-bastion"
@@ -162,8 +162,15 @@ aks_keyvault_identity_name="id-$my_name-keyvault"
 aks_nodepool1="nodepool1"
 aks_nodepool2="nodepool2"
 
+# Use static unique identifier
+if test -f "static-unique_id.env"; then
+  source static-unique_id.env
+else
+  unique_id=$(date +%s)
+  echo "unique_id=$unique_id" > static-unique_id.env
+fi
+
 # Additional resources used by AKS
-unique_id=$(date +%s)
 acr_name="cr${my_name}${unique_id}"
 storage_name="st${my_name}${unique_id}"
 keyvault_name="kv${my_name}${unique_id}"
