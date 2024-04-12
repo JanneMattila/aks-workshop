@@ -4,3 +4,4 @@ metadata:
   name: network-app
   labels:
     shared-gateway-access: "true"
+    app-ns: network-app

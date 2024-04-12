@@ -2,6 +2,8 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: network-app2
+  labels:
+    app-ns: network-app2
 ---
 apiVersion: v1
 kind: Service
@@ -18,7 +20,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: network-app-internal2-svc
+  name: network-app2-internal-svc
   namespace: network-app2
 spec:
   type: ClusterIP

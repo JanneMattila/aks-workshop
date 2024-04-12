@@ -10,6 +10,42 @@ spec:
       app: network-app2
   ingress:
     - from:
+        # - ipBlock:
+        #     cidr: 172.17.0.0/16
+        #     except:
+        #       - 172.17.1.0/24
+        - namespaceSelector:
+            matchLabels:
+              app-ns: network-app
+        # - podSelector:
+        #     matchLabels:
+        #       app: network-app
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 8080
+  egress:
+    - to:
+        - namespaceSelector:
+            matchLabels:
+              app-ns: network-app
         - podSelector:
             matchLabels:
               app: network-app
+      ports:
+        - protocol: TCP
+          port: 80
+        - protocol: TCP
+          port: 8080
+    # Allow one specific IP address from bing.com
+    - to:
+        - ipBlock:
+            cidr: 13.107.21.200/32
+      ports:
+        - protocol: TCP
+          port: 80
+    # Allow DNS resolution
+    - ports:
+        - protocol: UDP
+          port: 53
