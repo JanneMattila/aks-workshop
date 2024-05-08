@@ -2,6 +2,13 @@
 # More information here:
 # https://learn.microsoft.com/en-us/azure/aks/csi-storage-drivers
 # https://github.com/kubernetes-sigs/azurefile-csi-driver/blob/master/docs/driver-parameters.md
+#
+# Note:
+# https://github.com/Azure/AKS/releases/tag/2024-04-28
+# "Effective starting with Kubernetes version 1.29,
+# when you deploy Azure Kubernetes Service (AKS) clusters across multiple availability zones, 
+# AKS now utilizes zone-redundant storage (ZRS) to create managed disks within built-in storage classes."
+
 kubectl get storageclasses
 
 kubectl describe storageclass azurefile-csi
