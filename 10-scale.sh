@@ -63,9 +63,15 @@ az aks nodepool delete -g $resource_group_name --cluster-name $aks_name --name $
 # Command: SCALE-7
 az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
   --name $aks_nodepool1 \
-  --enable-cluster-autoscaler --min-count 1 --max-count 3 \
+  --enable-cluster-autoscaler \
   -o none
 
+# Change autoscaler settings
+# Command: SCALE-8
+az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
+  --name $aks_nodepool1 \
+  --update-cluster-autoscaler --min-count 3 --max-count 4 \
+  -o none
 #
 # "Re-create vs. start+stop vs. scale to zero"
 # 
