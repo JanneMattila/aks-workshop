@@ -28,7 +28,7 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
       containers:
-        - image: jannemattila/k8s-probe-demo:1.0.15
+        - image: jannemattila/k8s-probe-demo:1.0.17
           name: healthprobe-app
           resources:
             requests:
@@ -44,7 +44,7 @@ spec:
           startupProbe:
             httpGet:
               path: /api/healthcheck/startup
-              port: 80
+              port: 8080
             initialDelaySeconds: 15
             timeoutSeconds: 1
             periodSeconds: 10
@@ -52,18 +52,20 @@ spec:
           livenessProbe:
             httpGet:
               path: /api/healthcheck/liveness
-              port: 80
+              port: 8080
             timeoutSeconds: 1
             periodSeconds: 10
             failureThreshold: 1
           readinessProbe:
             httpGet:
               path: /api/healthcheck/readiness
-              port: 80
+              port: 8080
             timeoutSeconds: 1
             periodSeconds: 10
             failureThreshold: 1
           env:
+            - name: ASPNETCORE_URLS
+              value: http://*:8080
             # - name: webhook
             #   value: http://echo-app-svc.echo-app.svc.cluster.local/api/echo
             - name: livenessCheck

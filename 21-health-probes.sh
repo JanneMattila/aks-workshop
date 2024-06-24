@@ -23,15 +23,17 @@ echo $healthprobe_app_ip
 curl $healthprobe_app_ip
 curl -s $healthprobe_app_ip/api/healthcheck | jq .
 curl -s $healthprobe_app_ip/api/healthcheck/readiness --verbose
+curl -s $healthprobe_app_ip/api/healthcheck/liveness --verbose
 
-curl -s -X POST --data '{ "readiness": true, "liveness": true }' "http://$healthprobe_app_ip/api/healthcheck" | jq .
+curl -s -X POST --data '{ "readiness": true, "liveness": true }' -H "Content-Type: application/json" "http://$healthprobe_app_ip/api/healthcheck" | jq .
 
 healthprobe_app_server=$(curl -s $healthprobe_app_ip/api/healthcheck | jq -r .server)
 echo $healthprobe_app_server
 
-curl -s -X POST --data "{ \"shutdown\": true, \"condition\": \"$healthprobe_app_server\" }" -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/healthcheck" --verbose
+curl -s -X POST --data "{ \"shutdown\": true, \"condition\": \"$healthprobe_app_server\" }" -H "Content-Type: application/json" "http://$healthprobe_app_ip/api/healthcheck" --verbose
 
-curl -s -X POST --data '{ "readiness": true, "liveness": true }' -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/healthcheck" | jq .
+curl -s -X POST --data '{ "readiness": true, "liveness": true }' -H "Content-Type: application/json" "http://$healthprobe_app_ip/api/healthcheck" | jq .
+curl -s -X POST --data '{ "readiness": true, "liveness": false, "livenessStatusCode": 429 }' -H "Content-Type: application/json" "http://$healthprobe_app_ip/api/healthcheck" | jq .
 
 curl -s -X POST --data '{ "duration": 60 }' -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/resourceusage"
 kubectl top pod -n healthprobe-app
