@@ -114,6 +114,9 @@ curl -X POST --data "IPLOOKUP network-app-internal-svc" "$network_app_external_s
 curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 
+curl -X POST --data $'INFO ENV' "$network_app_external_svc_ip/api/commands"
+curl -X POST --data $'INFO HOSTNAME\nHTTP POST \"http://network-app-internal-svc/api/commands\"\nINFO HOSTNAME' "$network_app_external_svc_ip/api/commands"
+
 # QUESTION:
 # ---------
 # Are other apps service reachable from network-app?

@@ -14,6 +14,7 @@ spec:
   type: LoadBalancer
   ports:
     - port: 80
+      targetPort: 8080
   selector:
     app: network-app2
 ---
@@ -22,10 +23,16 @@ kind: Service
 metadata:
   name: network-app2-internal-svc
   namespace: network-app2
+  # https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/
+  # annotations:
+  #   service.kubernetes.io/topology-mode: Auto
 spec:
   type: ClusterIP
+  # trafficDistribution: PreferClose
+  # internalTrafficPolicy: Local
   ports:
     - port: 80
+      targetPort: 8080
   selector:
     app: network-app2
 ---
@@ -46,8 +53,17 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/os: linux
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: kubernetes.io/hostname
+      #               operator: NotIn
+      #               values:
+      #                 - "aks-nodepool1-52689824-vmss00000o"
       containers:
-        - image: jannemattila/webapp-network-tester:1.0.58
+        - image: jannemattila/webapp-network-tester:1.0.70
           name: network-app2
           resources:
             requests:
@@ -57,6 +73,6 @@ spec:
               cpu: 150m
               memory: 150Mi
           ports:
-            - containerPort: 80
+            - containerPort: 8080
               name: http
               protocol: TCP

@@ -28,6 +28,7 @@
 #
 
 kubectl apply -f others/network-policy/network-app2.yaml
+list_pods network-app2
 
 network_app2_pod1=$(kubectl get pod -n network-app2 -o name | head -n 1)
 echo $network_app2_pod1
@@ -44,7 +45,7 @@ echo $network_app2_internal_svc_ip
 curl $network_app2_external_svc_ip
 
 # Full access between namespaces
-curl -X POST --data "HTTP GET \"http://network-app-internal2-svc.network-app2.svc.cluster.local\"" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "HTTP GET \"http://network-app2-internal-svc.network-app2.svc.cluster.local\"" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "HTTP GET \"http://echo-app-svc.echo-app.svc.cluster.local/api/echo\"" "$network_app_external_svc_ip/api/commands"
 
 curl -X POST --data "HTTP GET \"http://network-app-internal-svc.network-app.svc.cluster.local\"" "$network_app2_external_svc_ip/api/commands"
@@ -58,6 +59,9 @@ curl -X POST --data "NSLOOKUP bing.com" "$network_app2_external_svc_ip/api/comma
 curl -X POST --data "TCP 13.107.21.200 80" "$network_app2_external_svc_ip/api/commands"
 curl -X POST --data "TCP 13.107.21.200 443" "$network_app2_external_svc_ip/api/commands"
 
+curl -X POST --data $'INFO HOSTNAME\nHTTP POST \"http://network-app2-internal-svc.network-app2.svc.cluster.local/api/commands\"\nINFO HOSTNAME' "$network_app_external_svc_ip/api/commands"
+curl -X POST --data $'INFO HOSTNAME\nHTTP POST \"http://network-app-internal-svc.network-app.svc.cluster.local/api/commands\"\nINFO HOSTNAME' "$network_app2_external_svc_ip/api/commands"
+
 # Apply network policy
 kubectl apply -f others/network-policy/network-policy.yaml
 
@@ -69,3 +73,18 @@ kubectl apply -f others/network-policy/network-policy.yaml
 # https://orca.tufin.io/netpol/
 # https://editor.networkpolicy.io - Cillium
 #
+
+# QUESTION:
+# ---------
+# If you have 1 replica of "app1" running in "Node1" in "Zone1"
+# and "app2" has multiple instances in same and different zones
+# **BUT** not in the node "Node1".
+#
+# Is the HTTP requests from "app1" going to
+# - Always to "app2" instances in same zone?
+# - Randomly between all "app2" instances?
+# - Round-robin between all "app2" instances?
+#
+
+# More information about Topology Aware Routing:
+# https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/
