@@ -96,6 +96,10 @@ az aks nodepool update -g $resource_group_name --cluster-name $aks_name \
 # More information here:
 # https://learn.microsoft.com/en-us/azure/aks/use-system-pools#system-and-user-node-pools
 #
+# How can use study pods and if they have specific tolerations?
+#
+kubectl get pods -A -o json | jq -r '.items[] | select(.spec.tolerations[]? | .key == "CriticalAddonsOnly" and .operator == "Exists") | "\(.metadata.namespace) \(.metadata.name)"'
+# 
 
 kubectl get nodes -o json | jq .
 az aks nodepool show -g $resource_group_name --cluster-name $aks_name --name nodepool1 -o json | jq .

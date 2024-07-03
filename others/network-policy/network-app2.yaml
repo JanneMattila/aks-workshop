@@ -63,7 +63,7 @@ spec:
       #               values:
       #                 - "aks-nodepool1-52689824-vmss00000o"
       containers:
-        - image: jannemattila/webapp-network-tester:1.0.70
+        - image: jannemattila/webapp-network-tester:1.0.71
           name: network-app2
           resources:
             requests:
