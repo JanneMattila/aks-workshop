@@ -1,0 +1,78 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: network-app3
+  labels:
+    app-ns: network-app3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: network-app3-external-svc
+  namespace: network-app3
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: network-app3
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: network-app3-internal-svc
+  namespace: network-app3
+  # https://kubernetes.io/docs/concepts/services-networking/topology-aware-routing/
+  # annotations:
+  #   service.kubernetes.io/topology-mode: Auto
+spec:
+  type: ClusterIP
+  # trafficDistribution: PreferClose
+  # internalTrafficPolicy: Local
+  ports:
+    - port: 80
+      targetPort: 8080
+  selector:
+    app: network-app3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-app3-deployment
+  namespace: network-app3
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network-app3
+  template:
+    metadata:
+      labels:
+        app: network-app3
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      # affinity:
+      #   nodeAffinity:
+      #     requiredDuringSchedulingIgnoredDuringExecution:
+      #       nodeSelectorTerms:
+      #         - matchExpressions:
+      #             - key: kubernetes.io/hostname
+      #               operator: NotIn
+      #               values:
+      #                 - "aks-nodepool1-52689824-vmss00000o"
+      containers:
+        - image: $acr_loginserver/docker/jannemattila/webapp-network-tester:1.0.71
+          name: network-app3
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+            limits:
+              cpu: 150m
+              memory: 150Mi
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP

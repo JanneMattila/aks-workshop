@@ -50,14 +50,14 @@ subscription_name="development"
 # Your own dedicated resource group name
 resource_group_name="rg-aks-workshop-$my_name"
 
-# Azure AD Group name used for AKS admins.
+# Entra ID Group name used for AKS admins.
 #
-# In case you don't have access rights to query Azure AD Groups,
+# In case you don't have access rights to query Entra ID Groups,
 # then at minimum you need to know Object ID of the group.
 #
 # You can use https://myaccount.microsoft.com/groups
 # to find group that you're member of. You can see "Object ID" of the group in URL.
-aks_azure_ad_admin_group_contains="janneops"
+aks_entra_id_admin_group_contains="janneops"
 
 # Azure region to use (remember not all regions support all services and availability zones)
 location="uksouth"
@@ -229,7 +229,7 @@ store_variable vm_password
 store_variable bastion_public_ip
 store_variable bastion_name
 store_variable aci_name
-store_variable aks_azure_ad_admin_group_contains
+store_variable aks_entra_id_admin_group_contains
 store_variable aks_name
 store_variable aks_log_analytics_workspace_name
 store_variable aks_monitor_workspace_name

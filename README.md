@@ -29,7 +29,12 @@ Azure Kubernetes Service (AKS) Workshop
   - Why? Because we need to test AKS cluster upgrades and other operations 
     that require personal environments
 - [Azure Cloud Shell](https://shell.azure.com/) available
-- Azure AD Group that contains all workshop participants
+  - If you want to run this **locally**, then you need to have [Azure CLI](https://learn.microsoft.com/en-us/cli/azure/install-azure-cli-linux?pivots=apt), 
+    [jq](https://manpages.ubuntu.com/manpages/noble/en/man1/jq.1.html), 
+    [envsubst](https://manpages.ubuntu.com/manpages/noble/man1/envsubst.1.html), and
+    [helm](https://helm.sh/docs/intro/install/)
+    installed
+- Entra ID Group that contains all workshop participants
   - Why? Because we need have group for AKS cluster admin access
     - You only need to have `Object ID` of the group
     - You can use [My Groups](https://myaccount.microsoft.com/groups)

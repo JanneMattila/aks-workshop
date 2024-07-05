@@ -33,7 +33,7 @@ az monitor diagnostic-settings create -n diag1 \
 # Grant admin access to key vault
 # Command: KEYVAULT-5
 az role assignment create \
- --assignee-object-id $aks_azure_ad_admin_group_object_id \
+ --assignee-object-id $aks_entra_id_admin_group_object_id \
  --assignee-principal-type Group \
  --scope $keyvault_id \
  --role "Key Vault Administrator"

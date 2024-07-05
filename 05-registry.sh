@@ -39,6 +39,15 @@ echo $simple_app_pod1
 
 kubectl logs $simple_app_pod1 -n simple-app
 
+# Create cache for DockerHub
+# Command: REGISTRY-4
+az acr cache create -r $acr_name -n DockerHubRule -s docker.io/* -t docker/*
+
+cat others/network-app3.yaml | envsubst | kubectl apply -f -
+kubectl get deploy -n network-app3
+kubectl get pods -n network-app3
+kubectl describe pods -n network-app3
+
 # Study ACR in Portal
 
 # QUESTION:
@@ -54,4 +63,14 @@ kubectl logs $simple_app_pod1 -n simple-app
 #
 # See some examples:
 # https://github.com/JanneMattila/playground-aks-acr/blob/main/setup.sh
+#
+
+# QUESTION:
+# ---------
+# Are there images in "docker/" repository?
+# What are these images?
+#
+# More information:
+# https://learn.microsoft.com/en-us/azure/container-registry/container-registry-artifact-cache
+# https://learn.microsoft.com/en-us/azure/container-registry/troubleshoot-artifact-cache#cached-images-dont-appear-in-a-live-repository
 #

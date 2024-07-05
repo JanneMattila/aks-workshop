@@ -108,11 +108,11 @@ aks_kubelet_identity_id=$(az identity create --name $aks_kubelet_identity_name -
 store_variable aks_kubelet_identity_id
 echo $aks_kubelet_identity_id
 
-# Find Azure AD Group for AKS Admins
+# Find Entra ID Group for AKS Admins
 # Command: COMPUTE-7
-aks_azure_ad_admin_group_object_id=$(az ad group list --display-name $aks_azure_ad_admin_group_contains --query [].id -o tsv)
-store_variable aks_azure_ad_admin_group_object_id
-echo $aks_azure_ad_admin_group_object_id
+aks_entra_id_admin_group_object_id=$(az ad group list --display-name $aks_entra_id_admin_group_contains --query [].id -o tsv)
+store_variable aks_entra_id_admin_group_object_id
+echo $aks_entra_id_admin_group_object_id
 
 # Create Log Analytics workspace for our AKS
 # Command: COMPUTE-8
@@ -170,7 +170,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.28.5 \
+ --kubernetes-version 1.29.4 \
  --enable-addons monitoring,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
@@ -178,7 +178,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --no-ssh-key \
  --enable-oidc-issuer \
  --enable-workload-identity \
- --aad-admin-group-object-ids $aks_azure_ad_admin_group_object_id \
+ --aad-admin-group-object-ids $aks_entra_id_admin_group_object_id \
  --workspace-resource-id $aks_log_analytics_workspace_id \
  --enable-azure-monitor-metrics \
  --azure-monitor-workspace-resource-id $aks_monitor_workspace_id \
@@ -367,6 +367,31 @@ ls -lF
 cat app.config
 cat delete.sh
 ./delete.sh
+
+# Install curl and jq
+apt update
+apt install curl jq -y
+
+# QUESTION:
+# ---------
+# Will those above commands persist after pod restart?
+#
+
+# Run some curl commands
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/instance?api-version=2021-02-01" | jq
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254:80/metadata/loadbalancer?api-version=2020-10-01" | jq
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/scheduledevents?api-version=2020-07-01" | jq
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/identity?api-version=2018-02-01" | jq
+curl -s -H Metadata:true --noproxy "*" "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&resource=https://management.azure.com/" | jq
+
+# QUESTION:
+# ---------
+# What is address 169.254.169.254?
+#
+# More information:
+# https://learn.microsoft.com/en-us/azure/virtual-machines/instance-metadata-service?tabs=linux
+# https://learn.microsoft.com/en-us/azure/aks/operator-best-practices-cluster-security?tabs=azure-cli#restrict-access-to-instance-metadata-api
+#
 
 # Exit pod
 exit
