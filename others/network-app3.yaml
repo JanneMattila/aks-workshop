@@ -63,7 +63,7 @@ spec:
       #               values:
       #                 - "aks-nodepool1-52689824-vmss00000o"
       containers:
-        - image: $acr_loginserver/docker/jannemattila/webapp-network-tester:1.0.71
+        - image: $acr_loginserver/docker/jannemattila/webapp-network-tester:1.0.73
           name: network-app3
           resources:
             requests:
