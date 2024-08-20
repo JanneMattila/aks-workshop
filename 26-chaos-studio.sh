@@ -1,3 +1,13 @@
+#
+# Requirements:
+# - Local accounts are required
+# - Experiment needs to have access API server
+#
+# az aks create ...
+#  --disable-local-accounts \                  <- DO NOT USE THIS
+#  --api-server-authorized-ip-ranges $my_ip \  <- DO NOT USE THIS
+#
+
 # Install
 helm repo add chaos-mesh https://charts.chaos-mesh.org
 helm repo update
@@ -20,12 +30,18 @@ curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.l
 
 curl -X POST --data "IPLOOKUP update-app-svc.update-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 
+curl -X POST --data "HTTP GET https://login.microsoftonline.com" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "HTTP GET http://network-app-internal-svc" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "HTTP GET https://microsoft.com" "$network_app_external_svc_ip/api/commands" | more
+
 # Pod Chaos:
 # https://chaos-mesh.org/docs/simulate-pod-chaos-on-kubernetes/#field-description
 # {"action":"pod-failure","mode":"fixed","value":"2","duration":"300s","selector":{"namespaces":["network-app"]}}
 # {"action":"pod-failure","mode":"fixed-percent","value":"66","duration":"300s","selector":{"namespaces":["update-app"]}}
 
 kubectl get pods -n network-app
+list_pods network-app
+
 kubectl get pods -n update-app
 
 curl $network_app_external_svc_ip
