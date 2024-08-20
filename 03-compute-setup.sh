@@ -170,7 +170,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.29.4 \
+ --kubernetes-version 1.30.3 \
  --enable-addons monitoring,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \
@@ -308,6 +308,10 @@ echo $network_app_external_svc_ip
 network_app_internal_svc_ip=$(kubectl get service network-app-internal-svc -n network-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
 store_variable network_app_internal_svc_ip
 echo $network_app_internal_svc_ip
+
+network_app_clusterip_svc_ip=$(kubectl get service network-app-clusterip-svc -n network-app -o jsonpath="{.spec.clusterIP}")
+store_variable network_app_clusterip_svc_ip
+echo $network_app_clusterip_svc_ip
 
 curl $network_app_external_svc_ip
 # -> Hello there!

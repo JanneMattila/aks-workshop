@@ -18,7 +18,7 @@ kubectl get pods -n chaos-testing
 
 # DNS Chaos:
 # https://chaos-mesh.org/docs/simulate-dns-chaos-on-kubernetes/#configuration-description
-# {"action":"error","mode":"all","patterns":["bing.com","chaos-mesh.*","github.?om","login.microsoftonline.com","network-app-internal-svc.*"],"selector":{"namespaces":["network-app","network-app2","update-app"]}}
+# {"action":"error","mode":"all","patterns":["bing.com","chaos-mesh.*","github.?om","login.microsoftonline.com","network-app-internal-svc.*","network-app-clusterip-svc.*"],"selector":{"namespaces":["network-app","network-app2","update-app"]}}
 
 curl -X POST --data "IPLOOKUP github.com" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "IPLOOKUP bing.com" "$network_app_external_svc_ip/api/commands"
@@ -28,11 +28,15 @@ curl -X POST --data "IPLOOKUP microsoft.com" "$network_app_external_svc_ip/api/c
 curl -X POST --data "IPLOOKUP network-app-internal-svc" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "IPLOOKUP network-app-internal-svc.network-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 
+curl -X POST --data "IPLOOKUP network-app-clusterip-svc" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "IPLOOKUP network-app-clusterip-svc.network-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
+
 curl -X POST --data "IPLOOKUP update-app-svc.update-app.svc.cluster.local" "$network_app_external_svc_ip/api/commands"
 
 curl -X POST --data "HTTP GET https://login.microsoftonline.com" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "HTTP GET http://network-app-internal-svc" "$network_app_external_svc_ip/api/commands"
-curl -X POST --data "HTTP GET https://microsoft.com" "$network_app_external_svc_ip/api/commands" | more
+curl -X POST --data "HTTP GET http://network-app-clusterip-svc" "$network_app_external_svc_ip/api/commands"
+curl -X POST --data "HTTP GET https://microsoft.com" "$network_app_external_svc_ip/api/commands"
 
 # Pod Chaos:
 # https://chaos-mesh.org/docs/simulate-pod-chaos-on-kubernetes/#field-description

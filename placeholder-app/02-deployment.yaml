@@ -33,7 +33,7 @@ spec:
           effect: "NoSchedule"
       containers:
         - name: placeholder-app
-          image: jannemattila/webapp-network-tester:1.0.73
+          image: jannemattila/webapp-network-tester:1.0.75
           resources:
             requests:
               cpu: 6000m
