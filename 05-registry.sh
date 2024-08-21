@@ -39,10 +39,42 @@ echo $simple_app_pod1
 
 kubectl logs $simple_app_pod1 -n simple-app
 
+########################################################
 # Create cache for DockerHub
+# Note:
+# These command require that you create key vault first.
+# Follow the instructions in "16-keyvault.sh".
+# Require commands:
+# - Command: KEYVAULT-3 - Create key vault
+# - Command: KEYVAULT-5 - Grant admin access to key vault
+########################################################
+# Create Docker Hub required secrets
 # Command: REGISTRY-4
-az acr cache create -r $acr_name -n DockerHubRule -s docker.io/* -t docker/*
+read -s -p "Docker Hub username:" dockerhub_user
+read -s -p "Docker Hub password:" dockerhub_password
 
+az keyvault secret set --vault-name $keyvault_name -n dockerhub-user --value $dockerhub_user
+az keyvault secret set --vault-name $keyvault_name -n dockerhub-password --value $dockerhub_password
+
+# Create a credential set for Docker Hub
+# Command: REGISTRY-5
+acr_credential_set_principal_id=$(az acr credential-set create -r $acr_name -n DockerHub -l docker.io -u "${keyvault_vault_uri}secrets/dockerhub-user" -p "${keyvault_vault_uri}secrets/dockerhub-password" --query identity.principalId -o tsv)
+store_variable acr_credential_set_principal_id
+echo $acr_credential_set_principal_id
+
+# Grant access to key vault for our credential set managed identity
+# Command: REGISTRY-6
+az role assignment create \
+ --assignee-object-id $acr_credential_set_principal_id \
+ --assignee-principal-type ServicePrincipal \
+ --scope $keyvault_id \
+ --role "Key Vault Secrets User"
+
+# Create a rule referencing the credential set
+# Command: REGISTRY-7
+az acr cache create -r $acr_name -n DockerHubRule -s docker.io/* -t docker/* -c DockerHub
+
+# Command: REGISTRY-8
 cat others/network-app3.yaml | envsubst | kubectl apply -f -
 kubectl get deploy -n network-app3
 kubectl get pods -n network-app3

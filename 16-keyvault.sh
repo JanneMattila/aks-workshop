@@ -18,8 +18,14 @@ echo $aks_keyvault_principal_id
 
 # Create key vault
 # Command: KEYVAULT-3
-keyvault_id=$(keyvault create -g $resource_group_name -n $keyvault_name --enable-rbac-authorization --query id -o tsv)
-store_variable "keyvault_id"
+keyvault_json=$(az keyvault show -g $resource_group_name -n $keyvault_name -o json)
+keyvault_json=$(az keyvault create -g $resource_group_name -n $keyvault_name --enable-rbac-authorization -o json)
+store_variable keyvault_json
+keyvault_vault_uri=$(echo $keyvault_json | jq -r .properties.vaultUri)
+store_variable keyvault_vault_uri
+echo $keyvault_vault_uri
+keyvault_id=$(echo $keyvault_json | jq -r .id)
+store_variable keyvault_id
 echo $keyvault_id
 
 # Enable diagnostic logs for key vault
