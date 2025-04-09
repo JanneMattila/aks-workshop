@@ -5,6 +5,9 @@ metadata:
   namespace: network-app
 spec:
   type: LoadBalancer
+  # https://learn.microsoft.com/en-us/azure/aks/load-balancer-standard#customizations-via-kubernetes-annotations
+  # Maintain the client's IP on inbound connections
+  externalTrafficPolicy: Local
   ports:
     - port: 80
       targetPort: 8080

@@ -1,6 +1,8 @@
 # Redis
 # https://artifacthub.io/packages/helm/bitnami/redis
 #
+# Install helm
+curl -sL https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | sudo bash
 
 helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
