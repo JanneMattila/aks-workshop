@@ -45,7 +45,7 @@ function list_pods()
 my_name="janne" # Lower caps!
 
 # Your subscription name
-subscription_name="development"
+subscription_name="workload1-production"
 
 # Your own dedicated resource group name
 resource_group_name="rg-aks-workshop-$my_name"
@@ -60,7 +60,7 @@ resource_group_name="rg-aks-workshop-$my_name"
 aks_entra_id_admin_group_contains="janneops"
 
 # Azure region to use (remember not all regions support all services and availability zones)
-location="uksouth"
+location="swedencentral"
 
 #########################
 #                   _

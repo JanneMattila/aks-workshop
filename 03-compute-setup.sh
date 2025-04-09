@@ -111,6 +111,12 @@ echo $aks_kubelet_identity_id
 # Find Entra ID Group for AKS Admins
 # Command: COMPUTE-7
 aks_entra_id_admin_group_object_id=$(az ad group list --display-name $aks_entra_id_admin_group_contains --query [].id -o tsv)
+# If you get:
+# ERROR: Insufficient privileges to complete the operation.
+# then open 
+# https://myaccount.microsoft.com/groups
+# and find the group manually and then set it here:
+# aks_entra_id_admin_group_object_id="00000000-0000-0000-0000-000000000000"
 store_variable aks_entra_id_admin_group_object_id
 echo $aks_entra_id_admin_group_object_id
 
@@ -170,7 +176,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.30.3 \
+ --kubernetes-version 1.32.0 \
  --enable-addons monitoring,azure-keyvault-secrets-provider \
  --enable-aad \
  --enable-azure-rbac \

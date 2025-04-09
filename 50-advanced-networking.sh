@@ -7,6 +7,13 @@
 #
 # Enable jumpbox to be router
 # https://github.com/dmauser/AzureVM-Router
+# Copy of "linuxrouteronly.sh" script:
+# Enable IPv4 and IPv6 forwarding by executing the following commands:
+sysctl -w net.ipv4.ip_forward=1
+sysctl -w net.ipv6.conf.all.forwarding=1
+sed -i "/net.ipv4.ip_forward=1/ s/# *//" /etc/sysctl.conf
+sed -i "/net.ipv6.conf.all.forwarding=1/ s/# *//" /etc/sysctl.conf
+
 #
 # Route traffic between spoke1 and spoke2 using this router.
 #
