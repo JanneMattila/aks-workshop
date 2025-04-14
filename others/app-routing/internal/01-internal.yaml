@@ -5,5 +5,7 @@ metadata:
 spec:
   ingressClassName: nginx-internal
   controllerNamePrefix: nginx-internal
+  # https://learn.microsoft.com/en-us/azure/aks/load-balancer-standard#customizations-via-kubernetes-annotations
+  # https://cloud-provider-azure.sigs.k8s.io/topics/pls-integration/
   loadBalancerAnnotations:
     service.beta.kubernetes.io/azure-load-balancer-internal: "true"

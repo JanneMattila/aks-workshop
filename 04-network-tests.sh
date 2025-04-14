@@ -49,6 +49,12 @@ curl $aci_ip
 # Command: NETWORK-TESTING-3
 curl -X POST --data "HTTP GET \"https://github.com\"" "$network_app_internal_svc_ip/api/commands" # OK
 curl -X POST --data "HTTP GET \"https://github.com\"" "$aci_ip/api/commands" # OK
+curl -X POST --data "HTTP GET \"https://myip.jannemattila.com\"" "$network_app_external_svc_ip/api/commands" # OK
+
+# QUESTION:
+# ---------
+# What IP came as output from last command and why?
+#
 
 # Test spoke001 -> spoke002 connectivity
 # Command: NETWORK-TESTING-4

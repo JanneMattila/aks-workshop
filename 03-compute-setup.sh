@@ -158,6 +158,16 @@ echo $my_ip
 # For Availability Zone (AZ) aware cluster add these:
 # --zones 1 2 3
 
+# For node public IP add these:
+#  --enable-node-public-ip \
+#  --node-public-ip-tags RoutingPreference=Internet \
+# If you need to expose host ports, then you need to run this after the cluster creation:
+# az aks nodepool update \
+#   --name nodepool1 \
+#   --cluster-name $aks_name \
+#   --resource-group $resource_group_name \
+#   --allowed-host-ports 40000-60000/tcp,40000-50000/udp
+
 # If you remove these:
 # --network-plugin-mode overlay \
 # --pod-cidr 192.168.0.0/16 \

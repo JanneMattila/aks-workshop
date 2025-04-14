@@ -12,6 +12,9 @@ spec:
     metadata:
       labels:
         app: network-app
+      # https://learn.microsoft.com/en-us/azure/aks/use-node-public-ips
+      # annotations:
+      #   kubernetes.azure.com/assign-hostports-for-containerports: 8080/tcp
     spec:
       nodeSelector:
         kubernetes.io/os: linux

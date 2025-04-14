@@ -24,6 +24,7 @@ curl $ingress_ip2
 kubectl delete -f others/app-routing/02-ingress.yaml
 
 # Deploy internal ingress
+kubectl apply -f others/app-routing/01-service.yaml
 kubectl apply -f others/app-routing/internal/
 
 kubectl get ingress -n network-app
