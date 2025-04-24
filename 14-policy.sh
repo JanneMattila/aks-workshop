@@ -12,7 +12,26 @@ kubectl get pods -n gatekeeper-system
 
 kubectl get constrainttemplates
 
-kubectl get constrainttemplates k8sazurev1blockdefault -o yaml
+kubectl get constrainttemplates k8sazurev2noprivilege -o yaml
+
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: privileged-pod
+spec:
+  containers:
+    - name: nginx
+      image: nginx
+      securityContext:
+        privileged: true
+EOF
+
+# Error from server (Forbidden): 
+# error when creating "STDIN": 
+# admission webhook "validation.gatekeeper.sh" 
+# denied the request: [azurepolicy-k8sazurev2noprivilege-0abdd17e1c6494e77e21]
+# Privileged container is not allowed: nginx, securityContext: {"privileged": true}
 
 #
 # QUESTION:
