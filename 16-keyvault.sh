@@ -18,7 +18,6 @@ echo $aks_keyvault_principal_id
 
 # Create key vault
 # Command: KEYVAULT-3
-keyvault_json=$(az keyvault show -g $resource_group_name -n $keyvault_name -o json)
 keyvault_json=$(az keyvault create -g $resource_group_name -n $keyvault_name --enable-rbac-authorization -o json)
 store_variable keyvault_json
 keyvault_vault_uri=$(echo $keyvault_json | jq -r .properties.vaultUri)

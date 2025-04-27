@@ -45,7 +45,7 @@ function list_pods()
 my_name="janne" # Lower caps!
 
 # Your subscription name
-subscription_name="workload1-production"
+subscription_name="workload1-production-online"
 
 # Your own dedicated resource group name
 resource_group_name="rg-aks-workshop-$my_name"
@@ -158,6 +158,7 @@ aks_cluster_identity_name="id-$my_name-cluster"
 aks_kubelet_identity_name="id-$my_name-kubelet"
 aks_agc_identity_name="id-$my_name-agc"
 aks_keyvault_identity_name="id-$my_name-keyvault"
+aks_sqlapp_identity_name="id-$my_name-sqlapp"
 
 aks_nodepool1="nodepool1"
 aks_nodepool2="nodepool2"
@@ -174,6 +175,8 @@ fi
 acr_name="cr${my_name}${unique_id}"
 storage_name="st${my_name}${unique_id}"
 keyvault_name="kv${my_name}${unique_id}"
+sql_server_name="sql${my_name}${unique_id}"
+sql_db_name="adventureworks"
 storage_share_name="nfs"
 agic_name="agw-aks"
 
@@ -237,6 +240,7 @@ store_variable aks_cluster_identity_name
 store_variable aks_kubelet_identity_name
 store_variable aks_agc_identity_name
 store_variable aks_keyvault_identity_name
+store_variable aks_sqlapp_identity_name
 store_variable aks_nodepool1
 store_variable aks_nodepool2
 store_variable unique_id
