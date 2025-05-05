@@ -35,7 +35,20 @@ curl -s -X POST --data "{ \"shutdown\": true, \"condition\": \"$healthprobe_app_
 curl -s -X POST --data '{ "readiness": true, "liveness": true }' -H "Content-Type: application/json" "http://$healthprobe_app_ip/api/healthcheck" | jq .
 curl -s -X POST --data '{ "readiness": true, "liveness": false, "livenessStatusCode": 429 }' -H "Content-Type: application/json" "http://$healthprobe_app_ip/api/healthcheck" | jq .
 
+curl -s -X POST --data '{ "duration": 10 }' -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/resourceusage"
 curl -s -X POST --data '{ "duration": 60 }' -H "Content-Type: application/json"  "http://$healthprobe_app_ip/api/resourceusage"
 kubectl top pod -n healthprobe-app
 kubectl get deployment -n healthprobe-app
 kubectl get pod -n healthprobe-app
+
+# PromQL queries
+# sum(container_cpu_usage_seconds_total{namespace="healthprobe-app"}) by (pod) 
+# sum(container_memory_working_set_bytes{namespace="healthprobe-app"}) by (pod)
+# sum(container_memory_rss{namespace="healthprobe-app"}) by (pod)
+# sum(container_memory_cache{namespace="healthprobe-app"}) by (pod)
+az rest \
+ --resource https://prometheus.monitor.azure.com \
+ --method post \
+ --headers "Content-Type=application/x-www-form-urlencoded" \
+ --uri "$aks_monitor_prometheus_query_endpoint/api/v1/query" \
+ --body 'query=sum(container_cpu_usage_seconds_total{namespace="healthprobe-app"}) by (pod)'

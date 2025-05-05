@@ -130,6 +130,8 @@ echo $aks_log_analytics_workspace_id
 # Create Azure Monitor  workspace for our AKS
 aks_monitor_workspace_json=$(az monitor account create -g $resource_group_name -n $aks_monitor_workspace_name -o json)
 aks_monitor_workspace_id=$(echo $aks_monitor_workspace_json | jq -r .id)
+aks_monitor_prometheus_query_endpoint=$(echo $aks_monitor_workspace_json | jq -r .metrics.prometheusQueryEndpoint)
+store_variable aks_monitor_prometheus_query_endpoint
 store_variable aks_monitor_workspace_id
 echo $aks_monitor_workspace_id
 
