@@ -1,11 +1,7 @@
 #
 # Requirements:
-# - Local accounts are required
-# - Experiment needs to have access API server
-#
-# az aks create ...
-#  --disable-local-accounts \                  <- DO NOT USE THIS
-#  --api-server-authorized-ip-ranges $my_ip \  <- DO NOT USE THIS
+# - For private AKS clusters, follow these instructions
+#   https://learn.microsoft.com/en-us/azure/chaos-studio/chaos-studio-private-networking
 #
 
 # Install

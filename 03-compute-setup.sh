@@ -180,14 +180,16 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --max-pods 100 \
  --network-plugin azure \
  --network-plugin-mode overlay \
- --network-policy azure \
+ --network-policy cilium \
+ --network-dataplane cilium \
  --pod-cidr 192.168.0.0/16 \
  --os-sku AzureLinux \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.32.0 \
+ --kubernetes-version 1.32.3 \
  --enable-addons monitoring,azure-keyvault-secrets-provider \
+ --enable-cost-analysis \
  --enable-aad \
  --enable-azure-rbac \
  --disable-local-accounts \
@@ -260,21 +262,23 @@ az aks update -g $resource_group_name -n $aks_name --api-server-authorized-ip-ra
 
 # QUESTION:
 # ---------
-# Above create command used following parameter:
-#   --network-plugin azure
+# Above create command used following parameters:
+# --network-plugin azure \
+# --network-plugin-mode overlay \
+# --network-policy azure \
+# --network-dataplane cilium \
 #
-# It means that it creates cluster using "Azure Container Networking Interface (CNI)"
-# (a.k.a. "Azure CNI with static IP allocation").
+# It means that it creates cluster using 
+# "Azure Container Networking Interface (CNI) Overlay Powered by Cilium"
 #
 # Other options would have been:
+# - Azure CNI
 # - Azure CNI with dynamic IP allocation
-# - Azure CNI Powered by Cilium
 # - Azure CNI Overlay
 # - BYO CNI
-# - Kubenet
+# (- Kubenet)
 #
 # What are differences and benefits in these options?
-# You can focus only to "Azure CNI" and "Kubenet".
 #
 # Verify from portal.
 # 
