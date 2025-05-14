@@ -375,7 +375,7 @@ curl $echo_app_ip
 
 # Connect to network app pod
 # Command: COMPUTE-21
-kubectl exec --stdin --tty $network_app_pod1 -n network-app -- /bin/bash
+kubectl exec --stdin --tty $network_app_pod1 -n network-app -- /bin/sh
 
 # Run commands inside pod
 
@@ -394,9 +394,12 @@ cat app.config
 cat delete.sh
 ./delete.sh
 
-# Install curl and jq
-apt update
+# Install curl and jq (Ubuntu)
+apt update -y
 apt install curl jq -y
+
+# Install curl and jq (Alpine)
+apk add --no-cache curl jq
 
 # QUESTION:
 # ---------
