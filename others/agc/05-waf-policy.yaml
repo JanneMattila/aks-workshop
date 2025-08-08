@@ -1,0 +1,13 @@
+apiVersion: alb.networking.azure.io/v1
+kind: WebApplicationFirewallPolicy
+metadata:
+  name: waf-policy
+  namespace: alb-ns
+spec:
+  targetRef:
+    group: gateway.networking.k8s.io
+    kind: Gateway
+    name: app-gateway
+    namespace: alb-ns
+  webApplicationFirewall:
+    id: $aks_agc_waf_policy_id
