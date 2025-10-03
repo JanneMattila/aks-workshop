@@ -8,7 +8,10 @@ kubectl apply -f update-app/
 # Command: UPDATE-2
 kubectl get deployment -n update-app
 kubectl get service -n update-app
+kubectl get pod -n update-app
 kubectl get pod -n update-app -o custom-columns=NAME:'{.metadata.name}',NODE:'{.spec.nodeName}'
+kubectl logs -n update-app --tail=10 -l app=update-app
+kubectl describe pods -n update-app
 
 list_pods update-app
 
@@ -30,8 +33,9 @@ pwsh deployment-monitor.ps1 -Url http://$update_app_svc_ip/api/update -Delay 100
 pwsh deployment-request-tester.ps1 -Url http://$update_app_svc_ip/api/update -Delay 1000
 
 # Test updating
+kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.14 -n update-app
+kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.15 -n update-app
 kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.11 -n update-app
-kubectl set image deployment/update-app-deployment update-app=jannemattila/webapp-update:1.0.12 -n update-app
 
 kubectl edit deployment/update-app-deployment -n update-app
 
