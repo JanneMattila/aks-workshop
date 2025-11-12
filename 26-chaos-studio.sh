@@ -49,10 +49,12 @@ curl -X POST --data "HTTP GET http://network-app-clusterip-svc" "$network_app_ex
 curl -X POST --data "HTTP GET https://microsoft.com" "$network_app_external_svc_ip/api/commands"
 curl -X POST --data "HTTP GET https://github.com" "$network_app_external_svc_ip/api/commands"
 
-# Pod Chaos:
+#####################################
+# Chaos Studio - Pod chaos experiment
+#####################################
 # https://chaos-mesh.org/docs/simulate-pod-chaos-on-kubernetes/#field-description
-# {"action":"pod-failure","mode":"fixed","value":"2","duration":"300s","selector":{"namespaces":["network-app"]}}
-# {"action":"pod-failure","mode":"fixed-percent","value":"66","duration":"300s","selector":{"namespaces":["update-app"]}}
+# {"action":"pod-failure","mode":"fixed","value":"2","selector":{"namespaces":["network-app"]}}
+# {"action":"pod-failure","mode":"fixed-percent","value":"66","selector":{"namespaces":["update-app"]}}
 
 kubectl get pods -n network-app
 list_pods network-app
@@ -61,18 +63,25 @@ kubectl get pods -n update-app
 list_pods update-app
 
 curl $network_app_external_svc_ip
+echo $network_app_external_svc_ip
 
 curl -s $update_app_svc_ip/api/update | jq .
+echo $update_app_svc_ip
 
 while true; do
     curl -s $update_app_svc_ip/api/update | jq .
 done
 
-# Availability zone chaos:
+
+#############################################
+# Chaos Studio - Availability Zone experiment
+#############################################
+
 kubectl apply -f others/chaos-studio/storage-app-lrs.yaml
 kubectl apply -f others/chaos-studio/storage-app-zrs.yaml
+
+kubectl get storageclass managed-csi-premium-lrs-sc -o yaml # LRS - was still default in 1.28.13 and older clusters
 kubectl get storageclass default -o yaml # ZRS
-kubectl get storageclass managed-csi-premium-lrs-sc -o yaml # LRS
 
 kubectl get svc -n storage-app-lrs
 kubectl get svc -n storage-app-zrs

@@ -190,7 +190,7 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
  --node-vm-size Standard_D8ds_v4 \
- --kubernetes-version 1.33.3 \
+ --kubernetes-version 1.33.5 \
  --enable-addons monitoring,azure-keyvault-secrets-provider \
  --enable-cost-analysis \
  --enable-aad \

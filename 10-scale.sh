@@ -25,7 +25,9 @@ az aks nodepool scale -g $resource_group_name --cluster-name $aks_name \
 # --zones 1 2 3 \
 az aks nodepool add -g $resource_group_name --cluster-name $aks_name \
   --name $aks_nodepool2 \
+  --os-sku AzureLinux \
   --node-count 1 \
+  --enable-cluster-autoscaler --min-count 1 --max-count 3 \
   --node-osdisk-type Ephemeral \
   --node-vm-size Standard_D8ds_v4 \
   --node-taints "usage=tempworkloads:NoSchedule" \

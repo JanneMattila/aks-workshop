@@ -136,8 +136,11 @@ spec:
         azure.workload.identity/use: "true"
     spec:
       serviceAccountName: "${sqlapp_service_account_name}"
+      nodeSelector:
+        kubernetes.io/os: linux
+        # kubernetes.azure.com/mode: user
       containers:
-        - image: jannemattila/webapp-network-tester:1.0.79
+        - image: jannemattila/webapp-network-tester:1.0.80
           name: sql-app
           ports:
             - containerPort: 8080
@@ -149,7 +152,7 @@ kubectl get pod -n sql-app
 kubectl describe pod -n sql-app
 
 sql_app_external_svc_ip=$(kubectl get service sql-app-external-svc -n sql-app -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-store_variable sql_sql_app_external_svc_ip
+store_variable sql_app_external_svc_ip
 echo $sql_app_external_svc_ip
 
 # Command: SQL-11
