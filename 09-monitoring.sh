@@ -2,7 +2,7 @@
 kubectl apply -f others/container-azm-ms-agentconfig.yaml
 
 # Read more about different configuration options:
-# https://github.com/microsoft/Docker-Provider/blob/ci_dev/kubernetes/container-azm-ms-agentconfig.yaml
+# https://github.com/microsoft/Docker-Provider/blob/ci_prod/kubernetes/container-azm-ms-agentconfig.yaml
 
 kubectl apply -f monitoring-app/
 
