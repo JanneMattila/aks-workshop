@@ -356,5 +356,7 @@ saved_variables.sh
 *.env
 redis-values.yaml
 
+# Tools
 k9s
 k9s.*
+aks-node-viewer
