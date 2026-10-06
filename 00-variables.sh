@@ -96,7 +96,7 @@ vnet_spoke1_front_subnet_address_prefix="10.1.0.0/24"
 
 vnet_spoke2_plain_name="spoke2"
 vnet_spoke2_name="vnet-$vnet_spoke2_plain_name"
-vnet_spoke2_address_prefix="10.2.0.0/22"
+vnet_spoke2_address_prefix="10.2.0.0/21"
 vnet_spoke2_aks_subnet_name="snet-aks"
 vnet_spoke2_aks_subnet_address_prefix="10.2.0.0/24"
 vnet_spoke2_aks_subnet_udr_name="udr-$vnet_spoke2_plain_name-aks"
@@ -106,6 +106,8 @@ vnet_spoke2_agc_subnet_name="snet-agc"
 vnet_spoke2_agc_subnet_address_prefix="10.2.2.0/24"
 vnet_spoke2_pe_subnet_name="snet-pe"
 vnet_spoke2_pe_subnet_address_prefix="10.2.3.0/24"
+vnet_spoke2_postgres_subnet_name="snet-postgres"
+vnet_spoke2_postgres_subnet_address_prefix="10.2.4.0/27"
 
 #######################
 # __   ___ __ ___
@@ -177,6 +179,19 @@ storage_name="st${my_name}${unique_id}"
 keyvault_name="kv${my_name}${unique_id}"
 sql_server_name="sql${my_name}${unique_id}"
 sql_db_name="adventureworks"
+postgres_server_name="psql${my_name}${unique_id}"
+postgres_db_name="sample"
+postgres_version="18"
+postgres_admin_user="postgresadmin"
+if test -f "static-postgresql.env"; then
+  # Password has been created so load it
+  source static-postgresql.env
+else
+  # Generate password and store it
+  postgres_admin_password=$(openssl rand -base64 32)
+  echo "postgres_admin_password=$postgres_admin_password" > static-postgresql.env
+fi
+
 storage_share_name="nfs"
 agic_name="agw-aks"
 
@@ -226,6 +241,8 @@ store_variable vnet_spoke2_agc_subnet_name
 store_variable vnet_spoke2_agc_subnet_address_prefix
 store_variable vnet_spoke2_pe_subnet_name
 store_variable vnet_spoke2_pe_subnet_address_prefix
+store_variable vnet_spoke2_postgres_subnet_name
+store_variable vnet_spoke2_postgres_subnet_address_prefix
 store_variable vm_name
 store_variable vm_username
 store_variable vm_password
@@ -247,6 +264,14 @@ store_variable unique_id
 store_variable acr_name
 store_variable storage_name
 store_variable keyvault_name
+store_variable postgres_server_name
+store_variable postgres_db_name
+store_variable postgres_version
+store_variable postgres_admin_user
+store_variable postgres_auth_mode
+store_variable postgres_app_source_path
+store_variable postgres_app_image
+store_variable postgres_app_nodepool_name
 store_variable storage_share_name
 store_variable agic_name
 

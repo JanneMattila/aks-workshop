@@ -61,7 +61,7 @@ spec:
       nodeSelector:
         kubernetes.io/os: linux
         # kubernetes.azure.com/mode: user
-      terminationGracePeriodSeconds: 30
+      terminationGracePeriodSeconds: 60
       # lifecycle:
       #   preStop:
       #     exec:

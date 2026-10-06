@@ -46,10 +46,11 @@ az identity federated-credential create \
  --subject "system:serviceaccount:azure-alb-system:alb-controller-sa"
 
 # Study https://mcr.microsoft.com
+# https://learn.microsoft.com/en-us/azure/application-gateway/for-containers/quickstart-deploy-application-gateway-for-containers-alb-controller-helm
 
 helm install alb-controller \
  oci://mcr.microsoft.com/application-lb/charts/alb-controller \
- --version 1.7.9 \
+ --version 1.9.13 \
  --set albController.namespace=azure-alb-system \
  --set albController.podIdentity.clientID=$aks_agc_client_id
 
