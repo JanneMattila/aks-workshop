@@ -45,7 +45,7 @@ echo $redis_connection_string
 echo $redis_connection_string_replicas
 
 # Run Redis client
-kubectl run -n redis-app redis-client --env REDIS_PASSWORD=$redis_password --image docker.io/bitnami/redis:7.0.11-debian-11-r12 --command -- sleep infinity
+kubectl run -n redis-app redis-client --env REDIS_PASSWORD=$redis_password --image docker.io/soldevelo/redis:7.0.15-debian-12-r0 --command -- sleep infinity
 kubectl exec --tty -i redis-client --namespace redis-app -- bash
 # Run commands inside the container
 redis-cli -h my-redis-master.redis-app.svc.cluster.local -p 6379 -a $REDIS_PASSWORD
