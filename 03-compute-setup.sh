@@ -189,13 +189,14 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  --os-sku AzureLinux \
  --node-count 1 --enable-cluster-autoscaler --min-count 1 --max-count 3 \
  --node-osdisk-type Ephemeral \
- --node-vm-size Standard_D8ds_v4 \
+ --node-vm-size Standard_D8ds_v7 \
  --kubernetes-version 1.37.0 \
  --enable-addons monitoring,azure-keyvault-secrets-provider \
  --enable-cost-analysis \
  --enable-aad \
  --enable-azure-rbac \
  --disable-local-accounts \
+ --ssh-access disabled \
  --no-ssh-key \
  --enable-oidc-issuer \
  --enable-workload-identity \
@@ -213,6 +214,9 @@ aks_json=$(az aks create -g $resource_group_name -n $aks_name \
  -o json)
 store_variable "aks_json"
 echo $aks_json | jq .
+
+# Or fetch the existing AKS cluster details
+aks_json=$(az aks show -g $resource_group_name -n $aks_name -o json)
 
 aks_api_server=$(echo $aks_json | jq -r .azurePortalFqdn)
 store_variable "aks_api_server"
