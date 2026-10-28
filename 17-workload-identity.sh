@@ -60,7 +60,9 @@ store_variable sql_db_json
 
 # Managed identity connection string
 # Command: SQL-6
-sql_db_connection_string="Server=$sql_server_name.database.windows.net;Database=$sql_db_name;Authentication=ActiveDirectoryMsi;TrustServerCertificate=True;"
+sql_db_connection_string="Server=$sql_server_name.database.windows.net;Database=$sql_db_name;Authentication=ActiveDirectoryMsi;TrustServerCertificate=False;"
+# Alternative format:
+# sql_db_connection_string="Server=tcp:$sql_server_name.database.windows.net,1433;Initial Catalog=$sql_db_name;User Id=$aks_sqlapp_client_id;Authentication=Active Directory Workload Identity;Encrypt=True;TrustServerCertificate=False;"
 echo $sql_db_connection_string
 store_variable sql_db_connection_string
 
@@ -140,7 +142,7 @@ spec:
         kubernetes.io/os: linux
         # kubernetes.azure.com/mode: user
       containers:
-        - image: jannemattila/webapp-network-tester:1.0.80
+        - image: jannemattila/webapp-network-tester:1.0.82
           name: sql-app
           ports:
             - containerPort: 8080
